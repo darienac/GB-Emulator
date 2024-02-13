@@ -1,0 +1,18 @@
+{
+  "name" : "gameboy-emulator",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "7ba0ba7334c3346e7eee1e049ba85da193a8d821",
+  "dependencies" : [ {
+    "name" : "sdl2",
+    "version>=" : "2.30.0"
+  }, {
+    "name" : "vcpkg-cmake-config",
+    "version>=" : "2022-02-06#1"
+  }, {
+    "name" : "vcpkg-cmake",
+    "version>=" : "2023-05-04"
+  }, {
+    "name" : "sdl2pp",
+    "version>=" : "0.16.1#8"
+  } ]
+}
