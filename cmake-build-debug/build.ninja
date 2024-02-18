@@ -56,6 +56,13 @@ build CMakeFiles/gameboy_emulator.dir/main.cpp.obj: CXX_COMPILER__gameboy_emulat
   OBJECT_DIR = CMakeFiles\gameboy_emulator.dir
   OBJECT_FILE_DIR = CMakeFiles\gameboy_emulator.dir
 
+build CMakeFiles/gameboy_emulator.dir/view/GUIWindow.cpp.obj: CXX_COMPILER__gameboy_emulator_unscanned_Debug C$:/Users/dacma/CLionProjects/gameboy_emulator/view/GUIWindow.cpp || cmake_object_order_depends_target_gameboy_emulator
+  DEP_FILE = CMakeFiles\gameboy_emulator.dir\view\GUIWindow.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  INCLUDES = -isystem C:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/include -isystem C:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/include/SDL2
+  OBJECT_DIR = CMakeFiles\gameboy_emulator.dir
+  OBJECT_FILE_DIR = CMakeFiles\gameboy_emulator.dir\view
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target gameboy_emulator
@@ -64,7 +71,7 @@ build CMakeFiles/gameboy_emulator.dir/main.cpp.obj: CXX_COMPILER__gameboy_emulat
 #############################################
 # Link the executable gameboy_emulator.exe
 
-build gameboy_emulator.exe: CXX_EXECUTABLE_LINKER__gameboy_emulator_Debug CMakeFiles/gameboy_emulator.dir/main.cpp.obj | C$:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/debug/lib/SDL2d.lib C$:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/debug/lib/manual-link/SDL2maind.lib
+build gameboy_emulator.exe: CXX_EXECUTABLE_LINKER__gameboy_emulator_Debug CMakeFiles/gameboy_emulator.dir/main.cpp.obj CMakeFiles/gameboy_emulator.dir/view/GUIWindow.cpp.obj | C$:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/debug/lib/SDL2d.lib C$:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/debug/lib/manual-link/SDL2maind.lib
   FLAGS = -g
   LINK_LIBRARIES = C:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/debug/lib/SDL2d.lib  C:/Users/dacma/.vcpkg-clion/vcpkg/installed/x64-windows/debug/lib/manual-link/SDL2maind.lib  -lshell32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\gameboy_emulator.dir
