@@ -9,6 +9,7 @@ const int GUIWindow::RENDER_FLAGS = SDL_RENDERER_ACCELERATED;
 const int GUIWindow::WINDOW_FLAGS = 0;
 const int GUIWindow::RENDER_WIDTH = 160;
 const int GUIWindow::RENDER_HEIGHT = 144;
+const int GUIWindow::WINDOW_SCALE = 5;
 
 GUIWindow::GUIWindow(const std::string& name) {
     int renderFlags = SDL_RENDERER_ACCELERATED;
@@ -17,7 +18,7 @@ GUIWindow::GUIWindow(const std::string& name) {
         throw ("Unable to initialize SDL: " + std::string(SDL_GetError()));
     }
 
-    window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RENDER_WIDTH, RENDER_HEIGHT, WINDOW_FLAGS);
+    window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RENDER_WIDTH*WINDOW_SCALE, RENDER_HEIGHT*WINDOW_SCALE, WINDOW_FLAGS);
     if (!window) {
         throw ("Failed to create window: " + std::string(SDL_GetError()));
     }
@@ -28,11 +29,13 @@ GUIWindow::GUIWindow(const std::string& name) {
         throw ("Failed to create renderer: " + std::string(SDL_GetError()));
     }
 
-    bitmapBuffer = new char[RENDER_WIDTH * RENDER_HEIGHT];
-    bitmap = new char*[RENDER_HEIGHT];
+    bitmapBuffer = new unsigned char[RENDER_WIDTH * RENDER_HEIGHT];
+    bitmap = new unsigned char*[RENDER_HEIGHT];
     for (int i = 0; i < RENDER_HEIGHT; i++) {
         bitmap[i] = bitmapBuffer + RENDER_WIDTH * i;
     }
+
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, RENDER_WIDTH, RENDER_HEIGHT);
 }
 
 void GUIWindow::pollEvents() {
@@ -48,13 +51,53 @@ void GUIWindow::pollEvents() {
 }
 
 void GUIWindow::render() {
-    SDL_SetRenderDrawColor(renderer, 96, 128, 255, 255);
-    SDL_RenderClear(renderer);
+    unsigned char* pixels;
+    int pitch;
+    SDL_LockTexture(texture, nullptr, (void**) &pixels, &pitch);
+
+    // Do stuff
+    for (int r = 0; r < RENDER_HEIGHT; r++) {
+        for (int c = 0; c < RENDER_WIDTH; c++) {
+            switch (bitmap[r][c]) {
+                case 3:
+                    pixels[0] = 155;
+                    pixels[1] = 188;
+                    pixels[2] = 15;
+                    break;
+                case 2:
+                    pixels[0] = 118;
+                    pixels[1] = 145;
+                    pixels[2] = 13;
+                    break;
+                case 1:
+                    pixels[0] = 48;
+                    pixels[1] = 98;
+                    pixels[2] = 48;
+                    break;
+                case 0:
+                    pixels[0] = 15;
+                    pixels[1] = 56;
+                    pixels[2] = 15;
+                    break;
+                default:
+                    pixels[0] = bitmap[r][c];
+                    pixels[1] = bitmap[r][c];
+                    pixels[2] = bitmap[r][c];
+            }
+            pixels += 3;
+        }
+    }
+
+    SDL_UnlockTexture(texture);
+
+//    SDL_SetRenderDrawColor(renderer, 96, 128, 255, 255);
+//    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
 
     SDL_RenderPresent(renderer);
 }
 
-char **GUIWindow::getBitmap() {
+unsigned char **GUIWindow::getBitmap() {
     return bitmap;
 }
 
