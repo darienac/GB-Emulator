@@ -12,16 +12,23 @@ class GUIWindow {
 private:
     static const int RENDER_FLAGS;
     static const int WINDOW_FLAGS;
+    static const int WINDOW_SCALE;
+
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Texture* texture;
+
+    unsigned char* bitmapBuffer;
+    unsigned char** bitmap;
+public:
     static const int RENDER_WIDTH;
     static const int RENDER_HEIGHT;
 
-    SDL_Renderer* renderer;
-    SDL_Window* window;
-    char* bitmapBuffer;
-    char** bitmap;
-public:
     GUIWindow(const std::string& name);
     void pollEvents();
+    void render();
+
+    unsigned char** getBitmap();
 
     ~GUIWindow();
 };
