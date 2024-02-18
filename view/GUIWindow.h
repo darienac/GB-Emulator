@@ -15,13 +15,18 @@ private:
     static const int RENDER_WIDTH;
     static const int RENDER_HEIGHT;
 
-    SDL_Renderer* renderer;
     SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Texture* texture;
+
     char* bitmapBuffer;
     char** bitmap;
 public:
     GUIWindow(const std::string& name);
     void pollEvents();
+    void render();
+
+    char** getBitmap();
 
     ~GUIWindow();
 };

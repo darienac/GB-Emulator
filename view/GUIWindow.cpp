@@ -47,7 +47,22 @@ void GUIWindow::pollEvents() {
     }
 }
 
+void GUIWindow::render() {
+    SDL_SetRenderDrawColor(renderer, 96, 128, 255, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderPresent(renderer);
+}
+
+char **GUIWindow::getBitmap() {
+    return bitmap;
+}
+
 GUIWindow::~GUIWindow() {
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
     delete[] bitmapBuffer;
     delete[] bitmap;
 }

@@ -8,6 +8,7 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     GUIWindow window("Hello World");
 
+    window.render();
     while (true) {
         window.pollEvents();
     }
