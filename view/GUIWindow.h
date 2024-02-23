@@ -7,6 +7,8 @@
 
 #include <SDL2/SDL_main.h>
 #include <SDL2/SDL.h>
+#include "../controller/IScreen.h"
+#include "../controller/IControls.h"
 
 class GUIWindow {
 private:
@@ -20,6 +22,9 @@ private:
 
     unsigned char* bitmapBuffer;
     unsigned char** bitmap;
+
+    IScreen* screen;
+    IControls* controls;
 public:
     static const int RENDER_WIDTH;
     static const int RENDER_HEIGHT;
