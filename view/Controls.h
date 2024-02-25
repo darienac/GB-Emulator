@@ -22,10 +22,16 @@ private:
         b_B = 128
     };
 
+    static const int JOYSTICK_DEADZONE;
+    static const bool INVERT_AB;
+
     char buttonStates;
+    SDL_GameController* controller;
 
     void setControl(char mask, bool value);
     void handleKey(SDL_Keycode sym, bool pressed);
+    void handleJoystick();
+    void handleControllerButton(SDL_GameControllerButton button, bool pressed);
 public:
     explicit Controls();
 
@@ -39,6 +45,8 @@ public:
     bool select() override;
     bool A() override;
     bool B() override;
+
+    ~Controls() override;
 };
 
 
