@@ -6,13 +6,30 @@
 #define GAMEBOY_EMULATOR_CONTROLS_H
 
 
+#include <SDL2/SDL.h>
 #include "../controller/IControls.h"
 
 class Controls : public IControls {
 private:
-    char* buttonStates;
+    enum Buttons {
+        b_up = 1,
+        b_down = 2,
+        b_left = 4,
+        b_right = 8,
+        b_start = 16,
+        b_select = 32,
+        b_A = 64,
+        b_B = 128
+    };
+
+    char buttonStates;
+
+    void setControl(char mask, bool value);
+    void handleKey(SDL_Keycode sym, bool pressed);
 public:
-    explicit Controls(char* buttonStates);
+    explicit Controls();
+
+    void handleEvent(SDL_Event event);
 
     bool up() override;
     bool down() override;

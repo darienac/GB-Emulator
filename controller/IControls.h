@@ -17,7 +17,7 @@ public:
     virtual bool B() = 0;
     // All of these methods just return true/false if the button is being pressed on a keyboard or controller
 
-    virtual ~IControls() = 0;
+    virtual ~IControls() = default;
 };
 
 #endif //GAMEBOY_EMULATOR_ICONTROLS_H

@@ -12,7 +12,7 @@ public:
     virtual void disableScreen() = 0;
     // Add more virtual methods you would like to be implemented
 
-    virtual ~IScreen() = 0;
+    virtual ~IScreen() = default;
 };
 
 #endif //GAMEBOY_EMULATOR_ISCREEN_H

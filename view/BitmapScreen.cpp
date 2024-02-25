@@ -19,3 +19,5 @@ void BitmapScreen::enableScreen() {
 void BitmapScreen::disableScreen() {
 
 }
+
+BitmapScreen::~BitmapScreen() = default;

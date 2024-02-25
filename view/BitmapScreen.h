@@ -17,6 +17,8 @@ public:
     unsigned char** getBitmap() override;
     void enableScreen() override;
     void disableScreen() override;
+
+    ~BitmapScreen() override;
 };
 
 
