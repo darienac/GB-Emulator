@@ -129,6 +129,11 @@ public:
 
     /// @brief The CPU's registers
     void setRegisters(Registers registers);
+
+    //TODO: do we want more granular control over the registers? like setA, setB, etc?
+
+    /// @brief Resets the CPU to its initial state
+    void RESET();
 };
 
 #endif // GAMEBOY_EMULATOR_CPU_H
