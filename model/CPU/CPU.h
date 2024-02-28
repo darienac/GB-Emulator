@@ -24,6 +24,8 @@ private:
     unsigned int cycleCount = 0;
     // TODO: put other internal state vars here
 
+    Instruction instructionSet = Instruction();
+
     /// @brief The CPU's program counter
     uint16_t PC = 0x100;
     /// @brief The CPU's stack pointer
@@ -96,12 +98,15 @@ private:
         bool C = false;
     } flags;
 
-public:
-    /// @brief The CPU's memory
-    uint8_t memory[0xFFFF];
+    /// @brief Fetch an instruction from memory
+    uint8_t fetch(Bus &bus);
 
+public:
     /// @brief The CPU's cycle count
     unsigned int getCycleCount() const;
+
+    /// @brief The CPU's instruction set
+    Instruction getInstructionSet() const;
 
     /// @brief The CPU's program counter
     uint16_t getPC() const;
@@ -171,11 +176,11 @@ public:
     /// @brief Set the carry flag
     void setCarryFlag(bool C);
 
-    /// @brief Fetch an instruction from memory
-    uint8_t fetch(Bus &bus);
-
     /// @brief Execute an instruction
     void execute(uint8_t opcode, Bus &bus);
+
+    /// @brief Tick the CPU
+    void tick(Bus &bus);
 
     /// @brief Resets the CPU to its initial state
     void RESET();
