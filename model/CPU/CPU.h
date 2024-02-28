@@ -5,7 +5,7 @@
 
 #include <cstdint>
 #include <string>
-#include "Bus.h"
+#include "../Memory/Bus.h"
 
 struct RegisterPair
 {

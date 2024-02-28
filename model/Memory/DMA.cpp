@@ -21,7 +21,7 @@ void DMA::tick() {
         return;
     }
 
-    oamRam->write(byte, bus->read((value * 0x100) + byte));
+//    oamRam->write(byte, bus->read((value * 0x100) + byte));
 
     byte++;
 

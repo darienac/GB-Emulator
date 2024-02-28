@@ -14,6 +14,8 @@ add_executable(gameboy_emulator main.cpp
         view/BitmapScreen.h
         view/Controls.cpp
         view/Controls.h
+        model/CPU/CPU.cpp
+        model/CPU/CPU.h
         model/PPU/PPU.cpp
         model/PPU/PPU.h
         model/Memory/DMA.cpp
@@ -28,7 +30,8 @@ add_executable(gameboy_emulator main.cpp
         model/Memory/HRAM.cpp
         model/Memory/HRAM.h
         model/Memory/WRAM.cpp
-        model/Memory/WRAM.h)
+        model/Memory/WRAM.h
+        utils/DataConversion.cpp)
 
 target_compile_features(gameboy_emulator PRIVATE cxx_std_23)
 target_link_libraries(gameboy_emulator PRIVATE SDL2::SDL2)
