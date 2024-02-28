@@ -11,8 +11,8 @@
 #include "OamRAM.h"
 #include "HRAM.h"
 #include "WRAM.h"
-#include "DMA.h"
 
+class DMA;
 class Bus {
 private:
     Cartridge* cart;
@@ -25,8 +25,8 @@ private:
     //IO*
     DMA* dma;
 public:
-    Bus(Cartridge* cart, VRAM* vRam, OamRAM* oamRam, HRAM* hram, WRAM* wram, DMA* dma/*, CPU* cpu*/) :
-            cart(cart), vRam(vRam), oamRam(oamRam), hRam(hram), dma(dma) /*, cpu(cpu)*/ {}
+    Bus(Cartridge* cart, VRAM* vRam, OamRAM* oamRam, HRAM* hram, WRAM* wRam, DMA* dma) :
+            cart(cart), vRam(vRam), wRam(wRam), oamRam(oamRam), hRam(hram), dma(dma) {}
 
     uint8_t read(uint16_t address);
     void write(uint16_t address, uint8_t value);
