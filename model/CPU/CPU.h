@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <string>
+#include "Bus.h"
 
 struct RegisterPair
 {
@@ -21,7 +22,7 @@ private:
     // TODO: put memory here?
     /// @brief The CPU's cycle count
     unsigned int cycleCount = 0;
-    //TODO: put other internal state vars here
+    // TODO: put other internal state vars here
 
     /// @brief The CPU's program counter
     uint16_t PC = 0x100;
@@ -41,7 +42,7 @@ private:
                 uint8_t A;
             };
             /// @brief The CPU's AF register pair (accumulator and flags)
-            uint16_t AF = 0x01B0; // TODO: double check this with the flag initial values
+            uint16_t AF = 0x01B0;
         };
         union
         {
@@ -82,7 +83,6 @@ private:
     } registers;
 
     /// @brief The CPU's flags. All initial values are from the powerup sequence ref on PanDocs using the DMG model
-    // TODO: do we even need this? I think we can just use the flags in the registers struct?
     struct Flags
     {
         /// @brief Zero flag; is the result of the last operation zero?
@@ -112,6 +112,21 @@ public:
     /// @brief The CPU's registers
     Registers getRegisters() const;
 
+    /// @brief The value of the A register
+    uint8_t getARegister() const;
+    /// @brief The value of the B register
+    uint8_t getBRegister() const;
+    /// @brief The value of the C register
+    uint8_t getCRegister() const;
+    /// @brief The value of the D register
+    uint8_t getDRegister() const;
+    /// @brief The value of the E register
+    uint8_t getERegister() const;
+    /// @brief The value of the H register
+    uint8_t getHRegister() const;
+    /// @brief The value of the L register
+    uint8_t getLRegister() const;
+
     /// @brief The CPU's flags
     Flags getFlags() const;
 
@@ -130,7 +145,37 @@ public:
     /// @brief The CPU's registers
     void setRegisters(Registers registers);
 
-    //TODO: do we want more granular control over the registers? like setA, setB, etc?
+    /// @brief Set the value of the A register
+    void setARegister(uint8_t A);
+    /// @brief Set the value of the B register
+    void setBRegister(uint8_t B);
+    /// @brief Set the value of the C register
+    void setCRegister(uint8_t C);
+    /// @brief Set the value of the D register
+    void setDRegister(uint8_t D);
+    /// @brief Set the value of the E register
+    void setERegister(uint8_t E);
+    /// @brief Set the value of the H register
+    void setHRegister(uint8_t H);
+    /// @brief Set the value of the L register
+    void setLRegister(uint8_t L);
+
+    /// @brief Set the CPU's flags
+    void setFlags(Flags flags);
+    /// @brief Set the zero flag
+    void setZeroFlag(bool Z);
+    /// @brief Set the subtract flag
+    void setSubtractFlag(bool N);
+    /// @brief Set the half carry flag
+    void setHalfCarryFlag(bool H);
+    /// @brief Set the carry flag
+    void setCarryFlag(bool C);
+
+    /// @brief Fetch an instruction from memory
+    uint8_t fetch(Bus &bus);
+
+    /// @brief Execute an instruction
+    void execute(uint8_t opcode, Bus &bus);
 
     /// @brief Resets the CPU to its initial state
     void RESET();
