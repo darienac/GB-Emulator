@@ -7,6 +7,8 @@
 
 #include <SDL2/SDL_main.h>
 #include <SDL2/SDL.h>
+#include "Controls.h"
+#include "BitmapScreen.h"
 
 class GUIWindow {
 private:
@@ -20,15 +22,19 @@ private:
 
     unsigned char* bitmapBuffer;
     unsigned char** bitmap;
+
+    BitmapScreen* screen;
+    Controls* controls;
 public:
     static const int RENDER_WIDTH;
     static const int RENDER_HEIGHT;
 
-    GUIWindow(const std::string& name);
+    explicit GUIWindow(const std::string& name);
     void pollEvents();
     void render();
 
-    unsigned char** getBitmap();
+    IScreen* getScreen();
+    IControls* getControls();
 
     ~GUIWindow();
 };

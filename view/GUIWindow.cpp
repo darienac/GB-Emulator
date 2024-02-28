@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include "GUIWindow.h"
+#include "BitmapScreen.h"
+#include "Controls.h"
 
 const int GUIWindow::RENDER_FLAGS = SDL_RENDERER_ACCELERATED;
 const int GUIWindow::WINDOW_FLAGS = 0;
@@ -36,6 +38,9 @@ GUIWindow::GUIWindow(const std::string& name) {
     }
 
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, RENDER_WIDTH, RENDER_HEIGHT);
+
+    screen = new BitmapScreen(bitmap);
+    controls = new Controls();
 }
 
 void GUIWindow::pollEvents() {
@@ -45,7 +50,7 @@ void GUIWindow::pollEvents() {
             case SDL_QUIT:
                 exit(0);
             default:
-                break;
+                controls->handleEvent(event);
         }
     }
 }
@@ -97,8 +102,12 @@ void GUIWindow::render() {
     SDL_RenderPresent(renderer);
 }
 
-unsigned char **GUIWindow::getBitmap() {
-    return bitmap;
+IScreen *GUIWindow::getScreen() {
+    return screen;
+}
+
+IControls *GUIWindow::getControls() {
+    return controls;
 }
 
 GUIWindow::~GUIWindow() {
@@ -108,4 +117,7 @@ GUIWindow::~GUIWindow() {
 
     delete[] bitmapBuffer;
     delete[] bitmap;
+
+    delete screen;
+    delete controls;
 }
