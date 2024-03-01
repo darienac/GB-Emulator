@@ -176,6 +176,12 @@ public:
     /// @brief Set the carry flag
     void setCarryFlag(bool C);
 
+    /// @brief Process an opcode
+    void processOpCode(uint8_t opCode);
+
+    /// @brief Get the cycle count for an opcode
+    unsigned int getCycleCount(uint8_t opcode) const;
+
     /// @brief Execute an instruction
     void execute(uint8_t opcode, Bus &bus);
 

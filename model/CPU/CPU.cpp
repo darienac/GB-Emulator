@@ -141,6 +141,16 @@ void CPU::setCarryFlag(bool C)
     flags.C = C;
 }
 
+void CPU::processOpCode(uint8_t opCode)
+{
+    instructionSet.processOpCode(opCode, *this);
+}
+
+void CPU::getCycleCount(uint8_t opcode) const
+{
+    return instructionSet.getCycleCount(opcode);
+}
+
 uint8_t CPU::fetch(Bus &bus)
 {
     uint8_t data = bus.read(PC);
