@@ -31,7 +31,10 @@ add_executable(gameboy_emulator main.cpp
         model/Memory/HRAM.h
         model/Memory/WRAM.cpp
         model/Memory/WRAM.h
-        utils/DataConversion.cpp)
+        utils/DataConversion.cpp
+        controller/Emulator.cpp
+        controller/Emulator.h
+)
 
 target_compile_features(gameboy_emulator PRIVATE cxx_std_23)
 target_link_libraries(gameboy_emulator PRIVATE SDL2::SDL2)
