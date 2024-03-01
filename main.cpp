@@ -3,6 +3,7 @@
 #define SDL_MAIN_HANDLED
 
 #include "view/GUIWindow.h"
+#include "controller/Emulator.h"
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
@@ -18,8 +19,9 @@ int main() {
 
     IControls* controls = window.getControls();
 
-    window.render();
+    Emulator emulator(window.getScreen(), controls, "");
     while (true) {
+        emulator.runFrame();
         window.pollEvents();
         bitmap[0][1] = controls->up() ? 3 : 1;
         bitmap[1][0] = controls->left() ? 3 : 1;
@@ -32,5 +34,6 @@ int main() {
         window.render();
         SDL_Delay(15);
     }
+
     return 0;
 }
