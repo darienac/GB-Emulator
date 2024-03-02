@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "Instruction.h"
 
 unsigned int CPU::getCycleCount() const
 {
@@ -58,11 +59,6 @@ uint8_t CPU::getLRegister() const
 CPU::Flags CPU::getFlags() const
 {
     return flags;
-}
-
-uint8_t *CPU::getMemory()
-{
-    return memory;
 }
 
 void CPU::setCycleCount(unsigned int cycleCount)
@@ -145,12 +141,33 @@ void CPU::setCarryFlag(bool C)
     flags.C = C;
 }
 
+void CPU::processOpCode(uint8_t opCode)
+{
+    instructionSet.processOpCode(opCode, *this);
+}
+
+void CPU::getCycleCount(uint8_t opcode) const
+{
+    return instructionSet.getCycleCount(opcode);
+}
+
 uint8_t CPU::fetch(Bus &bus)
 {
     uint8_t data = bus.read(PC);
-    PC++; // increment program counter
     return data;
+}
 
+void CPU::execute(uint8_t opcode, Bus &bus)
+{
+    instructionSet.processOpCode(opcode);
+    PC++; // increment program counter
+}
+
+void CPU::tick(Bus &bus)
+{
+    uint8_t opcode = fetch(bus);
+    execute(opcode, bus);
+    cycleCount += instructionSet.getCycleCount(opcode);
 }
 
 void CPU::RESET()
@@ -170,11 +187,4 @@ void CPU::RESET()
     flags.N = false;
     flags.H = false;
     flags.C = false;
-
-    // reset memory
-    // TODO: idk if we will do this from CPU or from memory class
-    for (int i = 0; i < 0xFFFF; ++i)
-    {
-        memory[i] = 0;
-    }
 }
