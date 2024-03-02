@@ -18,10 +18,11 @@ private:
     uint8_t value;
     uint8_t startDelay;
 
-    Bus* bus;
+//    Bus* bus;
     OamRAM* oamRam;
 public:
-    DMA(Bus* bus, OamRAM* oamRam) : bus(bus), oamRam(oamRam) {}
+//    DMA(Bus* bus, OamRAM* oamRam) : bus(bus), oamRam(oamRam) {}
+    DMA(OamRAM* oamRam) : oamRam(oamRam) {}
 
     void start(uint8_t start);
     void tick();
