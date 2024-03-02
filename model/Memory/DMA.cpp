@@ -3,6 +3,8 @@
 //
 
 #include "DMA.h"
+#include "OamRAM.h"
+#include "Bus.h"
 
 void DMA::start(uint8_t start) {
     active = true;
