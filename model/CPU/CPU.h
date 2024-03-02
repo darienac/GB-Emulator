@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <string>
 #include "../Memory/Bus.h"
+#include "Instruction.h"
 
 struct RegisterPair
 {

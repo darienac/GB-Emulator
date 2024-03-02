@@ -146,7 +146,7 @@ void CPU::processOpCode(uint8_t opCode)
     instructionSet.processOpCode(opCode, *this);
 }
 
-void CPU::getCycleCount(uint8_t opcode) const
+unsigned int CPU::getCycleCount(uint8_t opcode) const
 {
     return instructionSet.getCycleCount(opcode);
 }
@@ -159,7 +159,7 @@ uint8_t CPU::fetch(Bus &bus)
 
 void CPU::execute(uint8_t opcode, Bus &bus)
 {
-    instructionSet.processOpCode(opcode);
+    instructionSet.processOpCode(opcode, *this);
     PC++; // increment program counter
 }
 

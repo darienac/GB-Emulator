@@ -29,7 +29,7 @@ public:
      * Pass in relative file path,
      * loads the byte data into cartData
      */
-    Cartridge(string fileName);
+    Cartridge(const string& fileName);
 
     /*
      * Prints simple debugging info

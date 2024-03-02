@@ -16,6 +16,8 @@ add_executable(gameboy_emulator main.cpp
         view/Controls.h
         model/CPU/CPU.cpp
         model/CPU/CPU.h
+        model/CPU/Instruction.cpp
+        model/CPU/Instruction.h
         model/PPU/PPU.cpp
         model/PPU/PPU.h
         model/Memory/DMA.cpp

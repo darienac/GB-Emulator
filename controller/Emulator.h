@@ -27,6 +27,8 @@ private:
     WRAM* wRam;
     DMA* dma;
     Bus* bus;
+    LCD* lcd;
+    IO* io;
 public:
     Emulator(IScreen* screen, IControls* controls, const std::string& cartPath);
 
