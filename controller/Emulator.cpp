@@ -14,7 +14,9 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     hRam = new HRAM();
     wRam = new WRAM();
     dma = new DMA(oamRam);
-    bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma);
+    lcd = new LCD(dma);
+    io = new IO(lcd);
+    bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
 }
 
 void Emulator::runFrame() {
@@ -31,5 +33,7 @@ Emulator::~Emulator() {
     delete hRam;
     delete wRam;
     delete dma;
+    delete lcd;
+    delete io;
     delete bus;
 }

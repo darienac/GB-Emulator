@@ -172,7 +172,7 @@ static const std::map<char, std::string> LIC_CODE = {
 };
 
 
-Cartridge::Cartridge(std::string fileName) {
+Cartridge::Cartridge(const std::string& fileName) {
     ifstream inputFile(fileName);
 
     if (!inputFile.is_open()) {
