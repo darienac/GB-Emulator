@@ -102,6 +102,13 @@ private:
     /// @brief Fetch an instruction from memory
     uint8_t fetch(Bus &bus);
 
+    // functions to process each opcode
+    void process01(Bus &bus);
+    void process02(Bus &bus);
+    void process03(Bus &bus);
+    void process04(Bus &bus);
+    void process05(Bus &bus);
+
 public:
     /// @brief The CPU's cycle count
     unsigned int getCycleCount() const;
@@ -165,6 +172,12 @@ public:
     void setHRegister(uint8_t H);
     /// @brief Set the value of the L register
     void setLRegister(uint8_t L);
+    /// @brief Set the value of the BC register pair
+    void setBCRegister(uint16_t BC);
+    /// @brief Set the value of the DE register pair
+    void setDERegister(uint16_t DE);
+    /// @brief Set the value of the HL register pair
+    void setHLRegister(uint16_t HL);
 
     /// @brief Set the CPU's flags
     void setFlags(Flags flags);
@@ -191,6 +204,10 @@ public:
 
     /// @brief Resets the CPU to its initial state
     void RESET();
+    /// @brief Process the given opcode and execute the instruction
+    void processOpCode(uint8_t opcode, Bus &bus);
+    /// @brief Get the cycle count for the given opcode
+    unsigned int getCycleCount(uint8_t opcode) const;
 };
 
 #endif // GAMEBOY_EMULATOR_CPU_H

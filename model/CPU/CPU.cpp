@@ -116,6 +116,21 @@ void CPU::setLRegister(uint8_t L)
     registers.HL = (registers.HL & 0x00FF) | (L << 8);
 }
 
+void CPU::setBCRegister(uint16_t BC)
+{
+    registers.BC = BC;
+}
+
+void CPU::setDERegister(uint16_t DE)
+{
+    registers.DE = DE;
+}
+
+void CPU::setHLRegister(uint16_t HL)
+{
+    registers.HL = HL;
+}
+
 void CPU::setFlags(Flags flags)
 {
     this->flags = flags;
@@ -159,14 +174,13 @@ uint8_t CPU::fetch(Bus &bus)
 
 void CPU::execute(uint8_t opcode, Bus &bus)
 {
-    instructionSet.processOpCode(opcode, *this);
-    PC++; // increment program counter
+    instructionSet.processOpCode(opcode);
 }
 
 void CPU::tick(Bus &bus)
 {
     uint8_t opcode = fetch(bus);
-    execute(opcode, bus);
+    instructionSet.processOpCode(opcode, bus);
     cycleCount += instructionSet.getCycleCount(opcode);
 }
 
