@@ -1,21 +1,25 @@
 //
-// Created by Tyson Peterson on 2/28/24.
+// Created by BYU Rental on 3/1/2024.
 //
 
 #ifndef GAMEBOY_EMULATOR_IO_H
 #define GAMEBOY_EMULATOR_IO_H
 
 #include <cstdint>
+#include "Gamepad.h"
 #include "../PPU/LCD.h"
 
-class IO {
+class IO{
 private:
+    Gamepad* gamepad;
     LCD* lcd;
-public:
-    IO(LCD* lcd) : lcd(lcd) { }
-    uint8_t read(uint16_t address);
-    void write(uint16_t address, uint8_t value);
-};
 
+public:
+    IO(LCD* lcd, Gamepad* gamepad) : lcd(lcd), gamepad(gamepad){}
+
+    uint8_t io_read(uint16_t address);
+
+    void io_write(uint16_t address, uint8_t value);
+};
 
 #endif //GAMEBOY_EMULATOR_IO_H
