@@ -16,6 +16,9 @@ public:
     void processOpCode(uint8_t opcode, CPU& cpu);
     /// @brief Get the cycle count for the given opcode
     unsigned int getCycleCount(uint8_t opcode) const;
+
+    //make hashmap of opcodes to instructions
+    // std::unordered_map<uint8_t, std::function<void(CPU&)>> instructions;
 };
 
 #endif // GAMEBOY_EMULATOR_INSTRUCTION_H
