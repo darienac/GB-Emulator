@@ -17,10 +17,25 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     lcd = new LCD(dma);
     io = new IO(lcd);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
+
+    targetCPUDotCount = cpu->getCycleCount();
+
+    cart->printHeaderInfo();
 }
 
 void Emulator::runFrame() {
-    // TODO: make this do stuff
+//    cpu->tick(*bus);
+//    ppu->ppu_tick();
+    for (unsigned int r = 0; r < 144; r++) {
+        ppuMode = OAM_SCAN;
+        runForDots(80);
+        ppuMode = DRAW_PIXELS;
+        runForDots(172); // Certain operations make drawing take longer, but not considering that for now
+        ppuMode = HBLANK;
+        runForDots(204); // differs based on length of DRAW_PIXELS mode
+    }
+    ppuMode = VBLANK;
+    runForDots(4560);
 }
 
 Emulator::~Emulator() {
@@ -36,4 +51,12 @@ Emulator::~Emulator() {
     delete lcd;
     delete io;
     delete bus;
+}
+
+void Emulator::runForDots(unsigned int dots) {
+//    ppu->ppu_tick();
+    targetCPUDotCount += dots;
+    while (cpu->getCycleCount() < targetCPUDotCount) {
+        cpu->tick(*bus);
+    }
 }

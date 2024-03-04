@@ -12,6 +12,13 @@
 #include "../model/PPU/PPU.h"
 
 class Emulator {
+public:
+    enum PPU_Mode {
+        HBLANK,
+        VBLANK,
+        OAM_SCAN,
+        DRAW_PIXELS
+    };
 private:
     // view interfaces
     IScreen* screen;
@@ -29,6 +36,12 @@ private:
     Bus* bus;
     LCD* lcd;
     IO* io;
+
+    // runtime state
+    PPU_Mode ppuMode;
+    unsigned int targetCPUDotCount;
+
+    void runForDots(unsigned int dots);
 public:
     Emulator(IScreen* screen, IControls* controls, const std::string& cartPath);
 

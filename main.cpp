@@ -6,8 +6,7 @@
 #include "controller/Emulator.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    GUIWindow window("Hello World");
+    GUIWindow window("GB Emulator");
 
     unsigned char** bitmap = window.getScreen()->getBitmap();
     for (int r = 0; r < GUIWindow::RENDER_HEIGHT; r++) {
