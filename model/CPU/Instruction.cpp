@@ -1412,7 +1412,7 @@ void CPU::process01(Bus &bus)
     uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
     // load immediate value into the BC register pair
     setBCRegister(immediateValue);
-    // increment the program counter
+
     setPC(PC + 3);
 }
 
@@ -1421,7 +1421,7 @@ void CPU::process02(Bus &bus)
     // get the location in memory from the BC register pair
     uint16_t address = bus.read(registers.BC); // TODO: is this right?
     bus.write(address, registers.A);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1429,7 +1429,7 @@ void CPU::process03(Bus &bus)
 {
     // increment the BC register pair
     setBCRegister(registers.BC + 1);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1443,7 +1443,7 @@ void CPU::process04(Bus &bus)
     setSubtractFlag(false);
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.B & 0x0F) == 0);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1457,7 +1457,7 @@ void CPU::process05(Bus &bus)
     setSubtractFlag(true);
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.B & 0x0F) == 0);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1465,7 +1465,7 @@ void CPU::process06(Bus &bus)
 {
     // load the 8-bit immediate value into the B register
     setBRegister(bus.read(PC + 1));
-    // increment the program counter
+
     setPC(PC + 2);
 }
 
@@ -1479,7 +1479,7 @@ void CPU::process07(Bus &bus)
     // clear the subtract and half-carry flags
     setSubtractFlag(false);
     setHalfCarryFlag(false);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1490,7 +1490,7 @@ void CPU::process08(Bus &bus)
     // load immediate value into the memory address specified by the immediate value
     bus.write(immediateValue, SP & 0x00FF);
     bus.write(immediateValue + 1, (SP & 0xFF00) >> 8);
-    // increment the program counter
+
     setPC(PC + 3);
 }
 
@@ -1503,7 +1503,7 @@ void CPU::process09(Bus &bus)
     setSubtractFlag(false);
     setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.BC & 0x0FFF));
     setCarryFlag(result > 0xFFFF);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1512,7 +1512,7 @@ void CPU::process0A(Bus &bus)
     // get the location in memory from the BC register pair
     uint16_t address = bus.read(registers.BC);
     setARegister(bus.read(address));
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1520,7 +1520,7 @@ void CPU::process0B(Bus &bus)
 {
     // decrement the BC register pair
     setBCRegister(registers.BC - 1);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1534,7 +1534,7 @@ void CPU::process0C(Bus &bus)
     setSubtractFlag(false);
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.C & 0x0F) == 0);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1546,7 +1546,7 @@ void CPU::process0D(Bus &bus)
     setZeroFlag(registers.C == 0);
     setSubtractFlag(true);
     setHalfCarryFlag((registers.C & 0x0F) == 0);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1554,7 +1554,7 @@ void CPU::process0E(Bus &bus)
 {
     // load the 8-bit immediate value into the C register
     setCRegister(bus.read(PC + 1));
-    // increment the program counter
+
     setPC(PC + 2);
 }
 
@@ -1568,7 +1568,7 @@ void CPU::process0F(Bus &bus)
     // clear the subtract and half-carry flags
     setSubtractFlag(false);
     setHalfCarryFlag(false);
-    // increment the program counter
+
     setPC(PC + 1);
 }
 
@@ -1576,7 +1576,6 @@ void CPU::process10(Bus &bus)
 {
     // STOP instruction TODO: how?
 
-    // increment the program counter
     setPC(PC + 2);
 }
 
@@ -1586,78 +1585,141 @@ void CPU::process11(Bus &bus)
     uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
     // load immediate value into the DE register pair
     setDERegister(immediateValue);
-    // increment the program counter
     setPC(PC + 3);
 }
 
 void CPU::process12(Bus &bus)
 {
-    // Stub for opcode 0x12
+    // get the location in memory from the DE register pair and load the A register into it
+    bus.write(registers.DE, registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process13(Bus &bus)
 {
-    // Stub for opcode 0x13
+    // increment the DE register pair
+    setDERegister(registers.DE + 1);
+    setPC(PC + 1);
 }
 
 void CPU::process14(Bus &bus)
 {
-    // Stub for opcode 0x14
+    // increment the D register
+    setDRegister(registers.D + 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.D == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.D & 0x0F) == 0);
+
+    setPC(PC + 1);
 }
 
 void CPU::process15(Bus &bus)
 {
-    // Stub for opcode 0x15
+    // decrement the D register
+    setDRegister(registers.D - 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.D == 0);
+    // set the subtract flag
+    setSubtractFlag(true);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.D & 0x0F) == 0);
+
+    setPC(PC + 1);
 }
 
 void CPU::process16(Bus &bus)
 {
-    // Stub for opcode 0x16
+    // load the 8-bit immediate value into the D register
+    setDRegister(bus.read(PC + 1));
+
+    setPC(PC + 2);
 }
 
+// TODO: RLA needs a check for correctness
 void CPU::process17(Bus &bus)
 {
-    // Stub for opcode 0x17
+    // shift the A register left by one bit and set the carry flag to the value of the leftmost bit
+    setARegister(registers.A << 1);
+    setCarryFlag((registers.A & 0x80) != 0);
+    setPC(PC + 1);
 }
 
 void CPU::process18(Bus &bus)
 {
-    // Stub for opcode 0x18
+    // add the 8-bit immediate value to the program counter
+    int8_t offset = (int8_t)bus.read(PC + 1);
+    setPC(PC + offset + 2);
 }
 
 void CPU::process19(Bus &bus)
 {
-    // Stub for opcode 0x19
+    // add the value of the DE register pair to the HL register pair
+    uint16_t result = registers.HL + registers.DE;
+    setHLRegister(result);
+    // update flags
+    setSubtractFlag(false);
+    setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.DE & 0x0FFF));
+    setCarryFlag(result > 0xFFFF);
+    setPC(PC + 1);
 }
 
 void CPU::process1A(Bus &bus)
 {
-    // Stub for opcode 0x1A
+    // get the location in memory from the DE register pair and load the value into the A register
+    setARegister(bus.read(registers.DE));
+    setPC(PC + 1);
 }
 
 void CPU::process1B(Bus &bus)
 {
-    // Stub for opcode 0x1B
+    // decrement the DE register pair
+    setDERegister(registers.DE - 1);
+    setPC(PC + 1);
 }
 
 void CPU::process1C(Bus &bus)
 {
-    // Stub for opcode 0x1C
+    // increment the E register
+    setERegister(registers.E + 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.E == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.E & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process1D(Bus &bus)
 {
-    // Stub for opcode 0x1D
+    // decrement the E register
+    setERegister(registers.E - 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.E == 0);
+    // set the subtract flag
+    setSubtractFlag(true);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.E & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process1E(Bus &bus)
 {
-    // Stub for opcode 0x1E
+    // load the 8-bit immediate value into the E register
+    setERegister(bus.read(PC + 1));
+    setPC(PC + 2);
 }
 
+// TODO: check RRA for correctness
 void CPU::process1F(Bus &bus)
 {
-    // Stub for opcode 0x1F
+    // shift the A register right by one bit and set the carry flag to the value of the rightmost bit
+    setARegister(registers.A >> 1);
+    setCarryFlag((registers.A & 0x01) != 0);
+    setPC(PC + 1);
 }
 void CPU::process20(Bus &bus)
 {
