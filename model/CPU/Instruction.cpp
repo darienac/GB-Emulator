@@ -1245,6 +1245,160 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         return 8;
     case 0x03:
         return 8;
+    case 0x04:
+        return 4;
+    case 0x05:
+        return 4;
+    case 0x06:
+        return 8;
+    case 0x07:
+        return 4;
+    case 0x08:
+        return 20;
+    case 0x09:
+        return 8;
+    case 0x0A:
+        return 8;
+    case 0x0B:
+        return 8;
+    case 0x0C:
+        return 4;
+    case 0x0D:
+        return 4;
+    case 0x0E:
+        return 8;
+    case 0x0F:
+        return 8;
+    case 0x10:
+        return 20;
+    case 0x11:
+        return 12;
+    case 0x12:
+        return 8;
+    case 0x13:
+        return 8;
+    case 0x14:
+        return 4;
+    case 0x15:
+        return 4;
+    case 0x16:
+        return 8;
+    case 0x17:
+        return 4;
+    case 0x18:
+        return 12;
+    case 0x19:
+        return 8;
+    case 0x1A:
+        return 8;
+    case 0x1B:
+        return 8;
+    case 0x1C:
+        return 4;
+    case 0x1D:
+        return 4;
+    case 0x1E:
+        return 8;
+    case 0x1F:
+        return 8;
+    case 0x20:
+        return 8;
+    case 0x21:
+        return 12;
+    case 0x22:
+        return 8;
+    case 0x23:
+        return 8;
+    case 0x24:
+        return 4;
+    case 0x25:
+        return 4;
+    case 0x26:
+        return 8;
+    case 0x27:
+        return 4;
+    case 0x28:
+        return 8;
+    case 0x29:
+        return 8;
+    case 0x2A:
+        return 8;
+    case 0x2B:
+        return 8;
+    case 0x2C:
+        return 4;
+    case 0x2D:
+        return 4;
+    case 0x2E:
+        return 8;
+    case 0x2F:
+        return 8;
+    case 0x30:
+        return 8;
+    case 0x31:
+        return 12;
+    case 0x32:
+        return 8;
+    case 0x33:
+        return 8;
+    case 0x34:
+        return 12;
+    case 0x35:
+        return 12;
+    case 0x36:
+        return 12;
+    case 0x37:
+        return 8;
+    case 0x38:
+        return 8;
+    case 0x39:
+        return 8;
+    case 0x3A:
+        return 8;
+    case 0x3B:
+        return 8;
+    case 0x3C:
+        return 4;
+    case 0x3D:
+        return 4;
+    case 0x3E:
+        return 8;
+    case 0x3F:
+        return 8;
+    case 0x40:
+        return 4;
+    case 0x41:
+        return 4;
+    case 0x42:
+        return 4;
+    case 0x43:
+        return 4;
+    case 0x44:
+        return 4;
+    case 0x45:
+        return 4;
+    case 0x46:
+        return 8;
+    case 0x47:
+        return 4;
+    case 0x48:
+        return 4;
+    case 0x49:
+        return 4;
+    case 0x4A:
+        return 4;
+    case 0x4B:
+        return 4;
+    case 0x4C:
+        return 4;
+    case 0x4D:
+        return 4;
+    case 0x4E:
+        return 8;
+    case 0x4F:
+        return 8;
+    case 0x50:
+        return 4;
     }
 
     printf("Unknown opcode: 0x%02X\n", opcode);
@@ -1273,77 +1427,167 @@ void CPU::process02(Bus &bus)
 
 void CPU::process03(Bus &bus)
 {
-    // Stub for opcode 0x03
+    // increment the BC register pair
+    setBCRegister(registers.BC + 1);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process04(Bus &bus)
 {
-    // Stub for opcode 0x04
+    // increment the B register
+    setBRegister(registers.B + 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.B == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.B & 0x0F) == 0);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process05(Bus &bus)
 {
-    // Stub for opcode 0x05
+    // decrement the B register
+    setBRegister(registers.B - 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.B == 0);
+    // set the subtract flag
+    setSubtractFlag(true);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.B & 0x0F) == 0);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process06(Bus &bus)
 {
-    // Stub for opcode 0x06
+    // load the 8-bit immediate value into the B register
+    setBRegister(bus.read(PC + 1));
+    // increment the program counter
+    setPC(PC + 2);
 }
 
+// TODO: is this right? RLCA is kinda confusing
 void CPU::process07(Bus &bus)
 {
-    // Stub for opcode 0x07
+    // shift the A register left by one bit
+    setARegister(registers.A << 1);
+    // set the carry flag if the leftmost bit was set
+    setCarryFlag((registers.A & 0x80) != 0);
+    // clear the subtract and half-carry flags
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process08(Bus &bus)
 {
-    // Stub for opcode 0x08
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load immediate value into the memory address specified by the immediate value
+    bus.write(immediateValue, SP & 0x00FF);
+    bus.write(immediateValue + 1, (SP & 0xFF00) >> 8);
+    // increment the program counter
+    setPC(PC + 3);
 }
 
 void CPU::process09(Bus &bus)
 {
-    // Stub for opcode 0x09
+    uint16_t result = registers.HL + registers.BC;
+    // load the result into the HL register pair
+    setHLRegister(result);
+    // update flags
+    setSubtractFlag(false);
+    setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.BC & 0x0FFF));
+    setCarryFlag(result > 0xFFFF);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process0A(Bus &bus)
 {
-    // Stub for opcode 0x0A
+    // get the location in memory from the BC register pair
+    uint16_t address = bus.read(registers.BC);
+    setARegister(bus.read(address));
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process0B(Bus &bus)
 {
-    // Stub for opcode 0x0B
+    // decrement the BC register pair
+    setBCRegister(registers.BC - 1);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process0C(Bus &bus)
 {
-    // Stub for opcode 0x0C
+    // increment the C register
+    setCRegister(registers.C + 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.C == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.C & 0x0F) == 0);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process0D(Bus &bus)
 {
-    // Stub for opcode 0x0D
+    // decrement C register
+    setCRegister(registers.C - 1);
+    // update flags
+    setZeroFlag(registers.C == 0);
+    setSubtractFlag(true);
+    setHalfCarryFlag((registers.C & 0x0F) == 0);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process0E(Bus &bus)
 {
-    // Stub for opcode 0x0E
+    // load the 8-bit immediate value into the C register
+    setCRegister(bus.read(PC + 1));
+    // increment the program counter
+    setPC(PC + 2);
 }
 
+// TODO: is this right? RRCA
 void CPU::process0F(Bus &bus)
 {
-    // Stub for opcode 0x0F
+    // shift the A register right by one bit
+    setARegister(registers.A >> 1);
+    // set the carry flag if the rightmost bit was set
+    setCarryFlag((registers.A & 0x01) != 0);
+    // clear the subtract and half-carry flags
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    // increment the program counter
+    setPC(PC + 1);
 }
 
 void CPU::process10(Bus &bus)
 {
-    // Stub for opcode 0x10
+    // STOP instruction TODO: how?
+
+    // increment the program counter
+    setPC(PC + 2);
 }
 
 void CPU::process11(Bus &bus)
 {
-    // Stub for opcode 0x11
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load immediate value into the DE register pair
+    setDERegister(immediateValue);
+    // increment the program counter
+    setPC(PC + 3);
 }
 
 void CPU::process12(Bus &bus)
