@@ -156,9 +156,9 @@ void CPU::setCarryFlag(bool C)
     flags.C = C;
 }
 
-void CPU::processOpCode(uint8_t opCode)
+void CPU::processOpCode(uint8_t opCode, Bus& bus)
 {
-    instructionSet.processOpCode(opCode, *this);
+    instructionSet.processOpCode(opCode, bus);
 }
 
 unsigned int CPU::getCycleCount(uint8_t opcode) const
@@ -174,7 +174,7 @@ uint8_t CPU::fetch(Bus &bus)
 
 void CPU::execute(uint8_t opcode, Bus &bus)
 {
-    instructionSet.processOpCode(opcode);
+    instructionSet.processOpCode(opcode, bus);
 }
 
 void CPU::tick(Bus &bus)
