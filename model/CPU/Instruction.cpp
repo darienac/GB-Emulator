@@ -1723,121 +1723,247 @@ void CPU::process1F(Bus &bus)
 }
 void CPU::process20(Bus &bus)
 {
-    // Stub for opcode 0x20
+    // fetch the 8-bit immediate value
+    int8_t offset = (int8_t)bus.read(PC + 1);
+    // if the zero flag is not set, add the offset to the program counter
+    if (!getZeroFlag())
+    {
+        setPC(PC + offset + 2);
+    }
+    else
+    {
+        setPC(PC + 2);
+    }
 }
 
 void CPU::process21(Bus &bus)
 {
-    // Stub for opcode 0x21
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load immediate value into the HL register pair
+    setHLRegister(immediateValue);
+    setPC(PC + 3);
 }
 
+// TODO: double check on LD HL+
 void CPU::process22(Bus &bus)
 {
-    // Stub for opcode 0x22
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load the value of the HL register pair into the memory address specified by the immediate value
+    bus.write(immediateValue, registers.L);
+    bus.write(immediateValue + 1, registers.H);
+    setPC(PC + 3);
 }
 
 void CPU::process23(Bus &bus)
 {
-    // Stub for opcode 0x23
+    // increment the HL register pair
+    setHLRegister(registers.HL + 1);
+    setPC(PC + 1);
 }
 
 void CPU::process24(Bus &bus)
 {
-    // Stub for opcode 0x24
+    // increment the H register
+    setHRegister(registers.H + 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.H == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.H & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process25(Bus &bus)
 {
-    // Stub for opcode 0x25
+    // decrement the H register
+    setHRegister(registers.H - 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.H == 0);
+    // set the subtract flag
+    setSubtractFlag(true);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.H & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process26(Bus &bus)
 {
-    // Stub for opcode 0x26
+    // load the 8-bit immediate value into the H register
+    setHRegister(bus.read(PC + 1));
+    setPC(PC + 2);
 }
 
+// TODO: how to do DAA? what even is that?
 void CPU::process27(Bus &bus)
 {
-    // Stub for opcode 0x27
+    printf("Opcode 0x27 not implemented\n");
 }
 
 void CPU::process28(Bus &bus)
 {
-    // Stub for opcode 0x28
+    // fetch the 8-bit immediate value
+    int8_t offset = (int8_t)bus.read(PC + 1);
+    // if the zero flag is set, add the offset to the program counter
+    if (getZeroFlag())
+    {
+        setPC(PC + offset + 2);
+    }
+    else
+    {
+        setPC(PC + 2);
+    }
 }
 
 void CPU::process29(Bus &bus)
 {
-    // Stub for opcode 0x29
+    // add the value of the HL register pair to itself
+    uint16_t result = registers.HL + registers.HL;
+    // load the result into the HL register pair
+    setHLRegister(result);
+    // update flags
+    setSubtractFlag(false);
+    setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.HL & 0x0FFF));
+    setCarryFlag(result > 0xFFFF);
+    setPC(PC + 1);
 }
 
+// TODO: check on LD HL+
 void CPU::process2A(Bus &bus)
 {
-    // Stub for opcode 0x2A
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load the value of the memory address specified by the immediate value into the HL register pair
+    setHLRegister(bus.read(immediateValue) | (bus.read(immediateValue + 1) << 8));
+    setPC(PC + 3);
 }
 
 void CPU::process2B(Bus &bus)
 {
-    // Stub for opcode 0x2B
+    // decrement the HL register pair
+    setHLRegister(registers.HL - 1);
+    setPC(PC + 1);
 }
 
 void CPU::process2C(Bus &bus)
 {
-    // Stub for opcode 0x2C
+    // increment the L register
+    setLRegister(registers.L + 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.L == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.L & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process2D(Bus &bus)
 {
-    // Stub for opcode 0x2D
+    // decrement the L register
+    setLRegister(registers.L - 1);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.L == 0);
+    // set the subtract flag
+    setSubtractFlag(true);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.L & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process2E(Bus &bus)
 {
-    // Stub for opcode 0x2E
+    // load the 8-bit immediate value into the L register
+    setLRegister(bus.read(PC + 1));
+    setPC(PC + 2);
 }
 
+// TODO: check on CPL
 void CPU::process2F(Bus &bus)
 {
-    // Stub for opcode 0x2F
+    // complement the A register
+    setARegister(~registers.A);
+    // set the subtract and half-carry flags
+    setSubtractFlag(true);
+    setHalfCarryFlag(true);
+    setPC(PC + 1);
 }
-
-// CPU::process functions for opcodes 0x30 through 0xFE...
 
 void CPU::process30(Bus &bus)
 {
-    // Stub for opcode 0x30
+    // fetch the 8-bit immediate value
+    int8_t offset = (int8_t)bus.read(PC + 1);
+    // if the carry flag is not set, add the offset to the program counter
+    if (!getCarryFlag())
+    {
+        setPC(PC + offset + 2);
+    }
+    else
+    {
+        setPC(PC + 2);
+    }
 }
 
 void CPU::process31(Bus &bus)
 {
-    // Stub for opcode 0x31
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load immediate value into the stack pointer
+    setSP(immediateValue);
+    setPC(PC + 3);
 }
 
+// TODO: check on HL-
 void CPU::process32(Bus &bus)
 {
-    // Stub for opcode 0x32
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load the value of the A register into the memory address specified by the immediate value
+    bus.write(immediateValue, registers.A);
+    setPC(PC + 3);
 }
 
 void CPU::process33(Bus &bus)
 {
-    // Stub for opcode 0x33
+    // increment the stack pointer
+    setSP(SP + 1);
+    setPC(PC + 1);
 }
 
 void CPU::process34(Bus &bus)
 {
-    // Stub for opcode 0x34
+    // increment the value at the memory address specified by the HL register pair
+    uint8_t value = bus.read(registers.HL);
+    bus.write(registers.HL, value + 1);
+    // update flags
+    setZeroFlag(value == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag((value & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process35(Bus &bus)
 {
-    // Stub for opcode 0x35
+    // decrement the value at the memory address specified by the HL register pair
+    uint8_t value = bus.read(registers.HL);
+    bus.write(registers.HL, value - 1);
+    // update flags
+    setZeroFlag(value == 0);
+    setSubtractFlag(true);
+    setHalfCarryFlag((value & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process36(Bus &bus)
 {
-    // Stub for opcode 0x36
+    // load the 8-bit immediate value into the memory address specified by the HL register pair
+    bus.write(registers.HL, bus.read(PC + 1));
+    setPC(PC + 2);
 }
 
+// TODO: what the hay is SCF?
 void CPU::process37(Bus &bus)
 {
     // Stub for opcode 0x37
@@ -1845,127 +1971,194 @@ void CPU::process37(Bus &bus)
 
 void CPU::process38(Bus &bus)
 {
-    // Stub for opcode 0x38
+    // fetch the 8-bit immediate value
+    int8_t offset = (int8_t)bus.read(PC + 1);
+    // if the carry flag is set, add the offset to the program counter
+    if (getCarryFlag())
+    {
+        setPC(PC + offset + 2);
+    }
+    else
+    {
+        setPC(PC + 2);
+    }
 }
 
 void CPU::process39(Bus &bus)
 {
-    // Stub for opcode 0x39
+    // add the value of the stack pointer to the HL register pair
+    uint16_t result = registers.HL + SP;
+    // load the result into the HL register pair
+    setHLRegister(result);
+    // update flags
+    setSubtractFlag(false);
+    setHalfCarryFlag((registers.HL & 0x0FFF) < (SP & 0x0FFF));
+    setCarryFlag(result > 0xFFFF);
+    setPC(PC + 1);
 }
 
+// TODO: check on HL-
 void CPU::process3A(Bus &bus)
 {
-    // Stub for opcode 0x3A
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    // load the value of the memory address specified by the immediate value into the A register
+    setARegister(bus.read(immediateValue));
+    setPC(PC + 3);
 }
 
 void CPU::process3B(Bus &bus)
 {
-    // Stub for opcode 0x3B
+    // decrement the stack pointer
+    setSP(SP - 1);
+    setPC(PC + 1);
 }
 
 void CPU::process3C(Bus &bus)
 {
-    // Stub for opcode 0x3C
+    // increment A
+    setARegister(registers.A + 1);
+    setZeroFlag(registers.A == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process3D(Bus &bus)
 {
-    // Stub for opcode 0x3D
+    // decrement A
+    setARegister(registers.A - 1);
+    setZeroFlag(registers.A == 0);
+    setSubtractFlag(true);
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setPC(PC + 1);
 }
 
 void CPU::process3E(Bus &bus)
 {
-    // Stub for opcode 0x3E
+    // load the 8-bit immediate value into the A register
+    setARegister(bus.read(PC + 1));
+    setPC(PC + 2);
 }
 
+// TODO: check on CCF
 void CPU::process3F(Bus &bus)
 {
-    // Stub for opcode 0x3F
+    // complement the carry flag
+    setCarryFlag(!getCarryFlag());
+    setPC(PC + 1);
 }
 
 void CPU::process40(Bus &bus)
 {
-    // Stub for opcode 0x40
-}
-
-void CPU::process40(Bus &bus)
-{
-    // Stub for opcode 0x40
+    // load the B register into the B register
+    setBRegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process41(Bus &bus)
 {
-    // Stub for opcode 0x41
+    // load the C register into the B register
+    setBRegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process42(Bus &bus)
 {
-    // Stub for opcode 0x42
+    // load the D register into the B register
+    setBRegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process43(Bus &bus)
 {
-    // Stub for opcode 0x43
+    // load the E register into the B register
+    setBRegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process44(Bus &bus)
 {
-    // Stub for opcode 0x44
+    // load the H register into the B register
+    setBRegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process45(Bus &bus)
 {
-    // Stub for opcode 0x45
+    // load the L register into the B register
+    setBRegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process46(Bus &bus)
 {
-    // Stub for opcode 0x46
+    // load the value at the memory address specified by the HL register pair into the B register
+    setBRegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process47(Bus &bus)
 {
-    // Stub for opcode 0x47
+    // load the A register into the B register
+    setBRegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process48(Bus &bus)
 {
-    // Stub for opcode 0x48
+    // load the B register into the C register
+    setCRegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process49(Bus &bus)
 {
-    // Stub for opcode 0x49
+    // load the C register into the C register
+    setCRegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process4A(Bus &bus)
 {
-    // Stub for opcode 0x4A
+    // load the D register into the C register
+    setCRegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process4B(Bus &bus)
 {
-    // Stub for opcode 0x4B
+    // load the E register into the C register
+    setCRegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process4C(Bus &bus)
 {
-    // Stub for opcode 0x4C
+    // load the H register into the C register
+    setCRegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process4D(Bus &bus)
 {
-    // Stub for opcode 0x4D
+    // load the L register into the C register
+    setCRegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process4E(Bus &bus)
 {
-    // Stub for opcode 0x4E
+    // load the value at the memory address specified by the HL register pair into the C register
+    setCRegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process4F(Bus &bus)
 {
-    // Stub for opcode 0x4F
+    // load the A register into the C register
+    setCRegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process50(Bus &bus)

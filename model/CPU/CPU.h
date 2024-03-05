@@ -386,6 +386,18 @@ public:
     /// @brief The CPU's flags
     Flags getFlags() const;
 
+    /// @brief get zero flag
+    bool getZeroFlag() const;
+
+    /// @brief get subtract flag
+    bool getSubtractFlag() const;
+
+    /// @brief get half carry flag
+    bool getHalfCarryFlag() const;
+
+    /// @brief get carry flag
+    bool getCarryFlag() const;
+
     /// @brief The CPU's memory
     uint8_t *getMemory();
 

@@ -1,5 +1,4 @@
 #include "CPU.h"
-#include "Instruction.h"
 
 unsigned int CPU::getCycleCount() const
 {
@@ -59,6 +58,26 @@ uint8_t CPU::getLRegister() const
 CPU::Flags CPU::getFlags() const
 {
     return flags;
+}
+
+bool CPU::getZeroFlag() const
+{
+    return flags.Z;
+}
+
+bool CPU::getSubtractFlag() const
+{
+    return flags.N;
+}
+
+bool CPU::getHalfCarryFlag() const
+{
+    return flags.H;
+}
+
+bool CPU::getCarryFlag() const
+{
+    return flags.C;
 }
 
 void CPU::setCycleCount(unsigned int cycleCount)
@@ -156,7 +175,7 @@ void CPU::setCarryFlag(bool C)
     flags.C = C;
 }
 
-void CPU::processOpCode(uint8_t opCode, Bus& bus)
+void CPU::processOpCode(uint8_t opCode, Bus &bus)
 {
     instructionSet.processOpCode(opCode, bus);
 }
