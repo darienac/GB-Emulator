@@ -16,6 +16,8 @@ LCD::LCD(DMA* dma) : dma(dma) {
     lcdRegs.winX = 0;
     lcdRegs.winY = 0;
 
+    setLcdMode(MODE_OAM);
+
     for (int i = 0; i < 4; i++) bgColors[i] = sp1Colors[i] = sp2Colors[i] = i;
 }
 
@@ -80,6 +82,22 @@ void LCD::updatePalette(uint8_t paletteData, uint8_t palette) {
         sp2Colors[0] = paletteData >> 4 & 0b11;
         sp2Colors[0] = paletteData >> 6 & 0b11;
     }
+}
+
+uint8_t LCD::getLy() {
+    return lcdRegs.ly;
+}
+
+void LCD::resetLy() {
+    lcdRegs.ly = 0;
+}
+
+uint8_t LCD::getScrollY() {
+    return lcdRegs.scrollY;
+}
+
+uint8_t LCD::getScrollX() {
+    return lcdRegs.scrollX;
 }
 
 

@@ -6,7 +6,7 @@
 
 Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cartPath): screen(screen), controls(controls) {
     cpu = new CPU();
-    ppu = new PPU();
+
 
     cart = new Cartridge(cartPath);
     vRam = new VRAM();
@@ -17,6 +17,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     lcd = new LCD(dma);
     io = new IO(lcd);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
+    ppu = new PPU(lcd, bus);
 
     targetCPUDotCount = cpu->getCycleCount();
 
@@ -25,7 +26,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
 
 void Emulator::runFrame() {
 //    cpu->tick(*bus);
-//    ppu->ppu_tick();
+//    ppu->tick();
     for (unsigned int r = 0; r < 144; r++) {
         ppuMode = OAM_SCAN;
         runForDots(80);
@@ -54,7 +55,7 @@ Emulator::~Emulator() {
 }
 
 void Emulator::runForDots(unsigned int dots) {
-//    ppu->ppu_tick();
+//    ppu->ppuTick();
     targetCPUDotCount += dots;
     while (cpu->getCycleCount() < targetCPUDotCount) {
         cpu->tick(*bus);

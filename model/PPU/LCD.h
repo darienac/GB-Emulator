@@ -41,6 +41,12 @@ private:
 public:
     LCD(DMA* dma);
 
+    void resetLy();
+    uint8_t getLy();
+    void incrementLy();
+
+    uint8_t getLyCompare();
+
     //Control register settings
     bool getBgWEnabled() const;
     bool getObjEnabled() const;
@@ -65,6 +71,10 @@ public:
     void write(uint16_t address, uint8_t value);
 
     void updatePalette(uint8_t paletteData, uint8_t palette);
+
+    uint8_t getScrollY();
+
+    uint8_t getScrollX();
 };
 
 
