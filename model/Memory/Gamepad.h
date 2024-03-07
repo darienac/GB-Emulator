@@ -10,7 +10,7 @@
 class Gamepad{
 
 private:
-    struct gamepad_state{
+    struct gamepad_state {
         bool start;
         bool select;
         bool a;
@@ -19,21 +19,21 @@ private:
         bool down;
         bool left;
         bool right;
+
         explicit gamepad_state(bool val) : start(val), select(val), a(val), b(val),
-        up(val), down(val), left(val), right(val){}
+                                           up(val), down(val), left(val), right(val) {}
     };
-    bool button_selected;
-    bool direction_selected;
-    gamepad_state state = gamepad_state(false);
+    bool button_selected{};
+    bool direction_selected{};
+    static gamepad_state state;
+
 
 public:
-    [[nodiscard]] bool isButtonSelected() const;
 
-    [[nodiscard]] bool isDirectionSelected() const;
-
-private:
-
-    gamepad_state get_state();
+    static gamepad_state *get_state();
+    Gamepad(){
+        state = gamepad_state(false);
+    }
 
 
 
@@ -41,5 +41,6 @@ public:
     [[nodiscard]] uint8_t get_output() const;
     void set_sel(uint8_t value);
 };
+
 
 #endif //GAMEBOY_EMULATOR_GAMEPAD_H

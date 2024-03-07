@@ -3,16 +3,11 @@
 //
 // Created by BYU Rental on 3/1/2024.
 //
-bool Gamepad::isButtonSelected() const {
-    return button_selected;
-}
 
-bool Gamepad::isDirectionSelected() const {
-    return direction_selected;
-}
 
-Gamepad::gamepad_state Gamepad::get_state() {
-    return state;
+
+Gamepad::gamepad_state *Gamepad::get_state() {
+    return &state;
 }
 
 void Gamepad::set_sel(uint8_t value) {
@@ -52,6 +47,5 @@ uint8_t Gamepad::get_output() const {
             output &= ~(1 << 0);
         }
     }
-
     return output;
 }
