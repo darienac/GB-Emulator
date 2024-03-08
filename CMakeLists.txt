@@ -17,7 +17,6 @@ add_executable(gameboy_emulator main.cpp
         model/CPU/CPU.cpp
         model/CPU/CPU.h
         model/CPU/Instruction.cpp
-        model/CPU/Instruction.h
         model/PPU/PPU.cpp
         model/PPU/PPU.h
         model/Memory/DMA.cpp
@@ -42,6 +41,7 @@ add_executable(gameboy_emulator main.cpp
         utils/DataConversion.cpp
         controller/Emulator.cpp
         controller/Emulator.h
+        model/CPU/PrefixCB.cpp
 )
 
 target_compile_features(gameboy_emulator PRIVATE cxx_std_23)

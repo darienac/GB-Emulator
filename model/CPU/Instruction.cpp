@@ -2776,11 +2776,6 @@ void CPU::processCA(Bus &bus)
     // Stub for opcode 0xCA
 }
 
-void CPU::processCB(Bus &bus)
-{
-    // Stub for opcode 0xCB
-}
-
 void CPU::processCC(Bus &bus)
 {
     // Stub for opcode 0xCC

@@ -55,6 +55,21 @@ uint8_t CPU::getLRegister() const
     return (registers.HL & 0xFF00) >> 8;
 }
 
+uint16_t CPU::getBCRegister() const
+{
+    return registers.BC;
+}
+
+uint16_t CPU::getDERegister() const
+{
+    return registers.DE;
+}
+
+uint16_t CPU::getHLRegister() const
+{
+    return registers.HL;
+}
+
 CPU::Flags CPU::getFlags() const
 {
     return flags;
