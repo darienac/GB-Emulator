@@ -2166,11 +2166,6 @@ void CPU::process50(Bus &bus)
     // Stub for opcode 0x50
 }
 
-void CPU::process50(Bus &bus)
-{
-    // Stub for opcode 0x50
-}
-
 void CPU::process51(Bus &bus)
 {
     // Stub for opcode 0x51
