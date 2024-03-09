@@ -382,6 +382,12 @@ public:
     uint8_t getHRegister() const;
     /// @brief The value of the L register
     uint8_t getLRegister() const;
+    /// @brief The value of the BC register pair
+    uint16_t getBCRegister() const;
+    /// @brief The value of the DE register pair
+    uint16_t getDERegister() const;
+    /// @brief The value of the HL register pair
+    uint16_t getHLRegister() const;
 
     /// @brief The CPU's flags
     Flags getFlags() const;
