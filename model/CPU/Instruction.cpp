@@ -2558,10 +2558,10 @@ void CPU::process75(Bus &bus)
 }
 
 // Halt
-void CPU::process76(Bus &bus)
+void CPU::process76(Bus &bus) // TODO: Implement HALT
 {
     // If there is an interrupt pending, halt
-    if
+//    if
 }
 
 void CPU::process77(Bus &bus)
