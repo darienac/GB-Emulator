@@ -2163,322 +2163,626 @@ void CPU::process4F(Bus &bus)
 
 void CPU::process50(Bus &bus)
 {
-    // Stub for opcode 0x50
+    // load the B register into the D register
+    setDRegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process51(Bus &bus)
 {
-    // Stub for opcode 0x51
+    // load the C register into the D register
+    setDRegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process52(Bus &bus)
 {
-    // Stub for opcode 0x52
+    // load the D register into the D register
+    setDRegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process53(Bus &bus)
 {
-    // Stub for opcode 0x53
+    // load the E register into the D register
+    setDRegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process54(Bus &bus)
 {
-    // Stub for opcode 0x54
+    // load the H register into the D register
+    setDRegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process55(Bus &bus)
 {
-    // Stub for opcode 0x55
+    // load the L register into the D register
+    setDRegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process56(Bus &bus)
 {
-    // Stub for opcode 0x56
+    // load the value at the memory address specified by the HL register pair into the D register
+    setDRegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process57(Bus &bus)
 {
-    // Stub for opcode 0x57
+    // load the A register into the D register
+    setDRegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process58(Bus &bus)
 {
-    // Stub for opcode 0x58
+    // load the B register into the E register
+    setERegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process59(Bus &bus)
 {
-    // Stub for opcode 0x59
+    // load the C register into the E register
+    setERegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process5A(Bus &bus)
 {
-    // Stub for opcode 0x5A
+    // load the D register into the E register
+    setERegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process5B(Bus &bus)
 {
-    // Stub for opcode 0x5B
+    // load the E register into the E register
+    setERegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process5C(Bus &bus)
 {
-    // Stub for opcode 0x5C
+    // load the H register into the E register
+    setERegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process5D(Bus &bus)
 {
-    // Stub for opcode 0x5D
+    // load the L register into the E register
+    setERegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process5E(Bus &bus)
 {
-    // Stub for opcode 0x5E
+    // load the value at the memory address specified by the HL register pair into the E register
+    setERegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process5F(Bus &bus)
 {
-    // Stub for opcode 0x5F
+    // load the A register into the E register
+    setBRegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process60(Bus &bus)
 {
-    // Stub for opcode 0x60
+    // load the B register into the H register
+    setHRegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process61(Bus &bus)
 {
-    // Stub for opcode 0x61
+    // load the C register into the H register
+    setHRegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process62(Bus &bus)
 {
-    // Stub for opcode 0x62
+    // load the D register into the H register
+    setHRegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process63(Bus &bus)
 {
-    // Stub for opcode 0x63
+    // load the E register into the H register
+    setHRegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process64(Bus &bus)
 {
-    // Stub for opcode 0x64
+    // load the H register into the H register
+    setHRegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process65(Bus &bus)
 {
-    // Stub for opcode 0x65
+    // load the L register into the H register
+    setHRegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process66(Bus &bus)
 {
-    // Stub for opcode 0x66
+    // load the value at the memory address specified by the HL register pair into the H register
+    setHRegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process67(Bus &bus)
 {
-    // Stub for opcode 0x67
+    // load the A register into the H register
+    setHRegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process68(Bus &bus)
 {
-    // Stub for opcode 0x68
+    // load the B register into the L register
+    setLRegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process69(Bus &bus)
 {
-    // Stub for opcode 0x69
+    // load the C register into the L register
+    setLRegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process6A(Bus &bus)
 {
-    // Stub for opcode 0x6A
+    // load the D register into the L register
+    setLRegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process6B(Bus &bus)
 {
-    // Stub for opcode 0x6B
+    // load the E register into the L register
+    setLRegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process6C(Bus &bus)
 {
-    // Stub for opcode 0x6C
+    // load the H register into the L register
+    setLRegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process6D(Bus &bus)
 {
-    // Stub for opcode 0x6D
+    // load the L register into the L register
+    setLRegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process6E(Bus &bus)
 {
-    // Stub for opcode 0x6E
+    // load the value at the memory address specified by the HL register pair into the L register
+    setLRegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process6F(Bus &bus)
 {
-    // Stub for opcode 0x6F
+    // load the A register into the L register
+    setLRegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process70(Bus &bus)
 {
-    // Stub for opcode 0x70
+    // get the location in memory from the HL register pair and load the B register into it
+    bus.write(registers.HL, registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process71(Bus &bus)
 {
-    // Stub for opcode 0x71
+    // get the location in memory from the HL register pair and load the C register into it
+    bus.write(registers.HL, registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process72(Bus &bus)
 {
-    // Stub for opcode 0x72
+    // get the location in memory from the HL register pair and load the D register into it
+    bus.write(registers.HL, registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process73(Bus &bus)
 {
-    // Stub for opcode 0x73
+    // get the location in memory from the HL register pair and load the E register into it
+    bus.write(registers.HL, registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process74(Bus &bus)
 {
-    // Stub for opcode 0x74
+    // get the location in memory from the HL register pair and load the H register into it
+    bus.write(registers.HL, registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process75(Bus &bus)
 {
-    // Stub for opcode 0x75
+    // get the location in memory from the HL register pair and load the L register into it
+    bus.write(registers.HL, registers.L);
+    setPC(PC + 1);
 }
 
+// Halt
 void CPU::process76(Bus &bus)
 {
-    // Stub for opcode 0x76
+    // If there is an interrupt pending, halt
+    if
 }
 
 void CPU::process77(Bus &bus)
 {
-    // Stub for opcode 0x77
+    // get the location in memory from the HL register pair and load the A register into it
+    bus.write(registers.HL, registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process78(Bus &bus)
 {
-    // Stub for opcode 0x78
+    // load the B register into the A register
+    setARegister(registers.B);
+    setPC(PC + 1);
 }
 
 void CPU::process79(Bus &bus)
 {
-    // Stub for opcode 0x79
+    // load the C register into the A register
+    setARegister(registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::process7A(Bus &bus)
 {
-    // Stub for opcode 0x7A
+    // load the D register into the A register
+    setARegister(registers.D);
+    setPC(PC + 1);
 }
 
 void CPU::process7B(Bus &bus)
 {
-    // Stub for opcode 0x7B
+    // load the E register into the A register
+    setARegister(registers.E);
+    setPC(PC + 1);
 }
 
 void CPU::process7C(Bus &bus)
 {
-    // Stub for opcode 0x7C
+    // load the H register into the A register
+    setARegister(registers.H);
+    setPC(PC + 1);
 }
 
 void CPU::process7D(Bus &bus)
 {
-    // Stub for opcode 0x7D
+    // load the L register into the A register
+    setARegister(registers.L);
+    setPC(PC + 1);
 }
 
 void CPU::process7E(Bus &bus)
 {
-    // Stub for opcode 0x7E
+    // load the value at the memory address specified by the HL register pair into the A register
+    setARegister(bus.read(registers.HL));
+    setPC(PC + 1);
 }
 
 void CPU::process7F(Bus &bus)
 {
-    // Stub for opcode 0x7F
+    // load the A register into the A register
+    setARegister(registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::process80(Bus &bus)
 {
-    // Stub for opcode 0x80
+    // add the value of the B register to the A register
+    uint16_t result = registers.A + registers.B;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process81(Bus &bus)
 {
-    // Stub for opcode 0x81
+    // add the value of the C register to the A register
+    uint16_t result = registers.A + registers.C;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process82(Bus &bus)
 {
-    // Stub for opcode 0x82
+    // add the value of the D register to the A register
+    uint16_t result = registers.A + registers.D;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process83(Bus &bus)
 {
-    // Stub for opcode 0x83
+    // add the value of the E register to the A register
+    uint16_t result = registers.A + registers.E;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process84(Bus &bus)
 {
-    // Stub for opcode 0x84
+    // add the value of the H register to the A register
+    uint16_t result = registers.A + registers.H;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process85(Bus &bus)
 {
-    // Stub for opcode 0x85
+    // add the value of the L register to the A register
+    uint16_t result = registers.A + registers.L;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process86(Bus &bus)
 {
-    // Stub for opcode 0x86
+    // add the value at the address of HL to the A register
+    uint16_t result = registers.A + registers.HL;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process87(Bus &bus)
 {
-    // Stub for opcode 0x87
+    // add the value of the A register to the A register
+    uint16_t result = registers.A + registers.A;
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process88(Bus &bus)
 {
-    // Stub for opcode 0x88
+    // add the value of the B register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.B + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process89(Bus &bus)
 {
-    // Stub for opcode 0x89
+    // add the value of the C register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.C + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process8A(Bus &bus)
 {
-    // Stub for opcode 0x8A
+    // add the value of the D register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.D + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process8B(Bus &bus)
 {
-    // Stub for opcode 0x8B
+    // add the value of the E register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.E + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process8C(Bus &bus)
 {
-    // Stub for opcode 0x8C
+    // add the value of the H register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.H + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process8D(Bus &bus)
 {
-    // Stub for opcode 0x8D
+    // add the value of the L register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.L + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process8E(Bus &bus)
 {
-    // Stub for opcode 0x8E
+    // add the value from the address of HL and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.HL + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process8F(Bus &bus)
 {
-    // Stub for opcode 0x8F
+    // add the value of the A register and the Carry Flag to the A register
+    uint16_t result = registers.A + registers.A + getCarryFlag();
+    // load the result into the A register pair
+    setARegister(result);
+    // set the zero flag if the result is zero
+    setZeroFlag(registers.A == 0);
+    // clear the subtract flag
+    setSubtractFlag(false);
+    // set the half-carry flag if the lower nibble overflowed
+    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    // complement the carry flag
+    setCarryFlag(result > 0xFFFF);
+
+    setPC(PC + 1);
 }
 
 void CPU::process90(Bus &bus)
