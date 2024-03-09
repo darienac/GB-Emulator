@@ -355,39 +355,6 @@ private:
     void processFE(Bus &bus);
     void processFF(Bus &bus);
 
-    void processCB00(Bus &bus);
-    void processCB01(Bus &bus);
-    void processCB02(Bus &bus);
-    void processCB03(Bus &bus);
-    void processCB04(Bus &bus);
-    void processCB05(Bus &bus);
-    void processCB06(Bus &bus);
-    void processCB07(Bus &bus);
-    void processCB08(Bus &bus);
-    void processCB09(Bus &bus);
-    void processCB0A(Bus &bus);
-    void processCB0B(Bus &bus);
-    void processCB0C(Bus &bus);
-    void processCB0D(Bus &bus);
-    void processCB0E(Bus &bus);
-    void processCB0F(Bus &bus);
-    void processCB10(Bus &bus);
-    void processCB11(Bus &bus);
-    void processCB12(Bus &bus);
-    void processCB13(Bus &bus);
-    void processCB14(Bus &bus);
-    void processCB15(Bus &bus);
-    void processCB16(Bus &bus);
-    void processCB17(Bus &bus);
-    void processCB18(Bus &bus);
-    void processCB19(Bus &bus);
-    void processCB1A(Bus &bus);
-    void processCB1B(Bus &bus);
-    void processCB1C(Bus &bus);
-    void processCB1D(Bus &bus);
-    void processCB1E(Bus &bus);
-    void processCB1F(Bus &bus);
-
 public:
     /// @brief The CPU's cycle count
     unsigned int getCycleCount() const;
