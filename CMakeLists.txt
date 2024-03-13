@@ -41,6 +41,8 @@ add_executable(gameboy_emulator main.cpp
         utils/DataConversion.cpp
         controller/Emulator.cpp
         controller/Emulator.h
+        model/Structs.h
+        model/IEmulator.h
         model/CPU/PrefixCB.cpp
 )
 
