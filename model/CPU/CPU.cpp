@@ -1,5 +1,79 @@
 #include "CPU.h"
 
+void CPU::handleInterrupts(Bus &bus)
+{
+    if (!this->interruptsEnabled)
+    {
+        return;
+    }
+
+    uint8_t interrupt = getInterruptFlag() & getInterruptsEnabled();
+    if (!interrupt)
+    {
+        return;
+    }
+
+    setHalted(false);
+    stackPush(bus, PC);
+
+    // check each interrupt type (there are 5)
+    for (int i = 0; i < 5; i++)
+    {
+        uint8_t interruptMask = 1 << i;
+        if (interrupt & interruptMask)
+        {
+            // NOTE: the order of this switch is CRITICAL
+            // it is the same as GB interrupt priority
+            // DO NOT CHANGE IT!
+            switch (interruptMask)
+            {
+            case InterruptMasks::VBLANK:
+                handleSingleInterrupt(bus, interruptMask, InterruptAddresses::VBLANK);
+                return;
+            case InterruptMasks::LCD_STAT:
+                handleSingleInterrupt(bus, interruptMask, InterruptAddresses::LCD_STAT);
+                return;
+            case InterruptMasks::TIMER:
+                handleSingleInterrupt(bus, interruptMask, InterruptAddresses::TIMER);
+                return;
+            case InterruptMasks::SERIAL:
+                handleSingleInterrupt(bus, interruptMask, InterruptAddresses::SERIAL);
+                return;
+            case InterruptMasks::JOYPAD:
+                handleSingleInterrupt(bus, interruptMask, InterruptAddresses::JOYPAD);
+                return;
+            }
+        }
+    }
+}
+
+void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptAddress)
+{
+    // temp disable interrupts TODO: right now this is not re-enabled afaik
+    interruptsEnabled = false;
+
+    // push current PC to stack so we can return to it later
+    stackPush(bus, PC);
+
+    // go to interrupt address
+    PC = interruptAddress;
+}
+
+void CPU::stackPush(Bus &bus, uint16_t value)
+{
+    bus.write(getSP(), (value >> 8) & 0xFF); // high byte
+    setSP(--SP);
+    bus.write(getSP(), value & 0xFF); // low byte
+    setSP(--SP);
+}
+
+uint16_t CPU::stackPop(Bus &bus)
+{
+    uint16_t value = (bus.read(getSP() + 1) << 8) | bus.read(getSP());
+    setSP(SP + 2);
+    return value;
+}
+
 unsigned int CPU::getCycleCount() const
 {
     return cycleCount;
@@ -210,9 +284,9 @@ void CPU::tick(Bus &bus)
 
 void CPU::RESET()
 {
-    cycleCount = 0;
-    PC = 0x100;
-    SP = 0xFFFE;
+    setCycleCount(0);
+    setPC(0x100);
+    setSP(0xFFFE);
 
     // reset registers
     registers.AF = 0x01B0;
@@ -221,8 +295,8 @@ void CPU::RESET()
     registers.HL = 0x014D;
 
     // reset flags
-    flags.Z = true;
-    flags.N = false;
-    flags.H = false;
-    flags.C = false;
+    setZeroFlag(true);
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(false);
 }
