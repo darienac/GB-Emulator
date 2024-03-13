@@ -4,23 +4,11 @@
 
 #ifndef GAMEBOY_EMULATOR_LCD_H
 #define GAMEBOY_EMULATOR_LCD_H
+
 #include <cstdint>
 #include "../Memory/DMA.h"
 #include "../BitManip.h"
-
-struct LcdRegs {
-    uint8_t lcdControl;
-    uint8_t lcdStatus;
-    uint8_t scrollY;
-    uint8_t scrollX;
-    uint8_t ly;
-    uint8_t lyCompare;
-    uint8_t dma;
-    uint8_t bgPalette;
-    uint8_t spPalette[2];
-    uint8_t winY;
-    uint8_t winX;
-};
+#include "../Structs.h"
 
 enum lcdMode {
     MODE_HBLANK,
@@ -33,17 +21,22 @@ class LCD {
 private:
     LcdRegs lcdRegs;
 
+    DMA* dma;
+
+public:
     uint8_t bgColors[4];
     uint8_t sp1Colors[4];
     uint8_t sp2Colors[4];
 
-    DMA* dma;
-public:
     LCD(DMA* dma);
 
     void resetLy();
     uint8_t getLy();
     void incrementLy();
+
+    uint8_t getWinY() { return lcdRegs.winY; }
+    uint8_t getWinX() { return lcdRegs.winX; }
+
 
     uint8_t getLyCompare();
 

@@ -16,3 +16,7 @@ void OamRAM::write(uint16_t address, uint8_t value) {
     auto *p = reinterpret_cast<uint8_t*>(ram);
     p[address] = value;
 }
+
+OamEntry OamRAM::getOamEntry(int index) {
+    return ram[index];
+}
