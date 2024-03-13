@@ -1,5 +1,4 @@
 #include "CPU.h"
-#include "Instruction.h"
 
 unsigned int CPU::getCycleCount() const
 {
@@ -56,9 +55,44 @@ uint8_t CPU::getLRegister() const
     return (registers.HL & 0xFF00) >> 8;
 }
 
+uint16_t CPU::getBCRegister() const
+{
+    return registers.BC;
+}
+
+uint16_t CPU::getDERegister() const
+{
+    return registers.DE;
+}
+
+uint16_t CPU::getHLRegister() const
+{
+    return registers.HL;
+}
+
 CPU::Flags CPU::getFlags() const
 {
     return flags;
+}
+
+bool CPU::getZeroFlag() const
+{
+    return flags.Z;
+}
+
+bool CPU::getSubtractFlag() const
+{
+    return flags.N;
+}
+
+bool CPU::getHalfCarryFlag() const
+{
+    return flags.H;
+}
+
+bool CPU::getCarryFlag() const
+{
+    return flags.C;
 }
 
 void CPU::setCycleCount(unsigned int cycleCount)
@@ -156,16 +190,6 @@ void CPU::setCarryFlag(bool C)
     flags.C = C;
 }
 
-void CPU::processOpCode(uint8_t opCode, Bus& bus)
-{
-    instructionSet.processOpCode(opCode, bus);
-}
-
-unsigned int CPU::getCycleCount(uint8_t opcode) const
-{
-    return instructionSet.getCycleCount(opcode);
-}
-
 uint8_t CPU::fetch(Bus &bus)
 {
     uint8_t data = bus.read(PC);
@@ -174,14 +198,14 @@ uint8_t CPU::fetch(Bus &bus)
 
 void CPU::execute(uint8_t opcode, Bus &bus)
 {
-    instructionSet.processOpCode(opcode, bus);
+    processOpCode(opcode, bus);
 }
 
 void CPU::tick(Bus &bus)
 {
     uint8_t opcode = fetch(bus);
-    instructionSet.processOpCode(opcode, bus);
-    cycleCount += instructionSet.getCycleCount(opcode);
+    processOpCode(opcode, bus);
+    cycleCount += getCycleCount(opcode);
 }
 
 void CPU::RESET()

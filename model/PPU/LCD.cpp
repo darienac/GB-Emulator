@@ -88,6 +88,15 @@ uint8_t LCD::getLy() {
     return lcdRegs.ly;
 }
 
+void LCD::incrementLy() { // TODO: make sure I did this right
+    lcdRegs.ly++;
+}
+
+uint8_t LCD::getLyCompare() { // TODO: make sure I did this right also
+    return lcdRegs.lyCompare;
+}
+
+
 void LCD::resetLy() {
     lcdRegs.ly = 0;
 }
@@ -99,6 +108,5 @@ uint8_t LCD::getScrollY() {
 uint8_t LCD::getScrollX() {
     return lcdRegs.scrollX;
 }
-
 
 

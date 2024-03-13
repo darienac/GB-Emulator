@@ -18,7 +18,7 @@ int main() {
 
     IControls* controls = window.getControls();
 
-    Emulator emulator(window.getScreen(), controls, "./roms/01-special.gb");
+    Emulator emulator(window.getScreen(), controls, "./roms/11-op a,(hl).gb");
     while (true) {
         emulator.runFrame();
         window.pollEvents();
