@@ -38,10 +38,12 @@ private:
     IO* io;
 
     // runtime state
-    PPU_Mode ppuMode;
     unsigned int targetCPUDotCount;
+    unsigned int lastPPUTicks;
+    unsigned int ppuTicks;
 
-    void runForDots(unsigned int dots);
+    void cpuRunForDots(unsigned int dots);
+    void syncCPUWithPPU();
 public:
     Emulator(IScreen* screen, IControls* controls, const std::string& cartPath);
 

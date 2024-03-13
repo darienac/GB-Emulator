@@ -7,7 +7,6 @@
 Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cartPath): screen(screen), controls(controls) {
     cpu = new CPU();
 
-
     cart = new Cartridge(cartPath);
     vRam = new VRAM();
     oamRam = new OamRAM();
@@ -20,6 +19,8 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     ppu = new PPU(lcd, bus);
 
     targetCPUDotCount = cpu->getCycleCount();
+    lastPPUTicks = 0;
+    ppuTicks = 0;
 
     cart->printHeaderInfo();
 }
@@ -27,16 +28,38 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
 void Emulator::runFrame() {
 //    cpu->tick(*bus);
 //    ppu->tick();
-    for (unsigned int r = 0; r < 144; r++) {
-        ppuMode = OAM_SCAN;
-        runForDots(80);
-        ppuMode = DRAW_PIXELS;
-        runForDots(172); // Certain operations make drawing take longer, but not considering that for now
-        ppuMode = HBLANK;
-        runForDots(204); // differs based on length of DRAW_PIXELS mode
+//    for (unsigned int r = 0; r < 144; r++) {
+//        ppuMode = OAM_SCAN;
+//        cpuRunForDots(80);
+//        ppuMode = DRAW_PIXELS;
+//        cpuRunForDots(172); // Certain operations make drawing take longer, but not considering that for now
+//        ppuMode = HBLANK;
+//        cpuRunForDots(204); // differs based on length of DRAW_PIXELS mode
+//    }
+//    ppuMode = VBLANK;
+//    cpuRunForDots(4560);
+    for (uint8_t r = 0; r < 144; r++) {
+        while (lcd->getLcdMode() == lcdMode::MODE_OAM) {
+            ppu->tick();
+            ppuTicks++;
+            syncCPUWithPPU();
+        }
+        while (lcd->getLcdMode() == lcdMode::MODE_XFER) {
+            ppu->tick();
+            ppuTicks++;
+            syncCPUWithPPU();
+        }
+        while (lcd->getLcdMode() == lcdMode::MODE_HBLANK) {
+            ppu->tick();
+            ppuTicks++;
+            syncCPUWithPPU();
+        }
     }
-    ppuMode = VBLANK;
-    runForDots(4560);
+    while (lcd->getLcdMode() == lcdMode::MODE_VBLANK) {
+        ppu->tick();
+        ppuTicks++;
+        syncCPUWithPPU();
+    }
 }
 
 Emulator::~Emulator() {
@@ -54,10 +77,14 @@ Emulator::~Emulator() {
     delete bus;
 }
 
-void Emulator::runForDots(unsigned int dots) {
-//    ppu->ppuTick();
+void Emulator::cpuRunForDots(unsigned int dots) {
     targetCPUDotCount += dots;
     while (cpu->getCycleCount() < targetCPUDotCount) {
         cpu->tick(*bus);
     }
+}
+
+void Emulator::syncCPUWithPPU() {
+    cpuRunForDots(ppuTicks - lastPPUTicks);
+    lastPPUTicks = ppuTicks;
 }
