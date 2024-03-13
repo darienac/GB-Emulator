@@ -12,6 +12,7 @@
 #include "HRAM.h"
 #include "WRAM.h"
 #include "IO.h"
+#include "CPU.h"
 
 class DMA;
 
@@ -23,7 +24,7 @@ private:
     HRAM* hRam;
     WRAM* wRam;
     IO* io;
-    //CPU* cpu to set the enable register
+    CPU* cpu;
 
     DMA* dma;
 public:
