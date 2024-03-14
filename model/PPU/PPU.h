@@ -19,7 +19,7 @@
 static const int LINES_PER_FRAME = 154;
 static const int TICKS_PER_LINE = 456;
 static const int Y_RES = 144;
-static const int X_RES = 160 ;
+static const int X_RES = 160;
 
 enum FetchState {
     TILE,
