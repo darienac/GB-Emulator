@@ -8,10 +8,11 @@
 
 #include "IControls.h"
 #include "IScreen.h"
+#include "../model/IEmulator.h"
 #include "../model/CPU/CPU.h"
 #include "../model/PPU/PPU.h"
 
-class Emulator {
+class Emulator : public IEmulator {
 public:
     enum PPU_Mode {
         HBLANK,
@@ -48,6 +49,9 @@ public:
     Emulator(IScreen* screen, IControls* controls, const std::string& cartPath);
 
     void runFrame();
+
+    void triggerInterrupt(InterruptType interrupt) override;
+    void updateFrame(char** frame) override;
 
     ~Emulator();
 };

@@ -12,10 +12,9 @@ enum InterruptType {
 
 class IEmulator {
 public:
-
     //PPU Functionality
-    void triggerInterrupt(InterruptType interrupt);
-    void updateFrame(char** frame);
+    virtual void triggerInterrupt(InterruptType interrupt) = 0;
+    virtual void updateFrame(char** frame) = 0;
 };
 
 #endif //GAMEBOY_EMULATOR_IEMULATOR_H
