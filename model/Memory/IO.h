@@ -1,25 +1,29 @@
 //
-// Created by BYU Rental on 3/1/2024.
+// Created by Tyson Peterson on 2/28/24.
 //
 
 #ifndef GAMEBOY_EMULATOR_IO_H
 #define GAMEBOY_EMULATOR_IO_H
 
 #include <cstdint>
-#include "Gamepad.h"
 #include "../PPU/LCD.h"
+#include "../Memory/Gamepad.h"
+#include "../Memory/Timer.h"
+#include "../CPU/CPU.h"
 
-class IO{
+class IO {
 private:
-    Gamepad* gamepad;
     LCD* lcd;
+    Gamepad* gamepad;
+    Timer* timer;
+    static uint8_t serialData[2];
+
 
 public:
-    IO(LCD* lcd, Gamepad* gamepad) : lcd(lcd), gamepad(gamepad){}
-
-    uint8_t io_read(uint16_t address);
-
-    void io_write(uint16_t address, uint8_t value);
+    IO(LCD* lcd, Gamepad* gamepad, Timer* timer) : lcd(lcd), gamepad(gamepad), timer(timer){ }
+    uint8_t read(uint16_t address);
+    void write(uint16_t address, uint8_t value);
 };
+
 
 #endif //GAMEBOY_EMULATOR_IO_H

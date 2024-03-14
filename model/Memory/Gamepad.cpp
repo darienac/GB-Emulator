@@ -1,51 +1,47 @@
 #include "Gamepad.h"
 
 //
-// Created by BYU Rental on 3/1/2024.
+// Created by Keiffer on 3/1/2024.
 //
 
 
-
-Gamepad::gamepad_state *Gamepad::get_state() {
-    return &state;
-}
-
 void Gamepad::set_sel(uint8_t value) {
-    button_selected = value & 0x20;
-    direction_selected = value & 0x10;
+    buttonSelected = value & 0x20;
+    directionSelected = value & 0x10;
 }
 
 uint8_t Gamepad::get_output() const {
     uint8_t  output = 0xCF;
 
-    if(!button_selected){
-        if(state.start){
+    if(!buttonSelected){
+        if(controls->start()){
             output &= ~(1 << 3);
         }
-        if(state.select){
+        if(controls->select()){
             output &= ~(1 << 2);
         }
-        if(state.b){
+        if(controls->B()){
             output &= ~(1 << 1);
         }
-        if(state.a){
+        if(controls->A()){
             output &= ~(1 << 0);
         }
     }
 
-    if(!direction_selected){
-        if(state.down){
+    if(!directionSelected){
+        if(controls->down()){
             output &= ~(1 << 3);
         }
-        if(state.up){
+        if(controls->up()){
             output &= ~(1 << 2);
         }
-        if(state.left){
+        if(controls->left()){
             output &= ~(1 << 1);
         }
-        if(state.right){
+        if(controls->right()){
             output &= ~(1 << 0);
         }
     }
+
     return output;
 }

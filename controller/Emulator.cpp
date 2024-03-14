@@ -15,7 +15,8 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     wRam = new WRAM();
     dma = new DMA(oamRam);
     lcd = new LCD(dma);
-    io = new IO(lcd);
+    gamepad = new Gamepad(controls);
+    io = new IO(lcd, gamepad);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
 
     targetCPUDotCount = cpu->getCycleCount();
@@ -51,6 +52,7 @@ Emulator::~Emulator() {
     delete lcd;
     delete io;
     delete bus;
+    delete gamepad;
 }
 
 void Emulator::runForDots(unsigned int dots) {

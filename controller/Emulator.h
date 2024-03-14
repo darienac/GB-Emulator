@@ -36,6 +36,7 @@ private:
     Bus* bus;
     LCD* lcd;
     IO* io;
+    Gamepad* gamepad;
 
     // runtime state
     PPU_Mode ppuMode;
