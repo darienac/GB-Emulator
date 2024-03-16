@@ -3,7 +3,7 @@
 //
 
 #include "IO.h"
-
+uint8_t IO::serialData[2] = {};
 uint8_t IO::read(uint16_t address) {
     if (address == 0xFF00) {
         //Gamepad Stuff
@@ -12,12 +12,12 @@ uint8_t IO::read(uint16_t address) {
 
     if (address == 0xFF01) {
         //Link Cable Stuff
-        return serialData[0];
+        return IO::serialData[0];
     }
 
     if (address == 0xFF02) {
         //Link Cable Stuff
-        return serialData[1];
+        return IO::serialData[1];
     }
 
     if (0xFF04 <= address && address <= 0xFF07) {
@@ -51,13 +51,13 @@ void IO::write(uint16_t address, uint8_t value) {
 
     if (address == 0xFF01) {
         //Link Cable Stuff
-        serialData[0] = value;
+        IO::serialData[0] = value;
         return;
     }
 
     if (address == 0xFF02) {
         //Link Cable Stuff
-        serialData[1] = value;
+        IO::serialData[1] = value;
         return;
     }
 

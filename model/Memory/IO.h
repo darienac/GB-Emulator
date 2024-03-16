@@ -7,8 +7,8 @@
 
 #include <cstdint>
 #include "../PPU/LCD.h"
-#include "../Memory/Gamepad.h"
-#include "../Memory/Timer.h"
+#include "Gamepad.h"
+#include "Timer.h"
 
 class IO {
 private:
