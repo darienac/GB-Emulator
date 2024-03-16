@@ -37,6 +37,7 @@ private:
     Bus* bus;
     LCD* lcd;
     IO* io;
+    Timer* timer;
     Gamepad* gamepad;
 
     // runtime state

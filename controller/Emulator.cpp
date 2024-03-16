@@ -21,7 +21,8 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     dma = new DMA(oamRam);
     lcd = new LCD(dma);
     gamepad = new Gamepad(controls);
-    io = new IO(lcd, gamepad);
+    timer = new Timer();
+    io = new IO(lcd, gamepad, timer);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
     ppu = new PPU(lcd, bus, this);
 
@@ -49,18 +50,21 @@ void Emulator::runFrame() {
         while (lcd->getLcdMode() == lcdMode::MODE_OAM) {
             ppu->tick();
             dma->tick();
+            timer->timerTick();
             ppuTicks++;
             syncCPUWithPPU();
         }
         while (lcd->getLcdMode() == lcdMode::MODE_XFER) {
             ppu->tick();
             dma->tick();
+            timer->timerTick();
             ppuTicks++;
             syncCPUWithPPU();
         }
         while (lcd->getLcdMode() == lcdMode::MODE_HBLANK) {
             ppu->tick();
             dma->tick();
+            timer->timerTick();
             ppuTicks++;
             syncCPUWithPPU();
         }
@@ -68,6 +72,7 @@ void Emulator::runFrame() {
     while (lcd->getLcdMode() == lcdMode::MODE_VBLANK) {
         ppu->tick();
         dma->tick();
+        timer->timerTick();
         ppuTicks++;
         syncCPUWithPPU();
     }

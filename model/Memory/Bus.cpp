@@ -32,8 +32,7 @@ uint8_t Bus::read(uint16_t address) {
         //reserved unusable...
         return 0;
     } else if (address < 0xFF80) {
-        //IO Registers... TODO
-        //return io_read(address);
+        return io->read(address);
     } else if (address == 0xFFFF) {
         //CPU ENABLE REGISTER...
         //TODO
@@ -68,8 +67,7 @@ void Bus::write(uint16_t address, uint8_t value) {
     } else if (address < 0xFF00) {
         //unusable reserved
     } else if (address < 0xFF80) {
-        //IO Registers... TODO
-        //io_write(address, value);
+        io->write(address, value);
     } else if (address == 0xFFFF) {
         //CPU SET ENABLE REGISTER
         //TODO

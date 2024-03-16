@@ -9,7 +9,6 @@ const bool Controls::INVERT_AB = false;
 
 void Controls::setControl(char mask, bool value) {
     buttonStates = value ? (buttonStates | mask) : (buttonStates & ~mask);
-    setGamepad(mask, value);
 }
 
 
@@ -184,33 +183,4 @@ Controls::~Controls() {
     SDL_GameControllerClose(controller);
 }
 
-void Controls::setGamepad(char mask, bool value) {
-    switch(mask){
-        case b_up:
-            Gamepad::get_state()->up = value;
-            break;
-        case b_down:
-            Gamepad::get_state()->down = value;
-            break;
-        case b_left:
-            Gamepad::get_state()->left = value;
-            break;
-        case b_right:
-            Gamepad::get_state()->right = value;
-            break;
-        case b_A:
-            Gamepad::get_state()->a = value;
-            break;
-        case b_B:
-            Gamepad::get_state()->b = value;
-            break;
-        case b_select:
-            Gamepad::get_state()->select = value;
-            break;
-        case b_start:
-            Gamepad::get_state()->start = value;
-            break;
-        default:
-            break;
-    }
-}
+
