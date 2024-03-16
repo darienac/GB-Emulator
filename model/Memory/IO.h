@@ -7,12 +7,20 @@
 
 #include <cstdint>
 #include "../PPU/LCD.h"
+#include "../Memory/Gamepad.h"
+#include "../Memory/Timer.h"
+#include "../CPU/CPU.h"
 
 class IO {
 private:
     LCD* lcd;
+    Gamepad* gamepad;
+    Timer* timer;
+    static uint8_t serialData[2];
+
+
 public:
-    IO(LCD* lcd) : lcd(lcd) { }
+    IO(LCD* lcd, Gamepad* gamepad, Timer* timer) : lcd(lcd), gamepad(gamepad), timer(timer){ }
     uint8_t read(uint16_t address);
     void write(uint16_t address, uint8_t value);
 };
