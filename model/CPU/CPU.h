@@ -5,6 +5,8 @@
 #include <string>
 #include "../Memory/Bus.h"
 
+//this is a really cool feature
+
 struct RegisterPair
 {
     uint8_t high;
