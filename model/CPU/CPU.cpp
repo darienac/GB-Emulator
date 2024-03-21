@@ -22,9 +22,8 @@ void CPU::handleInterrupts(Bus &bus)
         uint8_t interruptMask = 1 << i;
         if (interrupt & interruptMask)
         {
-            // NOTE: the order of this switch is CRITICAL
-            // it is the same as GB interrupt priority
-            // DO NOT CHANGE IT!
+            // NOTE: the order of this switch is the same as GB interrupt priority
+            // i think changing it would be fine since we bit shift above, but to be safe let's not
             switch (interruptMask)
             {
             case InterruptMasks::VBLANK:
