@@ -2,12 +2,12 @@
 
 void CPU::handleInterrupts(Bus &bus)
 {
-    if (!this->interruptsEnabled)
+    if (!this->imeFlag)
     {
         return;
     }
 
-    uint8_t interrupt = getInterruptFlag() & getInterruptsEnabled();
+    uint8_t interrupt = getInterruptFlag() & getImeFlag();
     if (!interrupt)
     {
         return;
@@ -50,7 +50,7 @@ void CPU::handleInterrupts(Bus &bus)
 void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptAddress)
 {
     // temp disable interrupts TODO: right now this is not re-enabled afaik
-    interruptsEnabled = false;
+    setImeFlag(false);
 
     // push current PC to stack so we can return to it later
     stackPush(bus, PC);
@@ -169,6 +169,11 @@ bool CPU::getCarryFlag() const
     return flags.C;
 }
 
+bool CPU::getHalted() const
+{
+    return halted;
+}
+
 void CPU::setCycleCount(unsigned int cycleCount)
 {
     this->cycleCount = cycleCount;
@@ -277,9 +282,13 @@ void CPU::execute(uint8_t opcode, Bus &bus)
 
 void CPU::tick(Bus &bus)
 {
-    uint8_t opcode = fetch(bus);
-    processOpCode(opcode, bus);
-    cycleCount += getCycleCount(opcode);
+    // if we're halted, we only wait for interrupts (then wake up when an interrupt is received)
+    if (!getHalted())
+    {
+        uint8_t opcode = fetch(bus);
+        processOpCode(opcode, bus);
+    }
+    handleInterrupts(bus);
 }
 
 void CPU::RESET()

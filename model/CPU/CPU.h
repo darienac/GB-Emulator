@@ -50,8 +50,8 @@ private:
     /// @brief CPU halt status
     bool halted = false;
 
-    /// @brief Interrupts enabled
-    bool interruptsEnabled = false;
+    /// @brief IME flag (interrupts enabled)
+    bool imeFlag = true;
 
     /// @brief The CPU's registers. All initial values are from the powerup sequence ref on PanDocs using the DMG model
     struct Registers
@@ -413,7 +413,7 @@ public:
     bool getHalted() const;
 
     /// @brief The CPU's interrupts enabled status
-    bool getInterruptsEnabled() const;
+    bool getImeFlag() const;
 
     /// @brief The CPU's interrupt flag
     uint8_t getInterruptFlag() const;
@@ -473,7 +473,7 @@ public:
     void setHalted(bool halted);
 
     /// @brief Set the value of the interrupts enabled status
-    void setInterruptsEnabled(bool interruptsEnabled);
+    void setImeFlag(bool flagValue);
 
     /// @brief Set the value of the interrupt flag
     void setInterruptFlag(uint8_t interruptFlag);

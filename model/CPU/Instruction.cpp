@@ -2557,11 +2557,9 @@ void CPU::process75(Bus &bus)
     setPC(PC + 1);
 }
 
-// Halt
-void CPU::process76(Bus &bus) // TODO: Implement HALT
+void CPU::process76(Bus &bus)
 {
-    // If there is an interrupt pending, halt
-//    if
+    setHalted(true);
 }
 
 void CPU::process77(Bus &bus)
