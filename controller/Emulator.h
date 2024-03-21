@@ -8,10 +8,11 @@
 
 #include "IControls.h"
 #include "IScreen.h"
+#include "../model/IEmulator.h"
 #include "../model/CPU/CPU.h"
 #include "../model/PPU/PPU.h"
 
-class Emulator {
+class Emulator : public IEmulator {
 public:
     enum PPU_Mode {
         HBLANK,
@@ -36,16 +37,22 @@ private:
     Bus* bus;
     LCD* lcd;
     IO* io;
+    Gamepad* gamepad;
 
     // runtime state
-    PPU_Mode ppuMode;
     unsigned int targetCPUDotCount;
+    unsigned int lastPPUTicks;
+    unsigned int ppuTicks;
 
-    void runForDots(unsigned int dots);
+    void cpuRunForDots(unsigned int dots);
+    void syncCPUWithPPU();
 public:
     Emulator(IScreen* screen, IControls* controls, const std::string& cartPath);
 
     void runFrame();
+
+    void triggerInterrupt(InterruptType interrupt) override;
+    void updateFrame(char** frame) override;
 
     ~Emulator();
 };

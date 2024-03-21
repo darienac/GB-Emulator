@@ -8,6 +8,7 @@
 
 #include <SDL2/SDL.h>
 #include "../controller/IControls.h"
+#include "../model/Memory/Gamepad.h"
 
 class Controls : public IControls {
 private:
@@ -29,6 +30,7 @@ private:
     SDL_GameController* controller;
 
     void setControl(char mask, bool value);
+    static void setGamepad(char mask, bool value);
     void handleKey(SDL_Keycode sym, bool pressed);
     void handleJoystick();
     void handleControllerButton(SDL_GameControllerButton button, bool pressed);
