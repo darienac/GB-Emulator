@@ -14,8 +14,6 @@ private:
     bool directionSelected;
     IControls* controls;
 
-
-
 public:
     Gamepad(IControls* controls): controls(controls){}
     [[nodiscard]] uint8_t get_output() const;

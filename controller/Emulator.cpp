@@ -21,7 +21,8 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     dma = new DMA(oamRam);
     lcd = new LCD(dma);
     gamepad = new Gamepad(controls);
-    io = new IO(lcd, gamepad);
+    timer = new Timer();
+    io = new IO(lcd, gamepad, timer);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
     ppu = new PPU(lcd, bus, this);
 

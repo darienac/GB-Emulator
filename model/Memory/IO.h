@@ -9,15 +9,13 @@
 #include "../PPU/LCD.h"
 #include "../Memory/Gamepad.h"
 #include "../Memory/Timer.h"
-#include "../CPU/CPU.h"
 
 class IO {
 private:
     LCD* lcd;
     Gamepad* gamepad;
     Timer* timer;
-    static uint8_t serialData[2];
-
+    uint8_t serialData[2]; // Was this supposed to be static?
 
 public:
     IO(LCD* lcd, Gamepad* gamepad, Timer* timer) : lcd(lcd), gamepad(gamepad), timer(timer){ }

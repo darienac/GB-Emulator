@@ -23,8 +23,12 @@ add_executable(gameboy_emulator main.cpp
         model/Memory/DMA.h
         model/Memory/Bus.cpp
         model/Memory/Bus.h
+        model/Memory/Gamepad.cpp
+        model/Memory/Gamepad.h
         model/Memory/OamRAM.cpp
         model/Memory/OamRAM.h
+        model/Memory/Timer.cpp
+        model/Memory/Timer.h
         model/Memory/VRAM.cpp
         model/Memory/VRAM.h
         model/Memory/Cartridge.cpp
