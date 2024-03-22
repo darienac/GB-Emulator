@@ -51,7 +51,7 @@ private:
     bool halted = false;
 
     /// @brief IME flag (interrupts enabled)
-    bool imeFlag = true;
+    bool imeFlag = false; // interrupts disabled when game starts running
 
     /// @brief The CPU's registers. All initial values are from the powerup sequence ref on PanDocs using the DMG model
     struct Registers
@@ -119,12 +119,6 @@ private:
         /// @brief Carry flag; did the last operation cause a carry from bit 7 to bit 8? (upper 4 bits)
         bool C = false;
     } flags;
-
-    /// @brief The interrupt flag (IF)
-    uint8_t interruptFlag = 0xE0;
-
-    /// @brief The interrupt enable register (IE)
-    uint8_t interruptEnable = 0x00;
 
     /// @brief Fetch an instruction from memory
     uint8_t fetch(Bus &bus);
@@ -415,8 +409,11 @@ public:
     /// @brief The CPU's interrupts enabled status
     bool getImeFlag() const;
 
-    /// @brief The CPU's interrupt flag
-    uint8_t getInterruptFlag() const;
+    /// @brief The CPU's IE (interrupt enable) register (FFFF)
+    static uint8_t getInterruptEnableFlag(Bus &bus);
+
+    /// @brief The CPU's IF (interrupt flag) flag (FF0F)
+    static uint8_t getInterruptFlag(Bus &bus);
 
     /// @brief The CPU's registers
     Registers getRegisters() const;
@@ -479,10 +476,10 @@ public:
     void setImeFlag(bool flagValue);
 
     /// @brief Set the value of the interrupt flag
-    void setInterruptFlag(uint8_t interruptFlag);
+    static void setInterruptFlag(Bus &bus, uint8_t interruptFlag);
 
     /// @brief Set the value of the interrupts enabled register
-    void setInterruptEnable(uint8_t interruptEnable);
+    static void setInterruptEnable(Bus &bus, uint8_t interruptEnable);
 
     /// @brief The CPU's registers
     void setRegisters(Registers registers);

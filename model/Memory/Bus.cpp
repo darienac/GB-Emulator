@@ -34,9 +34,12 @@ uint8_t Bus::read(uint16_t address) {
     } else if (address < 0xFF80) {
         //IO Registers... TODO
         //return io_read(address);
+        if (address == 0xFF0F) {
+            return interruptFlag;
+        }
     } else if (address == 0xFFFF) {
         //CPU ENABLE REGISTER...
-        return cpu->getImeFlag();
+        return interruptEnable;
     }
 
     //NO_IMPL
@@ -70,9 +73,12 @@ void Bus::write(uint16_t address, uint8_t value) {
     } else if (address < 0xFF80) {
         //IO Registers... TODO
         //io_write(address, value);
+        if (address == 0xFF0F) {
+            interruptFlag = value;
+        }
     } else if (address == 0xFFFF) {
         //CPU SET ENABLE REGISTER
-        cpu->setImeFlag(value);
+        interruptEnable = value;
     } else {
         hRam->write(address, value);
     }

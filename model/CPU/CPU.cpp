@@ -7,8 +7,8 @@ void CPU::handleInterrupts(Bus &bus)
         return;
     }
 
-    uint8_t interrupt = getInterruptFlag() & getImeFlag();
-    if (!interrupt)
+    uint8_t interrupt = getInterruptEnableFlag(bus) & getInterruptFlag(bus);
+    if (!getImeFlag() || !interrupt)
     {
         return;
     }
@@ -178,6 +178,18 @@ bool CPU::getHalted() const
     return halted;
 }
 
+bool CPU::getImeFlag() const {
+    return imeFlag;
+}
+
+uint8_t CPU::getInterruptEnableFlag(Bus &bus) {
+    return bus.read(0xFFFF);
+}
+
+uint8_t CPU::getInterruptFlag(Bus &bus) {
+    return bus.read(0xFF0F);
+}
+
 void CPU::setCycleCount(unsigned int cycleCount)
 {
     this->cycleCount = cycleCount;
@@ -191,6 +203,22 @@ void CPU::setPC(uint16_t PC)
 void CPU::setSP(uint16_t SP)
 {
     this->SP = SP;
+}
+
+void CPU::setHalted(bool halted) {
+    this->halted = halted;
+}
+
+void CPU::setImeFlag(bool flagValue) {
+    imeFlag = flagValue;
+}
+
+void CPU::setInterruptFlag(Bus &bus, uint8_t interruptFlag) {
+    bus.write(0xFF0F, interruptFlag);
+}
+
+void CPU::setInterruptEnable(Bus &bus, uint8_t interruptEnable) {
+    bus.write(0xFFFF, interruptEnable);
 }
 
 void CPU::setRegisters(Registers registers)

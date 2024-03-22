@@ -12,7 +12,6 @@
 #include "HRAM.h"
 #include "WRAM.h"
 #include "IO.h"
-#include "CPU.h"
 
 class DMA;
 
@@ -24,9 +23,11 @@ private:
     HRAM* hRam;
     WRAM* wRam;
     IO* io;
-    CPU* cpu;
 
     DMA* dma;
+
+    uint8_t interruptFlag = 0xE0;
+    uint8_t interruptEnable = 0x00;
 public:
     Bus(Cartridge* cart, VRAM* vRam, OamRAM* oamRam, HRAM* hram, WRAM* wRam, DMA* dma, IO* io) :
             cart(cart), vRam(vRam), wRam(wRam), oamRam(oamRam), hRam(hram), dma(dma), io(io) {}
