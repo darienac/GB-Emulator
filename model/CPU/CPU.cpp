@@ -1,4 +1,7 @@
 #include "CPU.h"
+#include "../../GlobalFlags.h"
+
+#define DEBUG
 
 void CPU::handleInterrupts(Bus &bus)
 {
@@ -337,6 +340,10 @@ void CPU::tick(Bus &bus)
     if (!getHalted())
     {
         uint8_t opcode = fetch(bus);
+        if (GlobalFlags::debug) {
+            std::printf("PC: %X Opcode: %X\n", getPC(), opcode);
+            std::cin.get();
+        }
         processOpCode(opcode, bus);
     }
     handleInterrupts(bus);

@@ -9,6 +9,7 @@ void CPU::processOpCode(uint8_t opCode, Bus &bus)
     {
     case 0x00:
         // NOP
+        process00(bus);
         break;
     case 0x01:
         // LD BC, d16: load 16-bit immediate value into BC register pair
@@ -1533,6 +1534,10 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
 
     printf("Unknown opcode: 0x%02X\n", opcode);
     return 0;
+}
+
+void CPU::process00(Bus &bus) {
+    setPC(PC + 1);
 }
 
 void CPU::process01(Bus &bus)

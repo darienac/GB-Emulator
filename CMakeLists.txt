@@ -48,6 +48,8 @@ add_executable(gameboy_emulator main.cpp
         model/Structs.h
         model/IEmulator.h
         model/CPU/PrefixCB.cpp
+        GlobalFlags.cpp
+        GlobalFlags.h
 )
 
 target_compile_features(gameboy_emulator PRIVATE cxx_std_23)

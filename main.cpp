@@ -18,7 +18,9 @@ int main() {
 
     IControls* controls = window.getControls();
 
-    Emulator emulator(window.getScreen(), controls, "./roms/11-op a,(hl).gb");
+    std::string romPath = "./roms/01-special.gb";
+//    std::string romPath = "./roms/11-op a,(hl).gb";
+    Emulator emulator(window.getScreen(), controls, romPath);
     while (true) {
         emulator.runFrame();
         window.pollEvents();
