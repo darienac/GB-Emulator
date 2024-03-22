@@ -55,7 +55,7 @@ void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptA
     stackPush(bus, PC);
 
     // go to interrupt address
-    PC = interruptAddress;
+    setPC(interruptAddress);
 }
 
 void CPU::stackPush(Bus &bus, uint16_t value)
@@ -148,6 +148,11 @@ CPU::Flags CPU::getFlags() const
     return flags;
 }
 
+uint8_t CPU::getFlagsByte() const
+{
+    return (flags.Z << 7) | (flags.N << 6) | (flags.H << 5) | (flags.C << 4);
+}
+
 bool CPU::getZeroFlag() const
 {
     return flags.Z;
@@ -228,6 +233,13 @@ void CPU::setLRegister(uint8_t L)
     registers.HL = (registers.HL & 0x00FF) | (L << 8);
 }
 
+void CPU::setAFRegister(uint16_t AF)
+{
+    registers.AF = AF;
+    // set flags struct
+    setFlagsByte(AF >> 8);
+}
+
 void CPU::setBCRegister(uint16_t BC)
 {
     registers.BC = BC;
@@ -248,24 +260,36 @@ void CPU::setFlags(Flags flags)
     this->flags = flags;
 }
 
+void CPU::setFlagsByte(uint8_t flagsByte)
+{
+    flags.Z = (flagsByte & 0x80) >> 7;
+    flags.N = (flagsByte & 0x40) >> 6;
+    flags.H = (flagsByte & 0x20) >> 5;
+    flags.C = (flagsByte & 0x10) >> 4;
+}
+
 void CPU::setZeroFlag(bool Z)
 {
     flags.Z = Z;
+    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
 }
 
 void CPU::setSubtractFlag(bool N)
 {
     flags.N = N;
+    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
 }
 
 void CPU::setHalfCarryFlag(bool H)
 {
     flags.H = H;
+    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
 }
 
 void CPU::setCarryFlag(bool C)
 {
     flags.C = C;
+    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
 }
 
 uint8_t CPU::fetch(Bus &bus)

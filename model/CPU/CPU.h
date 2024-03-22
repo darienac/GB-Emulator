@@ -445,6 +445,9 @@ public:
     /// @brief The CPU's flags
     Flags getFlags() const;
 
+    /// @brief Get flags as a single byte
+    uint8_t getFlagsByte() const;
+
     /// @brief get zero flag
     bool getZeroFlag() const;
 
@@ -498,6 +501,8 @@ public:
     void setHRegister(uint8_t H);
     /// @brief Set the value of the L register
     void setLRegister(uint8_t L);
+    /// @brief Set AF register pair
+    void setAFRegister(uint16_t AF);
     /// @brief Set the value of the BC register pair
     void setBCRegister(uint16_t BC);
     /// @brief Set the value of the DE register pair
@@ -507,6 +512,8 @@ public:
 
     /// @brief Set the CPU's flags
     void setFlags(Flags flags);
+    ///@brief Set flags via a single byte
+    void setFlagsByte(uint8_t flagsByte);
     /// @brief Set the zero flag
     void setZeroFlag(bool Z);
     /// @brief Set the subtract flag
