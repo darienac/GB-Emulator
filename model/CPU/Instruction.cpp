@@ -1430,7 +1430,7 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         return 8;
     case 0x5F:
         return 4;
-    //0x6
+    // 0x6
     case 0x60:
         return 4;
     case 0x61:
@@ -1463,7 +1463,7 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         return 8;
     case 0x6F:
         return 4;
-    //0x7
+    // 0x7
     case 0x70:
         return 8;
     case 0x71:
@@ -2557,11 +2557,9 @@ void CPU::process75(Bus &bus)
     setPC(PC + 1);
 }
 
-// Halt
-void CPU::process76(Bus &bus) // TODO: Implement HALT
+void CPU::process76(Bus &bus)
 {
-    // If there is an interrupt pending, halt
-//    if
+    setHalted(true);
 }
 
 void CPU::process77(Bus &bus)
@@ -3312,62 +3310,83 @@ void CPU::processDF(Bus &bus)
 
 void CPU::processE0(Bus &bus)
 {
-    // Stub for opcode 0xE0
+    uint8_t addr = fetch(bus);
+    bus.write(0xFF00 + addr, registers.A);
+    setPC(PC + 2);
 }
 
 void CPU::processE1(Bus &bus)
 {
-    // Stub for opcode 0xE1
+    setHLRegister(stackPop(bus));
+    setPC(PC + 1);
 }
 
 void CPU::processE2(Bus &bus)
 {
-    // Stub for opcode 0xE2
+    bus.write(0xFF00 + registers.C, registers.A);
+    setPC(PC + 1);
 }
 
 void CPU::processE3(Bus &bus)
 {
-    // Stub for opcode 0xE3
+    printf("Opcode 0xE3 not implemented\n");
 }
 
 void CPU::processE4(Bus &bus)
 {
-    // Stub for opcode 0xE4
+    printf("Opcode 0xE4 not implemented\n");
 }
 
 void CPU::processE5(Bus &bus)
 {
-    // Stub for opcode 0xE5
+    stackPush(bus, registers.HL);
+    setPC(PC + 1);
 }
 
 void CPU::processE6(Bus &bus)
 {
-    // Stub for opcode 0xE6
+    uint8_t value = fetch(bus);
+    registers.A &= value;
+    setZeroFlag(registers.A == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag(true);
+    setCarryFlag(false);
+    setPC(PC + 2);
 }
 
 void CPU::processE7(Bus &bus)
 {
-    // Stub for opcode 0xE7
+    stackPush(bus, PC + 2);
+    setPC(0x20);
 }
 
 void CPU::processE8(Bus &bus)
 {
-    // Stub for opcode 0xE8
+    int8_t offset = static_cast<int8_t>(fetch(bus));
+    int result = SP + offset;
+    setZeroFlag(false);
+    setSubtractFlag(false);
+    setHalfCarryFlag(((SP & 0xF) + (offset & 0xF)) > 0xF);
+    setCarryFlag(((SP & 0xFF) + (offset & 0xFF)) > 0xFF);
+    setSP(static_cast<uint16_t>(result));
+    setPC(PC + 2);
 }
 
 void CPU::processE9(Bus &bus)
 {
-    // Stub for opcode 0xE9
+    setPC(registers.HL);
 }
 
 void CPU::processEA(Bus &bus)
 {
-    // Stub for opcode 0xEA
+    uint16_t addr = fetch(bus);
+    bus.write(addr, registers.A);
+    setPC(PC + 3);
 }
 
 void CPU::processEB(Bus &bus)
 {
-    // Stub for opcode 0xEB
+    printf("Opcode 0xEB not implemented\n");
 }
 
 void CPU::processEC(Bus &bus)
@@ -3382,72 +3401,105 @@ void CPU::processED(Bus &bus)
 
 void CPU::processEE(Bus &bus)
 {
-    // Stub for opcode 0xEE
+    uint8_t value = fetch(bus);
+    registers.A ^= value;
+    setZeroFlag(registers.A == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(false);
+    setPC(PC + 2);
 }
 
 void CPU::processEF(Bus &bus)
 {
-    // Stub for opcode 0xEF
+    stackPush(bus, PC + 2);
+    setPC(0x28);
 }
 
 void CPU::processF0(Bus &bus)
 {
-    // Stub for opcode 0xF0
+    uint8_t addr = fetch(bus);
+    registers.A = bus.read(0xFF00 + addr);
+    setPC(PC + 2);
 }
 
+// TODO: resolve this
 void CPU::processF1(Bus &bus)
 {
-    // Stub for opcode 0xF1
+    uint16_t value = stackPop(bus);
+    setAFRegister(value);
+    setPC(PC + 1);
 }
 
 void CPU::processF2(Bus &bus)
 {
-    // Stub for opcode 0xF2
+    registers.A = bus.read(0xFF00 + registers.C);
+    setPC(PC + 1);
 }
 
 void CPU::processF3(Bus &bus)
 {
-    // Stub for opcode 0xF3
+    setImeFlag(false);
+    setPC(PC + 1);
 }
 
 void CPU::processF4(Bus &bus)
 {
-    // Stub for opcode 0xF4
+    printf("Opcode 0xF4 not implemented\n");
 }
 
 void CPU::processF5(Bus &bus)
 {
-    // Stub for opcode 0xF5
+    stackPush(bus, registers.AF);
+    setPC(PC + 1);
 }
 
 void CPU::processF6(Bus &bus)
 {
-    // Stub for opcode 0xF6
+    uint8_t value = fetch(bus);
+    registers.A |= value;
+    setZeroFlag(registers.A == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(false);
+    setPC(PC + 2);
 }
 
 void CPU::processF7(Bus &bus)
 {
-    // Stub for opcode 0xF7
+    stackPush(bus, PC + 2);
+    setPC(0x30);
 }
 
 void CPU::processF8(Bus &bus)
 {
-    // Stub for opcode 0xF8
+    int8_t offset = static_cast<int8_t>(fetch(bus));
+    int result = SP + offset;
+    setHLRegister(static_cast<uint16_t>(result));
+    setZeroFlag(false);
+    setSubtractFlag(false);
+    setHalfCarryFlag(((SP & 0xF) + (offset & 0xF)) > 0xF);
+    setCarryFlag(((SP & 0xFF) + (offset & 0xFF)) > 0xFF);
+    setPC(PC + 2);
 }
 
 void CPU::processF9(Bus &bus)
 {
-    // Stub for opcode 0xF9
+    setSP(registers.HL);
+    setPC(PC + 1);
 }
 
 void CPU::processFA(Bus &bus)
 {
-    // Stub for opcode 0xFA
+    uint16_t addr = fetch(bus);
+    registers.A = bus.read(addr);
+    setPC(PC + 3);
 }
 
 void CPU::processFB(Bus &bus)
 {
-    // Stub for opcode 0xFB
+    setImeFlag(true);
+    setPC(PC + 1);
 }
 
 void CPU::processFC(Bus &bus)
@@ -3462,10 +3514,17 @@ void CPU::processFD(Bus &bus)
 
 void CPU::processFE(Bus &bus)
 {
-    // Stub for opcode 0xFE
+    uint8_t value = fetch(bus);
+    auto result = getARegister() - value;
+    setZeroFlag(result == 0);
+    setSubtractFlag(true);
+    setHalfCarryFlag((getARegister() & 0xF) < (value & 0xF));
+    setCarryFlag(getARegister() < value);
+    setPC(PC + 2);
 }
 
 void CPU::processFF(Bus &bus)
 {
-    // Stub for opcode 0xFF
+    stackPush(bus, PC + 2);
+    setPC(0x38);
 }
