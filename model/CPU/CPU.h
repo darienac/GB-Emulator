@@ -42,6 +42,9 @@ private:
     unsigned int cycleCount = 0;
     // TODO: put other internal state vars here
 
+    /// @brief Flag that is set if the last instruction took more cycles than it may otherwise (conditional jumps, etc)
+    bool opCodeAdditionalCycles = false;
+
     /// @brief The CPU's program counter
     uint16_t PC = 0x100;
     /// @brief The CPU's stack pointer
