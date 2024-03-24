@@ -1,10 +1,14 @@
 
+#include <format>
 #include "CPU.h"
+#include "../../GlobalFlags.h"
 
 // all these come from the opcode table at https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 
 void CPU::processOpCode(uint8_t opCode, Bus &bus)
 {
+    CPU::opCodeAdditionalCycles = false; // Set back to true if more cycles were needed for the instruction (conditional jumps, etc)
+    uint16_t oldPC = getPC();
     switch (opCode)
     {
     case 0x00:
@@ -1232,6 +1236,15 @@ void CPU::processOpCode(uint8_t opCode, Bus &bus)
         break;
     }
     cycleCount += getCycleCount(opCode);
+    if (oldPC == getPC() && !halted) {
+        if (GlobalFlags::debug) {
+            printf("Likely unimplemented opcode: 0x%02X\n", opCode);
+        } else {
+            char out[100];
+            sprintf(out, "Likely unimplemented opcode: 0x%02X\n", opCode);
+            throw runtime_error(out);
+        }
+    }
 }
 
 unsigned int CPU::getCycleCount(uint8_t opcode) const
@@ -1530,9 +1543,286 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         return 8;
     case 0x8F:
         return 4;
+    // 0x9
+    case 0x90:
+        return 4;
+    case 0x91:
+        return 4;
+    case 0x92:
+        return 4;
+    case 0x93:
+        return 4;
+    case 0x94:
+        return 4;
+    case 0x95:
+        return 4;
+    case 0x96:
+        return 8;
+    case 0x97:
+        return 4;
+    case 0x98:
+        return 4;
+    case 0x99:
+        return 4;
+    case 0x9A:
+        return 4;
+    case 0x9B:
+        return 4;
+    case 0x9C:
+        return 4;
+    case 0x9D:
+        return 4;
+    case 0x9E:
+        return 8;
+    case 0x9F:
+        return 4;
+    // 0xA
+    case 0xA0:
+        return 4;
+    case 0xA1:
+        return 4;
+    case 0xA2:
+        return 4;
+    case 0xA3:
+        return 4;
+    case 0xA4:
+        return 4;
+    case 0xA5:
+        return 4;
+    case 0xA6:
+        return 8;
+    case 0xA7:
+        return 4;
+    case 0xA8:
+        return 4;
+    case 0xA9:
+        return 4;
+    case 0xAA:
+        return 4;
+    case 0xAB:
+        return 4;
+    case 0xAC:
+        return 4;
+    case 0xAD:
+        return 4;
+    case 0xAE:
+        return 8;
+    case 0xAF:
+        return 4;
+    // 0xB
+    case 0xB0:
+        return 4;
+    case 0xB1:
+        return 4;
+    case 0xB2:
+        return 4;
+    case 0xB3:
+        return 4;
+    case 0xB4:
+        return 4;
+    case 0xB5:
+        return 4;
+    case 0xB6:
+        return 8;
+    case 0xB7:
+        return 4;
+    case 0xB8:
+        return 4;
+    case 0xB9:
+        return 4;
+    case 0xBA:
+        return 4;
+    case 0xBB:
+        return 4;
+    case 0xBC:
+        return 4;
+    case 0xBD:
+        return 4;
+    case 0xBE:
+        return 8;
+    case 0xBF:
+        return 4;
+    // 0xC
+    case 0xC0:
+        if (opCodeAdditionalCycles) {
+            return 20;
+        }
+        return 8;
+    case 0xC1:
+        return 12;
+    case 0xC2:
+        if (opCodeAdditionalCycles) {
+            return 16;
+        }
+        return 12;
+    case 0xC3:
+        return 16;
+    case 0xC4:
+        if (opCodeAdditionalCycles) {
+            return 24;
+        }
+        return 12;
+    case 0xC5:
+        return 16;
+    case 0xC6:
+        return 8;
+    case 0xC7:
+        return 16;
+    case 0xC8:
+        if (opCodeAdditionalCycles) {
+            return 20;
+        }
+        return 8;
+    case 0xC9:
+        return 16;
+    case 0xCA:
+        if (opCodeAdditionalCycles) {
+            return 16;
+        }
+        return 12;
+    case 0xCB:
+        if ((opcode & 0xF) == 0x6 || (opcode & 0xF) == 0xE) {
+            return 20;
+        }
+        return 12;
+    case 0xCC:
+        if (opCodeAdditionalCycles) {
+            return 24;
+        }
+        return 12;
+    case 0xCD:
+        return 24;
+    case 0xCE:
+        return 8;
+    case 0xCF:
+        return 16;
+    // 0xD
+    case 0xD0:
+        if (opCodeAdditionalCycles) {
+            return 20;
+        }
+        return 8;
+    case 0xD1:
+        return 12;
+    case 0xD2:
+        if (opCodeAdditionalCycles) {
+            return 16;
+        }
+        return 12;
+    case 0xD3:
+        break; // Undefined
+    case 0xD4:
+        if (opCodeAdditionalCycles) {
+            return 24;
+        }
+        return 12;
+    case 0xD5:
+        return 16;
+    case 0xD6:
+        return 8;
+    case 0xD7:
+        return 16;
+    case 0xD8:
+        if (opCodeAdditionalCycles) {
+            return 20;
+        }
+        return 8;
+    case 0xD9:
+        return 16;
+    case 0xDA:
+        if (opCodeAdditionalCycles) {
+            return 16;
+        }
+        return 12;
+    case 0xDB:
+        break; // Undefined
+    case 0xDC:
+        if (opCodeAdditionalCycles) {
+            return 24;
+        }
+        return 12;
+    case 0xDD:
+        break; // Undefined
+    case 0xDE:
+        return 8;
+    case 0xDF:
+        return 16;
+    // 0xE
+    case 0xE0:
+        return 12;
+    case 0xE1:
+        return 12;
+    case 0xE2:
+        return 8;
+    case 0xE3:
+        break; // Undefined
+    case 0xE4:
+        break; // Undefined
+    case 0xE5:
+        return 16;
+    case 0xE6:
+        return 8;
+    case 0xE7:
+        return 16;
+    case 0xE8:
+        return 16;
+    case 0xE9:
+        return 4;
+    case 0xEA:
+        return 16;
+    case 0xEB:
+        break; // Undefined
+    case 0xEC:
+        break; // Undefined
+    case 0xED:
+        break; // Undefined
+    case 0xEE:
+        return 8;
+    case 0xEF:
+        return 16;
+    // 0xF
+    case 0xF0:
+        return 12;
+    case 0xF1:
+        return 12;
+    case 0xF2:
+        return 8;
+    case 0xF3:
+        return 4;
+    case 0xF4:
+        break; // Undefined
+    case 0xF5:
+        return 16;
+    case 0xF6:
+        return 8;
+    case 0xF7:
+        return 16;
+    case 0xF8:
+        return 12;
+    case 0xF9:
+        return 8;
+    case 0xFA:
+        return 16;
+    case 0xFB:
+        return 4;
+    case 0xFC:
+        break; // Undefined
+    case 0xFD:
+        break; // Undefined
+    case 0xFE:
+        return 8;
+    case 0xFF:
+        return 16;
     }
 
-    printf("Unknown opcode: 0x%02X\n", opcode);
+    if (GlobalFlags::debug) {
+        printf("Unknown opcode: 0x%02X\n", opcode);
+    } else {
+        char out[100];
+        sprintf(out, "Unknown opcode: 0x%02X\n", opcode);
+        throw runtime_error(out);
+    }
+
     return 0;
 }
 
@@ -3175,7 +3465,8 @@ void CPU::processC2(Bus &bus)
 
 void CPU::processC3(Bus &bus)
 {
-    // Stub for opcode 0xC3
+    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(immediateValue);
 }
 
 void CPU::processC4(Bus &bus)
