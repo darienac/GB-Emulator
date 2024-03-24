@@ -9,6 +9,8 @@
 class GlobalFlags {
 public:
     static const bool debug;
+
+    static const bool showControls;
 };
 
 
