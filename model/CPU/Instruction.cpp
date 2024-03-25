@@ -2154,6 +2154,7 @@ void CPU::process20(Bus &bus)
     if (!getZeroFlag())
     {
         setPC(PC + offset + 2);
+        opCodeAdditionalCycles = true;
     }
     else
     {
@@ -2235,6 +2236,7 @@ void CPU::process28(Bus &bus)
     if (getZeroFlag())
     {
         setPC(PC + offset + 2);
+        opCodeAdditionalCycles = true;
     }
     else
     {
@@ -2324,6 +2326,7 @@ void CPU::process30(Bus &bus)
     if (!getCarryFlag())
     {
         setPC(PC + offset + 2);
+        opCodeAdditionalCycles = true;
     }
     else
     {
@@ -2402,6 +2405,7 @@ void CPU::process38(Bus &bus)
     if (getCarryFlag())
     {
         setPC(PC + offset + 2);
+        opCodeAdditionalCycles = true;
     }
     else
     {
