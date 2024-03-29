@@ -23,9 +23,11 @@ private:
     HRAM* hRam;
     WRAM* wRam;
     IO* io;
-    //CPU* cpu to set the enable register
 
     DMA* dma;
+
+    uint8_t interruptFlag = 0xE0;
+    uint8_t interruptEnable = 0x00;
 public:
     Bus(Cartridge* cart, VRAM* vRam, OamRAM* oamRam, HRAM* hram, WRAM* wRam, DMA* dma, IO* io) :
             cart(cart), vRam(vRam), wRam(wRam), oamRam(oamRam), hRam(hram), dma(dma), io(io) {}

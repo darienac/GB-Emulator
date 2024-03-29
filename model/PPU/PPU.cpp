@@ -4,7 +4,7 @@
 
 #include "PPU.h"
 
-PPU::PPU(LCD* lcd, Bus* bus, IEmulator* emu) : lcd(lcd), emu(emu), bus(bus) {
+PPU::PPU(LCD* lcd, Bus* bus, IEmulator* emu) : lcd(lcd), emu(emu) {
     currFrame = 0;
     lineTicks = 0;
     windowLine = 0;

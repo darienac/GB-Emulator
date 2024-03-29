@@ -5,6 +5,26 @@
 #include <string>
 #include "../Memory/Bus.h"
 
+/// @brief InterruptMask values TODO: move these outside of this file to a more static location?
+namespace InterruptMasks
+{
+    const uint8_t VBLANK = 0x01;
+    const uint8_t LCD_STAT = 0x02;
+    const uint8_t TIMER = 0x04;
+    const uint8_t SERIAL = 0x08;
+    const uint8_t JOYPAD = 0x10;
+}
+
+/// @brief InterruptAddress values TODO: move these outside of this file to a more static location?
+namespace InterruptAddresses
+{
+    const uint16_t VBLANK = 0x0040;
+    const uint16_t LCD_STAT = 0x0048;
+    const uint16_t TIMER = 0x0050;
+    const uint16_t SERIAL = 0x0058;
+    const uint16_t JOYPAD = 0x0060;
+}
+
 struct RegisterPair
 {
     uint8_t high;
@@ -22,10 +42,19 @@ private:
     unsigned int cycleCount = 0;
     // TODO: put other internal state vars here
 
+    /// @brief Flag that is set if the last instruction took more cycles than it may otherwise (conditional jumps, etc)
+    bool opCodeAdditionalCycles = false;
+
     /// @brief The CPU's program counter
     uint16_t PC = 0x100;
     /// @brief The CPU's stack pointer
     uint16_t SP = 0xFFFE;
+
+    /// @brief CPU halt status
+    bool halted = false;
+
+    /// @brief IME flag (interrupts enabled)
+    bool imeFlag = false; // interrupts disabled when game starts running
 
     /// @brief The CPU's registers. All initial values are from the powerup sequence ref on PanDocs using the DMG model
     struct Registers
@@ -96,6 +125,18 @@ private:
 
     /// @brief Fetch an instruction from memory
     uint8_t fetch(Bus &bus);
+
+    /// @brief Handle interrupts TODO: read more about HALT bug and make sure this works with it
+    void handleInterrupts(Bus &bus);
+
+    /// @brief Handle a single interrupt
+    void handleSingleInterrupt(Bus &bus, uint8_t interruptBit, uint16_t interruptVector);
+
+    /// @brief Push a value onto the stack
+    void stackPush(Bus &bus, uint16_t value);
+
+    /// @brief Pop a value from the stack
+    uint16_t stackPop(Bus &bus);
 
     // functions to process each opcode
     void process00(Bus &bus);
@@ -365,6 +406,18 @@ public:
     /// @brief The CPU's stack pointer
     uint16_t getSP() const;
 
+    /// @brief The CPU's halt status
+    bool getHalted() const;
+
+    /// @brief The CPU's interrupts enabled status
+    bool getImeFlag() const;
+
+    /// @brief The CPU's IE (interrupt enable) register (FFFF)
+    static uint8_t getInterruptEnableFlag(Bus &bus);
+
+    /// @brief The CPU's IF (interrupt flag) flag (FF0F)
+    static uint8_t getInterruptFlag(Bus &bus);
+
     /// @brief The CPU's registers
     Registers getRegisters() const;
 
@@ -392,6 +445,9 @@ public:
     /// @brief The CPU's flags
     Flags getFlags() const;
 
+    /// @brief Get flags as a single byte
+    uint8_t getFlagsByte() const;
+
     /// @brief get zero flag
     bool getZeroFlag() const;
 
@@ -416,6 +472,18 @@ public:
     /// @brief The CPU's stack pointer
     void setSP(uint16_t SP);
 
+    /// @brief Set the value of the halt status
+    void setHalted(bool halted);
+
+    /// @brief Set the value of the interrupts enabled status
+    void setImeFlag(bool flagValue);
+
+    /// @brief Set the value of the interrupt flag
+    static void setInterruptFlag(Bus &bus, uint8_t interruptFlag);
+
+    /// @brief Set the value of the interrupts enabled register
+    static void setInterruptEnable(Bus &bus, uint8_t interruptEnable);
+
     /// @brief The CPU's registers
     void setRegisters(Registers registers);
 
@@ -433,6 +501,8 @@ public:
     void setHRegister(uint8_t H);
     /// @brief Set the value of the L register
     void setLRegister(uint8_t L);
+    /// @brief Set AF register pair
+    void setAFRegister(uint16_t AF);
     /// @brief Set the value of the BC register pair
     void setBCRegister(uint16_t BC);
     /// @brief Set the value of the DE register pair
@@ -442,6 +512,8 @@ public:
 
     /// @brief Set the CPU's flags
     void setFlags(Flags flags);
+    ///@brief Set flags via a single byte
+    void setFlagsByte(uint8_t flagsByte);
     /// @brief Set the zero flag
     void setZeroFlag(bool Z);
     /// @brief Set the subtract flag
