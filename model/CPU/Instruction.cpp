@@ -4070,15 +4070,14 @@ void CPU::processBF(Bus &bus)
 // Opcodes 0xC0 - 0xCF
 void CPU::processC0(Bus &bus)
 {
-    uint8_t addr = fetch(bus);
-
     /* Implement internal branch decision */
 
     // If the Zero Flag is NOT set
+    setPC(PC + 1);
     if (!getZeroFlag()) {
         // Return from subroutine
-        stackPop(bus)
-        setPC(PC + 1)
+        opCodeAdditionalCycles = true;
+        setPC(stackPop(bus));
     }
 }
 
@@ -4091,10 +4090,12 @@ void CPU::processC1(Bus &bus)
 void CPU::processC2(Bus &bus)
 {
     // If Zero Flag is NOT set
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     if (!getZeroFlag()) {
         // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-        setPC(address)
+        opCodeAdditionalCycles = true;
+        setPC(address);
     }
 }
 
@@ -4107,12 +4108,14 @@ void CPU::processC3(Bus &bus)
 void CPU::processC4(Bus &bus)
 {
     // If Zero Flag is NOT set
+    setPC(PC + 3);
     if (!getZeroFlag()) {
+        opCodeAdditionalCycles = true;
         // fetch the 16-bit immediate value (little-endian)
         uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
         // Push address onto the stack
-        stackPush(bus, address);
-        setPC(PC + 1);
+        stackPush(bus, PC);
+        setPC(address);
     }
 }
 
@@ -4126,7 +4129,7 @@ void CPU::processC5(Bus &bus)
 void CPU::processC6(Bus &bus)
 {
     // fetch the u8 value from the bus
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     // add the value to register A
     uint16_t result = registers.A + value;
     // load the result into the A register pair
@@ -4140,44 +4143,44 @@ void CPU::processC6(Bus &bus)
     // complement the carry flag
     setCarryFlag(result > 0xFFFF);
 
-    setPC(PC + 1);
+    setPC(PC + 2);
 }
 
 void CPU::processC7(Bus &bus)
 {
     // Set PC to 0x00
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1); // I think it's PC + 1 since the current instruction is only 1 byte
     setPC(0x00);
 }
 
 void CPU::processC8(Bus &bus)
 {
-    uint8_t addr = fetch(bus);
-
     /* Implement internal branch decision */
 
     // If the Zero Flag is set
+    setPC(PC + 1);
     if (getZeroFlag()) {
         // Return from subroutine
-        stackPop(bus)
-        setPC(PC + 1)
+        opCodeAdditionalCycles = true;
+        setPC(stackPop(bus));
     }
 }
 
 void CPU::processC9(Bus &bus)
 {
     // Return from subroutine, a.k.a. Stack Pop
-    stackPop(bus)
-    setPC(PC + 1)
+    setPC(stackPop(bus));
 }
 
 void CPU::processCA(Bus &bus)
 {
     // If Zero Flag is set
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     if (getZeroFlag()) {
         // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-        setPC(address)
+        opCodeAdditionalCycles = true;
+        setPC(address);
     }
 }
 
@@ -4186,12 +4189,14 @@ void CPU::processCA(Bus &bus)
 void CPU::processCC(Bus &bus)
 {
     // If Zero Flag is set
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     if (getZeroFlag()) {
+        opCodeAdditionalCycles = true;
         // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
         // Push address onto the stack
-        stackPush(bus, address);
-        setPC(PC + 1);
+        stackPush(bus, PC);
+        setPC(address);
     }
 }
 
@@ -4200,14 +4205,14 @@ void CPU::processCD(Bus &bus)
     // fetch the 16-bit immediate value (little-endian)
     uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
     // Push address onto the stack
-    stackPush(bus, address);
-    setPC(PC + 1);
+    stackPush(bus, PC);
+    setPC(address);
 }
 
 void CPU::processCE(Bus &bus)
 {
     // fetch the u8 value from the bus
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     // add the value and the carry flag to register A
     uint16_t result = registers.A + value + getCarryFlag();
     // load the result into the A register pair
@@ -4221,27 +4226,26 @@ void CPU::processCE(Bus &bus)
     // complement the carry flag
     setCarryFlag(result > 0xFFFF);
 
-    setPC(PC + 1);
+    setPC(PC + 2);
 }
 
 void CPU::processCF(Bus &bus)
 {
     // Set PC to 0x08
-    stackPush(bus, PC + 2);
-    setPC(0x10);
+    stackPush(bus, PC + 1);
+    setPC(0x08);
 }
 
 void CPU::processD0(Bus &bus)
 {
-    uint8_t addr = fetch(bus);
-
     /* Implement internal branch decision */
 
     // If the Carry Flag is NOT set
+    setPC(PC + 1);
     if (!getCarryFlag()) {
         // Return from subroutine
-        stackPop(bus)
-        setPC(PC + 1)
+        opCodeAdditionalCycles = true;
+        setPC(stackPop(bus));
     }
 }
 
@@ -4253,11 +4257,13 @@ void CPU::processD1(Bus &bus)
 
 void CPU::processD2(Bus &bus)
 {
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     // If Carry Flag is NOT set
     if (!getCarryFlag()) {
         // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-        setPC(address)
+        opCodeAdditionalCycles = true;
+        setPC(address);
     }
 }
 
@@ -4268,13 +4274,15 @@ void CPU::processD3(Bus &bus)
 
 void CPU::processD4(Bus &bus)
 {
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     // If Carry Flag is NOT set
     if (!getCarryFlag()) {
-        // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+        opCodeAdditionalCycles = true;
         // Push address onto the stack
-        stackPush(bus, address);
-        setPC(PC + 1);
+        stackPush(bus, PC);
+        setPC(address);
     }
 }
 
@@ -4288,7 +4296,7 @@ void CPU::processD5(Bus &bus)
 void CPU::processD6(Bus &bus)
 {
     // fetch the u8 value from the bus
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     // subtract the value to register A
     uint16_t result = registers.A - value;
     // load the result into the A register pair
@@ -4302,27 +4310,26 @@ void CPU::processD6(Bus &bus)
     // complement the carry flag
     setCarryFlag(result > 0xFFFF);
 
-    setPC(PC + 1);
+    setPC(PC + 2);
 }
 
 void CPU::processD7(Bus &bus)
 {
     // Set PC to 0x10
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1);
     setPC(0x10);
 }
 
 void CPU::processD8(Bus &bus)
 {
-    uint8_t addr = fetch(bus);
-
     /* Implement internal branch decision */
 
+    setPC(PC + 1);
     // If the Carry Flag is set
     if (getCarryFlag()) {
         // Return from subroutine
-        stackPop(bus)
-        setPC(PC + 1)
+        opCodeAdditionalCycles = true;
+        setPC(stackPop(bus));
     }
 }
 
@@ -4331,17 +4338,18 @@ void CPU::processD9(Bus &bus)
     // Enable Interrupts
     setImeFlag(true);
     // Return from subroutine
-    stackPop(bus)
-    setPC(PC + 1);
+    setPC(stackPop(bus));
 }
 
 void CPU::processDA(Bus &bus)
 {
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     // If Carry Flag is set
     if (getCarryFlag()) {
         // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-        setPC(address)
+        opCodeAdditionalCycles = true;
+        setPC(address);
     }
 }
 
@@ -4352,13 +4360,15 @@ void CPU::processDB(Bus &bus)
 
 void CPU::processDC(Bus &bus)
 {
+    // fetch the 16-bit immediate value (little-endian)
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    setPC(PC + 3);
     // If Carry Flag is set
     if (getCarryFlag()) {
-        // fetch the 16-bit immediate value (little-endian)
-        uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+        opCodeAdditionalCycles = true;
         // Push address onto the stack
-        stackPush(bus, address);
-        setPC(PC + 1);
+        stackPush(bus, PC);
+        setPC(address);
     }
 }
 
@@ -4370,7 +4380,7 @@ void CPU::processDD(Bus &bus)
 void CPU::processDE(Bus &bus)
 {
     // fetch the u8 value from the bus
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     // Subtract the value  and the Carry Flag from that in Register A
     uint16_t result = registers.A - (value + getCarryFlag());
     // load the result into the A register pair
@@ -4384,19 +4394,19 @@ void CPU::processDE(Bus &bus)
     // set the carry flag
     setCarryFlag(registers.A < (bus.read(registers.HL) + getCarryFlag()));
 
-    setPC(PC + 1);
+    setPC(PC + 2);
 }
 
 void CPU::processDF(Bus &bus)
 {
     // Set PC to 0x18
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1);
     setPC(0x18);
 }
 
 void CPU::processE0(Bus &bus)
 {
-    uint8_t addr = fetch(bus);
+    uint8_t addr = bus.read(PC + 1);
     bus.write(0xFF00 + addr, registers.A);
     setPC(PC + 2);
 }
@@ -4410,7 +4420,7 @@ void CPU::processE1(Bus &bus)
 void CPU::processE2(Bus &bus)
 {
     bus.write(0xFF00 + registers.C, registers.A);
-    setPC(PC + 1);
+    setPC(PC + 2);
 }
 
 void CPU::processE3(Bus &bus)
@@ -4431,7 +4441,7 @@ void CPU::processE5(Bus &bus)
 
 void CPU::processE6(Bus &bus)
 {
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     registers.A &= value;
     setZeroFlag(registers.A == 0);
     setSubtractFlag(false);
@@ -4442,13 +4452,13 @@ void CPU::processE6(Bus &bus)
 
 void CPU::processE7(Bus &bus)
 {
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1);
     setPC(0x20);
 }
 
 void CPU::processE8(Bus &bus)
 {
-    int8_t offset = static_cast<int8_t>(fetch(bus));
+    int8_t offset = static_cast<int8_t>(bus.read(PC + 1));
     int result = SP + offset;
     setZeroFlag(false);
     setSubtractFlag(false);
@@ -4465,8 +4475,8 @@ void CPU::processE9(Bus &bus)
 
 void CPU::processEA(Bus &bus)
 {
-    uint16_t addr = fetch(bus);
-    bus.write(addr, registers.A);
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    bus.write(address, registers.A);
     setPC(PC + 3);
 }
 
@@ -4477,17 +4487,17 @@ void CPU::processEB(Bus &bus)
 
 void CPU::processEC(Bus &bus)
 {
-    // Stub for opcode 0xEC
+    printf("Opcode 0xEC not implemented\n");
 }
 
 void CPU::processED(Bus &bus)
 {
-    // Stub for opcode 0xED
+    printf("Opcode 0xED not implemented\n");
 }
 
 void CPU::processEE(Bus &bus)
 {
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     registers.A ^= value;
     setZeroFlag(registers.A == 0);
     setSubtractFlag(false);
@@ -4498,13 +4508,13 @@ void CPU::processEE(Bus &bus)
 
 void CPU::processEF(Bus &bus)
 {
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1);
     setPC(0x28);
 }
 
 void CPU::processF0(Bus &bus)
 {
-    uint8_t addr = fetch(bus);
+    uint8_t addr = bus.read(PC + 1);
     registers.A = bus.read(0xFF00 + addr);
     setPC(PC + 2);
 }
@@ -4520,7 +4530,7 @@ void CPU::processF1(Bus &bus)
 void CPU::processF2(Bus &bus)
 {
     registers.A = bus.read(0xFF00 + registers.C);
-    setPC(PC + 1);
+    setPC(PC + 1); // Documentation inconsistency, Listed as 1 byte in GB complete technical reference, 2 bytes in gb opcodes table
 }
 
 void CPU::processF3(Bus &bus)
@@ -4542,7 +4552,7 @@ void CPU::processF5(Bus &bus)
 
 void CPU::processF6(Bus &bus)
 {
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     registers.A |= value;
     setZeroFlag(registers.A == 0);
     setSubtractFlag(false);
@@ -4553,13 +4563,13 @@ void CPU::processF6(Bus &bus)
 
 void CPU::processF7(Bus &bus)
 {
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1);
     setPC(0x30);
 }
 
 void CPU::processF8(Bus &bus)
 {
-    int8_t offset = static_cast<int8_t>(fetch(bus));
+    int8_t offset = static_cast<int8_t>(bus.read(PC + 1));
     int result = SP + offset;
     setHLRegister(static_cast<uint16_t>(result));
     setZeroFlag(false);
@@ -4577,8 +4587,8 @@ void CPU::processF9(Bus &bus)
 
 void CPU::processFA(Bus &bus)
 {
-    uint16_t addr = fetch(bus);
-    registers.A = bus.read(addr);
+    uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
+    registers.A = bus.read(address);
     setPC(PC + 3);
 }
 
@@ -4590,17 +4600,17 @@ void CPU::processFB(Bus &bus)
 
 void CPU::processFC(Bus &bus)
 {
-    // Stub for opcode 0xFC
+    printf("Opcode 0xFC not implemented\n");
 }
 
 void CPU::processFD(Bus &bus)
 {
-    // Stub for opcode 0xFD
+    printf("Opcode 0xFD not implemented\n");
 }
 
 void CPU::processFE(Bus &bus)
 {
-    uint8_t value = fetch(bus);
+    uint8_t value = bus.read(PC + 1);
     auto result = getARegister() - value;
     setZeroFlag(result == 0);
     setSubtractFlag(true);
@@ -4611,6 +4621,6 @@ void CPU::processFE(Bus &bus)
 
 void CPU::processFF(Bus &bus)
 {
-    stackPush(bus, PC + 2);
+    stackPush(bus, PC + 1);
     setPC(0x38);
 }
