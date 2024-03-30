@@ -50,6 +50,8 @@ add_executable(gameboy_emulator main.cpp
         model/CPU/PrefixCB.cpp
         GlobalFlags.cpp
         GlobalFlags.h
+        model/CPU/DebugLookupTable.cpp
+        model/CPU/DebugLookupTable.h
 )
 
 target_compile_features(gameboy_emulator PRIVATE cxx_std_23)

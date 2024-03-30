@@ -5,4 +5,5 @@
 #include "GlobalFlags.h"
 
 const bool GlobalFlags::debug = true;
+const bool GlobalFlags::showRegisters = true;
 const bool GlobalFlags::showControls = false;
