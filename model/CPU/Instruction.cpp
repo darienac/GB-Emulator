@@ -1843,9 +1843,7 @@ void CPU::process01(Bus &bus)
 
 void CPU::process02(Bus &bus)
 {
-    // get the location in memory from the BC register pair
-    uint16_t address = bus.read(registers.BC); // TODO: is this right?
-    bus.write(address, registers.A);
+    bus.write(getBCRegister(), registers.A);
 
     setPC(PC + 1);
 }
@@ -1894,16 +1892,16 @@ void CPU::process06(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: is this right? RLCA is kinda confusing
 void CPU::process07(Bus &bus)
 {
+    uint8_t msb = (getARegister() & 0x80) >> 7;
     // shift the A register left by one bit
-    setARegister(registers.A << 1);
-    // set the carry flag if the leftmost bit was set
-    setCarryFlag((registers.A & 0x80) != 0);
-    // clear the subtract and half-carry flags
+    setARegister((getARegister() << 1) | msb);
+
+    setZeroFlag(getARegister() == 0);
     setSubtractFlag(false);
     setHalfCarryFlag(false);
+    setCarryFlag(msb);
 
     setPC(PC + 1);
 }
@@ -1983,16 +1981,17 @@ void CPU::process0E(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: is this right? RRCA
 void CPU::process0F(Bus &bus)
 {
-    // shift the A register right by one bit
-    setARegister(registers.A >> 1);
     // set the carry flag if the rightmost bit was set
-    setCarryFlag((registers.A & 0x01) != 0);
+    uint8_t lsb = getARegister() & 0x01;
+    // shift the A register right by one bit
+    setARegister((getARegister() >> 1) | (lsb << 7));
     // clear the subtract and half-carry flags
+    setZeroFlag(getARegister() == 0);
     setSubtractFlag(false);
     setHalfCarryFlag(false);
+    setCarryFlag(lsb);
 
     setPC(PC + 1);
 }
@@ -2063,12 +2062,17 @@ void CPU::process16(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: RLA needs a check for correctness
 void CPU::process17(Bus &bus)
 {
+    uint8_t msb = (getARegister() | 0x80) >> 7;
     // shift the A register left by one bit and set the carry flag to the value of the leftmost bit
-    setARegister(registers.A << 1);
-    setCarryFlag((registers.A & 0x80) != 0);
+    setARegister((getARegister() << 1) | getCarryFlag());
+
+    setZeroFlag(getARegister() == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(msb);
+
     setPC(PC + 1);
 }
 
@@ -2138,12 +2142,17 @@ void CPU::process1E(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: check RRA for correctness
 void CPU::process1F(Bus &bus)
 {
     // shift the A register right by one bit and set the carry flag to the value of the rightmost bit
-    setARegister(registers.A >> 1);
-    setCarryFlag((registers.A & 0x01) != 0);
+    uint8_t lsb = getARegister() & 1;
+    setARegister((getARegister() >> 1) | (getCarryFlag() << 7));
+
+    setZeroFlag(getARegister() == 0);
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(lsb);
+
     setPC(PC + 1);
 }
 void CPU::process20(Bus &bus)
