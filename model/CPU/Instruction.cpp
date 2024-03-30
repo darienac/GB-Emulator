@@ -2349,14 +2349,11 @@ void CPU::process31(Bus &bus)
     setPC(PC + 3);
 }
 
-// TODO: check on HL-
 void CPU::process32(Bus &bus)
 {
-    // fetch the 16-bit immediate value (little-endian)
-    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-    // load the value of the A register into the memory address specified by the immediate value
-    bus.write(immediateValue, registers.A);
-    setPC(PC + 3);
+    bus.write(getHLRegister(), getARegister());
+    setHLRegister(getHLRegister() - 1);
+    setPC(PC + 1);
 }
 
 void CPU::process33(Bus &bus)
