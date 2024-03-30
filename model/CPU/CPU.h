@@ -75,10 +75,10 @@ private:
         {
             struct
             {
-                /// @brief The CPU's general purpose register B
-                uint8_t B;
                 /// @brief The CPU's general purpose register C
                 uint8_t C;
+                /// @brief The CPU's general purpose register B
+                uint8_t B;
             };
             /// @brief The CPU's BC register pair
             uint16_t BC = 0x0013;
@@ -87,10 +87,10 @@ private:
         {
             struct
             {
-                /// @brief The CPU's general purpose register D
-                uint8_t D;
                 /// @brief The CPU's general purpose register E
                 uint8_t E;
+                /// @brief The CPU's general purpose register D
+                uint8_t D;
             };
             /// @brief The CPU's DE register pair
             uint16_t DE = 0x00D8;
@@ -99,10 +99,10 @@ private:
         {
             struct
             {
-                /// @brief The CPU's general purpose register H
-                uint8_t H;
                 /// @brief The CPU's general purpose register L
                 uint8_t L;
+                /// @brief The CPU's general purpose register H
+                uint8_t H;
             };
             /// @brief The CPU's HL register pair
             uint16_t HL = 0x014D;
