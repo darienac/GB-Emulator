@@ -2397,10 +2397,12 @@ void CPU::process36(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: what the hay is SCF?
 void CPU::process37(Bus &bus)
 {
-    // Stub for opcode 0x37
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(true);
+    setPC(PC + 1);
 }
 
 void CPU::process38(Bus &bus)
