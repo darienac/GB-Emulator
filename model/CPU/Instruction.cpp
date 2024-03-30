@@ -2477,10 +2477,10 @@ void CPU::process3E(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: check on CCF
 void CPU::process3F(Bus &bus)
 {
-    // complement the carry flag
+    setSubtractFlag(false);
+    setHalfCarryFlag(false);
     setCarryFlag(!getCarryFlag());
     setPC(PC + 1);
 }
