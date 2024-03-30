@@ -1,5 +1,6 @@
 #include "CPU.h"
 #include "../../GlobalFlags.h"
+#include "DebugLookupTable.h"
 
 #define DEBUG
 
@@ -341,7 +342,15 @@ void CPU::tick(Bus &bus)
     {
         uint8_t opcode = fetch(bus);
         if (GlobalFlags::debug) {
-            std::printf("PC: %X Opcode: %X\n", getPC(), opcode);
+            std::printf("PC: %04X SP: %04X Op: %02X - (%s)\n", getPC(), getSP(), opcode, DebugLookupTable::getInstructionName(opcode, bus.read(PC + 1)).c_str());
+            std::printf("d8/a8: %02X    d16/a16: %04X\n", bus.read(PC + 1), (bus.read(PC + 2) << 8) | bus.read(PC + 1));
+            if (GlobalFlags::showRegisters) {
+                std::printf("A F: %02X %02X\n", getARegister(), getFlagsByte());
+                std::printf("Z: %d N: %d H: %d C: %d\n", getZeroFlag(), getSubtractFlag(), getHalfCarryFlag(), getCarryFlag());
+                std::printf("B C: %02X %02X\n", getBRegister(), getCRegister());
+                std::printf("D E: %02X %02X\n", getDRegister(), getERegister());
+                std::printf("H L: %02X %02X\n", getHRegister(), getLRegister());
+            }
             std::cin.get();
         }
         processOpCode(opcode, bus);
