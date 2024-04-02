@@ -99,37 +99,37 @@ CPU::Registers CPU::getRegisters() const
 
 uint8_t CPU::getARegister() const
 {
-    return registers.AF & 0x00FF;
+    return registers.AF >> 8;
 }
 
 uint8_t CPU::getBRegister() const
 {
-    return registers.BC & 0x00FF;
+    return registers.BC >> 8;
 }
 
 uint8_t CPU::getCRegister() const
 {
-    return (registers.BC & 0xFF00) >> 8;
+    return registers.BC & 0x00FF;
 }
 
 uint8_t CPU::getDRegister() const
 {
-    return registers.DE & 0x00FF;
+    return registers.DE >> 8;
 }
 
 uint8_t CPU::getERegister() const
 {
-    return (registers.DE & 0xFF00) >> 8;
+    return registers.DE & 0x00FF;
 }
 
 uint8_t CPU::getHRegister() const
 {
-    return registers.HL & 0x00FF;
+    return registers.HL >> 8;
 }
 
 uint8_t CPU::getLRegister() const
 {
-    return (registers.HL & 0xFF00) >> 8;
+    return registers.HL & 0x00FF;
 }
 
 uint16_t CPU::getBCRegister() const
@@ -232,44 +232,44 @@ void CPU::setRegisters(Registers registers)
 
 void CPU::setARegister(uint8_t A)
 {
-    registers.AF = (registers.AF & 0xFF00) | A;
+    registers.AF = (registers.AF & 0x00FF) | (A << 8);
 }
 
 void CPU::setBRegister(uint8_t B)
 {
-    registers.BC = (registers.BC & 0xFF00) | B;
+    registers.BC = (registers.BC & 0x00FF) | (B << 8);
 }
 
 void CPU::setCRegister(uint8_t C)
 {
-    registers.BC = (registers.BC & 0x00FF) | (C << 8);
+    registers.BC = (registers.BC & 0xFF00) | C;
 }
 
 void CPU::setDRegister(uint8_t D)
 {
-    registers.DE = (registers.DE & 0xFF00) | D;
+    registers.DE = (registers.DE & 0x00FF) | (D << 8);
 }
 
 void CPU::setERegister(uint8_t E)
 {
-    registers.DE = (registers.DE & 0x00FF) | (E << 8);
+    registers.DE = (registers.DE & 0xFF00) | E;
 }
 
 void CPU::setHRegister(uint8_t H)
 {
-    registers.HL = (registers.HL & 0xFF00) | H;
+    registers.HL = (registers.HL & 0x00FF) | (H << 8);
 }
 
 void CPU::setLRegister(uint8_t L)
 {
-    registers.HL = (registers.HL & 0x00FF) | (L << 8);
+    registers.HL = (registers.HL & 0xFF00) | L;
 }
 
 void CPU::setAFRegister(uint16_t AF)
 {
     registers.AF = AF;
     // set flags struct
-    setFlagsByte(AF >> 8);
+    setFlagsByte(AF & 0x00FF);
 }
 
 void CPU::setBCRegister(uint16_t BC)
@@ -303,25 +303,25 @@ void CPU::setFlagsByte(uint8_t flagsByte)
 void CPU::setZeroFlag(bool Z)
 {
     flags.Z = Z;
-    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
+    setAFRegister((registers.AF & 0xFF00) | getFlagsByte());
 }
 
 void CPU::setSubtractFlag(bool N)
 {
     flags.N = N;
-    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
+    setAFRegister((registers.AF & 0xFF00) | getFlagsByte());
 }
 
 void CPU::setHalfCarryFlag(bool H)
 {
     flags.H = H;
-    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
+    setAFRegister((registers.AF & 0xFF00) | getFlagsByte());
 }
 
 void CPU::setCarryFlag(bool C)
 {
     flags.C = C;
-    setAFRegister((registers.AF & 0xFF) | (getFlagsByte() << 8));
+    setAFRegister((registers.AF & 0xFF00) | getFlagsByte());
 }
 
 uint8_t CPU::fetch(Bus &bus)
