@@ -342,20 +342,33 @@ void CPU::tick(Bus &bus)
     {
         uint8_t opcode = fetch(bus);
         if (GlobalFlags::debug) {
-            std::printf("PC: %04X SP: %04X Op: %02X - (%s)\n", getPC(), getSP(), opcode, DebugLookupTable::getInstructionName(opcode, bus.read(PC + 1)).c_str());
-            std::printf("d8/a8: %02X    d16/a16: %04X\n", bus.read(PC + 1), (bus.read(PC + 2) << 8) | bus.read(PC + 1));
-            if (GlobalFlags::showRegisters) {
-                std::printf("A F: %02X %02X\n", getARegister(), getFlagsByte());
-                std::printf("Z: %d N: %d H: %d C: %d\n", getZeroFlag(), getSubtractFlag(), getHalfCarryFlag(), getCarryFlag());
-                std::printf("B C: %02X %02X\n", getBRegister(), getCRegister());
-                std::printf("D E: %02X %02X\n", getDRegister(), getERegister());
-                std::printf("H L: %02X %02X\n", getHRegister(), getLRegister());
+            if (GlobalFlags::matchTranscript) {
+                std::printf("A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X SP: %04X PC: 00:%04X (%02X %02X %02X %02X)\n",
+                            getARegister(), getFlagsByte(), getBRegister(), getCRegister(), getDRegister(), getERegister(), getHRegister(), getLRegister(),
+                            getSP(), getPC(), bus.read(PC), bus.read(PC + 1), bus.read(PC + 2), bus.read(PC + 3));
             }
-            std::cin.get();
+            else {
+                std::printf("PC: %04X SP: %04X Op: %02X - (%s)\n", getPC(), getSP(), opcode,
+                            DebugLookupTable::getInstructionName(opcode, bus.read(PC + 1)).c_str());
+                std::printf("d8/a8: %02X    d16/a16: %04X    count: %x\n", bus.read(PC + 1),
+                            (bus.read(PC + 2) << 8) | bus.read(PC + 1), count++);
+                if (GlobalFlags::showRegisters) {
+                    std::printf("A F: %02X %02X\n", getARegister(), getFlagsByte());
+                    std::printf("Z: %d N: %d H: %d C: %d\n", getZeroFlag(), getSubtractFlag(), getHalfCarryFlag(),
+                                getCarryFlag());
+                    std::printf("B C: %02X %02X\n", getBRegister(), getCRegister());
+                    std::printf("D E: %02X %02X\n", getDRegister(), getERegister());
+                    std::printf("H L: %02X %02X\n", getHRegister(), getLRegister());
+                }
+            }
+            if (GlobalFlags::manualdbg) std::cin.get();
         }
         processOpCode(opcode, bus);
     }
     handleInterrupts(bus);
+
+    dbg->update(bus);
+    //dbg->print();
 }
 
 void CPU::RESET()

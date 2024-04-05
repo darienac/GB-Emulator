@@ -34,18 +34,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
 }
 
 void Emulator::runFrame() {
-//    cpu->tick(*bus);
-//    ppu->tick();
-//    for (unsigned int r = 0; r < 144; r++) {
-//        ppuMode = OAM_SCAN;
-//        cpuRunForDots(80);
-//        ppuMode = DRAW_PIXELS;
-//        cpuRunForDots(172); // Certain operations make drawing take longer, but not considering that for now
-//        ppuMode = HBLANK;
-//        cpuRunForDots(204); // differs based on length of DRAW_PIXELS mode
-//    }
-//    ppuMode = VBLANK;
-//    cpuRunForDots(4560);
+
     for (uint8_t r = 0; r < 144; r++) {
         while (lcd->getLcdMode() == lcdMode::MODE_OAM) {
             ppu->tick();

@@ -21,6 +21,7 @@ struct OamEntry {
 struct LcdRegs {
     uint8_t lcdControl;
     uint8_t lcdStatus;
+
     uint8_t scrollY;
     uint8_t scrollX;
     uint8_t ly;
@@ -28,6 +29,7 @@ struct LcdRegs {
     uint8_t dma;
     uint8_t bgPalette;
     uint8_t spPalette[2];
+
     uint8_t winY;
     uint8_t winX;
 };

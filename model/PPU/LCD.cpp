@@ -11,8 +11,8 @@ LCD::LCD(DMA* dma) : dma(dma) {
     lcdRegs.ly = 0;
     lcdRegs.lyCompare = 0;
     lcdRegs.bgPalette = 0xFC;
+    lcdRegs.spPalette[0] = 0xFF;
     lcdRegs.spPalette[1] = 0xFF;
-    lcdRegs.spPalette[2] = 0xFF;
     lcdRegs.winX = 0;
     lcdRegs.winY = 0;
 
@@ -30,12 +30,18 @@ bool LCD::getWinEnabled() const { return BitManip::getBit(lcdRegs.lcdControl, 5)
 uint16_t LCD::getWinMapArea() const { return BitManip::getBit(lcdRegs.lcdControl, 6) ? 0x9C00 : 0x9800; }
 bool LCD::getLcdEnabled() const { return BitManip::getBit(lcdRegs.lcdControl, 7); }
 
+//First 2 bits
 lcdMode LCD::getLcdMode() const { return static_cast<lcdMode>(lcdRegs.lcdStatus & 0b11); }
 void LCD::setLcdMode(lcdMode mode) { lcdRegs.lcdStatus &= ~0b11; lcdRegs.lcdStatus |= mode; }
+
+// 1 bit
 bool LCD::getLycFlag() const { return BitManip::getBit(lcdRegs.lcdStatus, 2); }
 void LCD::setLycFlag(bool value) { BitManip::setBit(&lcdRegs.lcdStatus, 2, value); }
+
+// 1 bit
 bool LCD::getHBlankInt() const { return BitManip::getBit(lcdRegs.lcdStatus, 3);}
 bool LCD::getVBlankInt() const { return BitManip::getBit(lcdRegs.lcdStatus, 4);}
+
 bool LCD::getOAMInt() const { return BitManip::getBit(lcdRegs.lcdStatus, 5);}
 bool LCD::getLycInt() const { return BitManip::getBit(lcdRegs.lcdStatus, 6);}
 
