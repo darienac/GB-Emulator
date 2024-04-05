@@ -1236,7 +1236,7 @@ void CPU::processOpCode(uint8_t opCode, Bus &bus)
         break;
     }
     cycleCount += getCycleCount(opCode);
-    if (oldPC == getPC() && !halted) {
+    if (oldPC == getPC() && !halted && GlobalFlags::checkForStuckInstruction) {
         if (GlobalFlags::debug) {
             printf("Likely unimplemented opcode: 0x%02X\n", opCode);
         } else {
@@ -2179,15 +2179,11 @@ void CPU::process21(Bus &bus)
     setPC(PC + 3);
 }
 
-// TODO: double check on LD HL+
 void CPU::process22(Bus &bus)
 {
-    // fetch the 16-bit immediate value (little-endian)
-    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-    // load the value of the HL register pair into the memory address specified by the immediate value
-    bus.write(immediateValue, registers.L);
-    bus.write(immediateValue + 1, registers.H);
-    setPC(PC + 3);
+    bus.write(getHLRegister(), getARegister());
+    setHLRegister(getHLRegister() + 1);
+    setPC(PC + 1);
 }
 
 void CPU::process23(Bus &bus)
@@ -2264,14 +2260,11 @@ void CPU::process29(Bus &bus)
     setPC(PC + 1);
 }
 
-// TODO: check on LD HL+
 void CPU::process2A(Bus &bus)
 {
-    // fetch the 16-bit immediate value (little-endian)
-    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-    // load the value of the memory address specified by the immediate value into the HL register pair
-    setHLRegister(bus.read(immediateValue) | (bus.read(immediateValue + 1) << 8));
-    setPC(PC + 3);
+    setARegister(bus.read(getHLRegister()));
+    setHLRegister(getHLRegister() + 1);
+    setPC(PC + 1);
 }
 
 void CPU::process2B(Bus &bus)
@@ -2430,14 +2423,11 @@ void CPU::process39(Bus &bus)
     setPC(PC + 1);
 }
 
-// TODO: check on HL-
 void CPU::process3A(Bus &bus)
 {
-    // fetch the 16-bit immediate value (little-endian)
-    uint16_t immediateValue = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
-    // load the value of the memory address specified by the immediate value into the A register
-    setARegister(bus.read(immediateValue));
-    setPC(PC + 3);
+    setARegister(bus.read(getHLRegister()));
+    setHLRegister(getHLRegister() - 1);
+    setPC(PC + 1);
 }
 
 void CPU::process3B(Bus &bus)
@@ -4527,7 +4517,7 @@ void CPU::processF0(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: resolve this
+// TODO: resolve this (verify if flag updates are handled correctly after F is modified)
 void CPU::processF1(Bus &bus)
 {
     uint16_t value = stackPop(bus);
