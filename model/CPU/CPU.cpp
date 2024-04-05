@@ -4,6 +4,16 @@
 
 #define DEBUG
 
+CPU::CPU() {
+    std::ofstream outputFile("output.txt");
+
+    // Check if the file is opened successfully
+    if (!outputFile.is_open()) {
+        std::cerr << "Error opening file for writing." << std::endl;
+        exit(1); // Exit with error
+    }
+}
+
 void CPU::handleInterrupts(Bus &bus)
 {
     if (!this->imeFlag)
@@ -65,14 +75,14 @@ void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptA
 void CPU::stackPush(Bus &bus, uint16_t value)
 {
     bus.write(getSP(), (value >> 8) & 0xFF); // high byte
-    setSP(--SP);
+    setSP(SP - 1);
     bus.write(getSP(), value & 0xFF); // low byte
-    setSP(--SP);
+    setSP(SP - 1);
 }
 
 uint16_t CPU::stackPop(Bus &bus)
 {
-    uint16_t value = (bus.read(getSP() + 1) << 8) | bus.read(getSP());
+    uint16_t value = (bus.read(getSP() + 2) << 8) | bus.read(getSP() + 1);
     setSP(SP + 2);
     return value;
 }
@@ -342,11 +352,7 @@ void CPU::tick(Bus &bus)
     {
         uint8_t opcode = fetch(bus);
         if (GlobalFlags::debug) {
-            if (GlobalFlags::matchTranscript) {
-                std::printf("A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X SP: %04X PC: 00:%04X (%02X %02X %02X %02X)\n",
-                            getARegister(), getFlagsByte(), getBRegister(), getCRegister(), getDRegister(), getERegister(), getHRegister(), getLRegister(),
-                            getSP(), getPC(), bus.read(PC), bus.read(PC + 1), bus.read(PC + 2), bus.read(PC + 3));
-            }
+            if (GlobalFlags::matchTranscript) printTranscript(bus);
             else {
                 std::printf("PC: %04X SP: %04X Op: %02X - (%s)\n", getPC(), getSP(), opcode,
                             DebugLookupTable::getInstructionName(opcode, bus.read(PC + 1)).c_str());
@@ -368,7 +374,7 @@ void CPU::tick(Bus &bus)
     handleInterrupts(bus);
 
     dbg->update(bus);
-    //dbg->print();
+    dbg->print();
 }
 
 void CPU::RESET()
@@ -388,4 +394,20 @@ void CPU::RESET()
     setSubtractFlag(false);
     setHalfCarryFlag(false);
     setCarryFlag(false);
+}
+
+void CPU::printTranscript(Bus &bus) {
+    if (count < 100000) {
+        count++;
+        FILE* outputFile = std::fopen("output.txt", "a");
+
+        std::fprintf(outputFile,
+                     "A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X SP: %04X PC: 00:%04X (%02X %02X %02X %02X)\n",
+                     getARegister(), getFlagsByte(), getBRegister(), getCRegister(), getDRegister(),
+                     getERegister(), getHRegister(), getLRegister(),
+                     getSP(), getPC(), bus.read(PC), bus.read(PC + 1), bus.read(PC + 2), bus.read(PC + 3));
+
+        std::fclose(outputFile);
+    }
+    else exit(0);
 }

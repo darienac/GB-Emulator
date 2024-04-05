@@ -4203,7 +4203,10 @@ void CPU::processCD(Bus &bus)
     // fetch the 16-bit immediate value (little-endian)
     uint16_t address = (bus.read(PC + 2) << 8) | bus.read(PC + 1);
     // Push address onto the stack
+
+    setPC(PC + 3);
     stackPush(bus, PC);
+
     setPC(address);
 }
 

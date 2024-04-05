@@ -12,6 +12,7 @@
 class TestRomSerialDebug {
 private:
     std::string message;
+    std::string messageOld;
 public:
     TestRomSerialDebug();
     void update(Bus& bus);

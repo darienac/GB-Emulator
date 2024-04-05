@@ -26,17 +26,16 @@ uint8_t Bus::read(uint16_t address) {
         if (dma->transferring()) {
             return 0xFF;
         }
-
         return oamRam->read(address);
     } else if (address < 0xFF00) {
         //reserved unusable...
         return 0;
     } else if (address < 0xFF80) {
         //IO Registers... TODO
-        //return io_read(address);
         if (address == 0xFF0F) {
             return interruptFlag;
         }
+        return io->read(address);
     } else if (address == 0xFFFF) {
         //CPU ENABLE REGISTER...
         return interruptEnable;

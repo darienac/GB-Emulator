@@ -398,9 +398,11 @@ private:
     void processFF(Bus &bus);
 
     TestRomSerialDebug* dbg = new TestRomSerialDebug();
+    void printTranscript(Bus &bus);
     int count = 0;
 
 public:
+    CPU();
     /// @brief The CPU's cycle count
     unsigned int getCycleCount() const;
 

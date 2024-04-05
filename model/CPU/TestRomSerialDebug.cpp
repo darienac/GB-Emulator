@@ -6,6 +6,7 @@
 
 TestRomSerialDebug::TestRomSerialDebug() {
     message = "";
+    messageOld = "";
 }
 
 void TestRomSerialDebug::update(Bus &bus) {
@@ -16,5 +17,8 @@ void TestRomSerialDebug::update(Bus &bus) {
 }
 
 void TestRomSerialDebug::print() {
-    std::cout << message << "\n";
+    if (messageOld != message) {
+        std::cout << message << "\n";
+        messageOld = message;
+    }
 }
