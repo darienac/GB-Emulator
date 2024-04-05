@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include "../Memory/Bus.h"
+#include "TestRomSerialDebug.h"
 
 /// @brief InterruptMask values TODO: move these outside of this file to a more static location?
 namespace InterruptMasks
@@ -396,7 +397,12 @@ private:
     void processFE(Bus &bus);
     void processFF(Bus &bus);
 
+    TestRomSerialDebug* dbg = new TestRomSerialDebug();
+    void printTranscript(Bus &bus);
+    int count = 0;
+
 public:
+    CPU();
     /// @brief The CPU's cycle count
     unsigned int getCycleCount() const;
 

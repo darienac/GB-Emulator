@@ -21,10 +21,18 @@ int main() {
 
 //    std::string romPath = "./roms/01-special.gb";
 //    std::string romPath = "./roms/02-interrupts.gb";
+//    std::string romPath = "./roms/03-op sp,hl.gb";
+//    std::string romPath = "./roms/04-op r,imm.gb";
+//    std::string romPath = "./roms/05-op rp.gb";
+//    std::string romPath = "./roms/06-ld r,r.gb";
+//    std::string romPath = "./roms/07-jr,jp,call,ret,rst.gb";
+//    std::string romPath = "./roms/08-misc instrs.gb";
+//    std::string romPath = "./roms/09-op r,r.gb";
+//    std::string romPath = "./roms/10-bit ops.gb";
 //    std::string romPath = "./roms/11-op a,(hl).gb";
-//    std::string romPath = "./roms/drmario.gb";
+    std::string romPath = "./roms/dr_mario.gb";
 //    std::string romPath = "./roms/000-write_to_x8000.gb";
-    std::string romPath = "./roms/flood_vram.gb";
+//    std::string romPath = "./roms/flood_vram.gb";
     Emulator emulator(window.getScreen(), controls, romPath);
     while (true) {
         emulator.runFrame();

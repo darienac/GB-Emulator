@@ -14,6 +14,9 @@ public:
     static const bool checkForStuckInstruction; // Checks if PC stays the same between instruction calls to try to detect unimplemented instructions
 
     static const bool showControls;
+
+    static const bool manualdbg;
+    static const bool matchTranscript;
 };
 
 

@@ -4,7 +4,7 @@
 
 #include "PPU.h"
 
-PPU::PPU(LCD* lcd, Bus* bus, IEmulator* emu) : lcd(lcd), bus(bus), emu(emu) {
+PPU::PPU(LCD* lcd, Bus* bus, IEmulator* emu) : lcd(lcd), emu(emu), bus(bus) {
     currFrame = 0;
     lineTicks = 0;
     windowLine = 0;
@@ -92,7 +92,6 @@ void PPU::runHBlankMode() {
         }
 
         emu->updateFrame(display);
-        lineTicks = 0;
     }
 }
 
@@ -263,6 +262,7 @@ void PPU::loadLineSprites() {
     for (int i = 0; i < 40; i++) {
         OamEntry e = bus->getOamEntry(i);
         if (e.x == 0) continue;
+
         if (lineSprites.size() == 10) break;
 
         if (e.y <= curY + 16 && e.y + spriteHeight > curY + 16) {
