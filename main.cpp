@@ -20,9 +20,10 @@ int main() {
     IControls* controls = window.getControls();
 
 //    std::string romPath = "./roms/01-special.gb";
-    std::string romPath = "./roms/02-interrupts.gb";
+//    std::string romPath = "./roms/02-interrupts.gb";
 //    std::string romPath = "./roms/11-op a,(hl).gb";
-//    std::string romPath = "./roms/tetris.gb";
+//    std::string romPath = "./roms/drmario.gb";
+    std::string romPath = "./roms/000-write_to_x8000.gb";
     Emulator emulator(window.getScreen(), controls, romPath);
     while (true) {
         emulator.runFrame();

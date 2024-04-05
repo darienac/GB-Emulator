@@ -11,8 +11,8 @@ void CPU::handleInterrupts(Bus &bus)
         return;
     }
 
-    uint8_t interrupt = getInterruptEnableFlag(bus) & getInterruptFlag(bus);
-    if (!getImeFlag() || !interrupt)
+    uint8_t interrupts = getInterruptEnableFlag(bus) & getInterruptFlag(bus);
+    if (!getImeFlag() || !interrupts)
     {
         return;
     }
@@ -24,7 +24,7 @@ void CPU::handleInterrupts(Bus &bus)
     for (int i = 0; i < 5; i++)
     {
         uint8_t interruptMask = 1 << i;
-        if (interrupt & interruptMask)
+        if (interrupts & interruptMask)
         {
             // NOTE: the order of this switch is the same as GB interrupt priority
             // i think changing it would be fine since we bit shift above, but to be safe let's not
