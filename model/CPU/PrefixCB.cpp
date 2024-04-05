@@ -88,7 +88,7 @@ uint8_t SRL(CPU& cpu, uint8_t word8) {
 }
 
 void BIT(CPU& cpu, uint8_t bitMask, uint8_t data) {
-    cpu.setZeroFlag(!(data | bitMask));
+    cpu.setZeroFlag(!(data & bitMask));
     cpu.setSubtractFlag(false);
     cpu.setHalfCarryFlag(true);
 }
@@ -186,29 +186,31 @@ void CPU::processCB(Bus &bus) {
         default: // bitwise
             uint8_t bitIndex = instruction & 7;
             uint8_t bitMask = 1;
-            if (bitIndex | 1) {
+            if (bitIndex & 1) {
                 bitMask = bitMask << 1;
             }
-            if (bitIndex | 2) {
+            if (bitIndex & 2) {
                 bitMask = bitMask << 2;
             }
-            if (bitIndex | 4) {
+            if (bitIndex & 4) {
                 bitMask = bitMask << 4;
             }
             instruction = instruction >> 3;
             switch(instruction) {
-                case 0: // BIT
+                case 1: // BIT
                     BIT(*this, bitMask, data);
                     break;
-                case 1: // RES
+                case 2: // RES
                     data = RES(*this, bitMask, data);
                     break;
-                case 2: // SET
+                case 3: // SET
                     data = SET(*this, bitMask, data);
+                    break;
+                default:
                     break;
             }
     }
     setOperand(*this, bus, operand, data);
 
-    setPC(PC + 2); // All prefixed instructions are 2 bytes long (after the leading CB)
+    setPC(PC + 1);
 }
