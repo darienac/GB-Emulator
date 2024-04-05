@@ -1236,7 +1236,7 @@ void CPU::processOpCode(uint8_t opCode, Bus &bus)
         break;
     }
     cycleCount += getCycleCount(opCode);
-    if (oldPC == getPC() && !halted) {
+    if (oldPC == getPC() && !halted && GlobalFlags::checkForStuckInstruction) {
         if (GlobalFlags::debug) {
             printf("Likely unimplemented opcode: 0x%02X\n", opCode);
         } else {
