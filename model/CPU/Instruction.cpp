@@ -1898,7 +1898,7 @@ void CPU::process07(Bus &bus)
     // shift the A register left by one bit
     setARegister((getARegister() << 1) | msb);
 
-    setZeroFlag(getARegister() == 0);
+    setZeroFlag(false);
     setSubtractFlag(false);
     setHalfCarryFlag(false);
     setCarryFlag(msb);
@@ -1920,12 +1920,13 @@ void CPU::process08(Bus &bus)
 void CPU::process09(Bus &bus)
 {
     uint16_t result = registers.HL + registers.BC;
+    int result_int = registers.HL + registers.BC;
     // load the result into the HL register pair
     setHLRegister(result);
     // update flags
     setSubtractFlag(false);
     setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.BC & 0x0FFF));
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result_int > 0xFFFF);
 
     setPC(PC + 1);
 }
@@ -1988,7 +1989,7 @@ void CPU::process0F(Bus &bus)
     // shift the A register right by one bit
     setARegister((getARegister() >> 1) | (lsb << 7));
     // clear the subtract and half-carry flags
-    setZeroFlag(getARegister() == 0);
+    setZeroFlag(false);
     setSubtractFlag(false);
     setHalfCarryFlag(false);
     setCarryFlag(lsb);
@@ -2087,11 +2088,12 @@ void CPU::process19(Bus &bus)
 {
     // add the value of the DE register pair to the HL register pair
     uint16_t result = registers.HL + registers.DE;
+    int result_int = registers.HL + registers.DE;
     setHLRegister(result);
     // update flags
     setSubtractFlag(false);
     setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.DE & 0x0FFF));
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result_int > 0xFFFF);
     setPC(PC + 1);
 }
 
@@ -2229,7 +2231,25 @@ void CPU::process26(Bus &bus)
 // TODO: how to do DAA? what even is that?
 void CPU::process27(Bus &bus)
 {
-    printf("Opcode 0x27 not implemented\n");
+    uint8_t u = 0;
+    int fc = 0;
+
+    if (getHalfCarryFlag() || (!getSubtractFlag() && (getARegister() & 0xF) > 9)) {
+        u = 6;
+    }
+
+    if (getCarryFlag() || (!getSubtractFlag() && getARegister() > 0x99)) {
+        u |= 0x60;
+        fc = 1;
+    }
+
+    setARegister(getSubtractFlag() ? -u : u);
+
+    setZeroFlag(false);
+    setHalfCarryFlag(false);
+    setCarryFlag(fc != 0);
+
+    setPC(PC + 1);
 }
 
 void CPU::process28(Bus &bus)
@@ -2251,12 +2271,13 @@ void CPU::process29(Bus &bus)
 {
     // add the value of the HL register pair to itself
     uint16_t result = registers.HL + registers.HL;
+    int result_int = registers.HL + registers.HL;
     // load the result into the HL register pair
     setHLRegister(result);
     // update flags
     setSubtractFlag(false);
     setHalfCarryFlag((registers.HL & 0x0FFF) < (registers.HL & 0x0FFF));
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result_int > 0xFFFF);
     setPC(PC + 1);
 }
 
@@ -2414,12 +2435,13 @@ void CPU::process39(Bus &bus)
 {
     // add the value of the stack pointer to the HL register pair
     uint16_t result = registers.HL + SP;
+    int result_int = registers.HL + SP;
     // load the result into the HL register pair
     setHLRegister(result);
     // update flags
     setSubtractFlag(false);
     setHalfCarryFlag((registers.HL & 0x0FFF) < (SP & 0x0FFF));
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result_int > 0xFFFF);
     setPC(PC + 1);
 }
 
@@ -2931,7 +2953,7 @@ void CPU::process80(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -2949,7 +2971,7 @@ void CPU::process81(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -2967,7 +2989,7 @@ void CPU::process82(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -2985,7 +3007,7 @@ void CPU::process83(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3003,7 +3025,7 @@ void CPU::process84(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3021,7 +3043,7 @@ void CPU::process85(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3039,7 +3061,7 @@ void CPU::process86(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3057,7 +3079,7 @@ void CPU::process87(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3075,7 +3097,7 @@ void CPU::process88(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3093,7 +3115,7 @@ void CPU::process89(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3111,7 +3133,7 @@ void CPU::process8A(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3129,7 +3151,7 @@ void CPU::process8B(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3147,7 +3169,7 @@ void CPU::process8C(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3165,7 +3187,7 @@ void CPU::process8D(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3183,7 +3205,7 @@ void CPU::process8E(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3201,7 +3223,7 @@ void CPU::process8F(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 1);
 }
@@ -3340,13 +3362,13 @@ void CPU::process97(Bus &bus)
     // load the result into the A register pair
     setARegister(result);
     // set the zero flag if the result is zero
-    setZeroFlag(registers.A == 0);
+    setZeroFlag(true);
     // clear the subtract flag
-    setSubtractFlag(false);
+    setSubtractFlag(true);
     // set the half-carry flag if the lower nibble overflowed
-    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setHalfCarryFlag(false);
     // set the carry flag
-    setCarryFlag(registers.A < registers.A);
+    setCarryFlag(false);
 
     setPC(PC + 1);
 }
@@ -4054,13 +4076,13 @@ void CPU::processBF(Bus &bus)
     uint16_t result = registers.A - registers.A;
 
     // set the zero flag if the result is zero
-    setZeroFlag(result == 0);
+    setZeroFlag(true);
     // set the subtract flag
     setSubtractFlag(true);
     // set the half-carry flag if the lower nibble overflowed
-    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setHalfCarryFlag(false);
     // set the carry flag
-    setCarryFlag(registers.A < registers.A);
+    setCarryFlag(false);
 
     setPC(PC + 1);
 }
@@ -4139,7 +4161,7 @@ void CPU::processC6(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 2);
 }
@@ -4225,7 +4247,7 @@ void CPU::processCE(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 2);
 }
@@ -4309,7 +4331,7 @@ void CPU::processD6(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag((registers.A & 0x0F) == 0);
     // complement the carry flag
-    setCarryFlag(result > 0xFFFF);
+    setCarryFlag(result > 0xFF);
 
     setPC(PC + 2);
 }
