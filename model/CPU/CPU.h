@@ -119,9 +119,9 @@ private:
         bool N = false;
         // TODO: if header checksum is 0x00, then H and C are 0; otherwise, H and C are 1; tbh idk what this means so i gotta do more research
         /// @brief Half carry flag (binary coded decimal support); did the last operation cause a carry from bit 3 to bit 4? (lower 4 bits)
-        bool H = false;
+        bool H = true;
         /// @brief Carry flag; did the last operation cause a carry from bit 7 to bit 8? (upper 4 bits)
-        bool C = false;
+        bool C = true;
     } flags;
 
     /// @brief Fetch an instruction from memory
