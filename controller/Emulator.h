@@ -36,9 +36,9 @@ private:
     DMA* dma;
     Bus* bus;
     LCD* lcd;
-    Gamepad* gamepad;
-    Timer* timer;
     IO* io;
+    Timer* timer;
+    Gamepad* gamepad;
 
     // runtime state
     unsigned int targetCPUDotCount;

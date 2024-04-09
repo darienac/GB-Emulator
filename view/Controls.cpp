@@ -9,7 +9,6 @@ const bool Controls::INVERT_AB = false;
 
 void Controls::setControl(char mask, bool value) {
     buttonStates = value ? (buttonStates | mask) : (buttonStates & ~mask);
-    setGamepad(mask, value);
 }
 
 
@@ -214,3 +213,4 @@ void Controls::setGamepad(char mask, bool value) {
             break;
     }
 }
+
