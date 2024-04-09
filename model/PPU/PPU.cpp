@@ -308,11 +308,11 @@ void PPU::pipelineLoadSpriteData(int pos) {
 }
 
 void PPU::pipelineLoadWindowTile() {
-    if (!windowVisible())
+    if (!windowVisible()) return;
     if (fetchX + 7 >= lcd->getWinX() && fetchX + 7 < X_RES + lcd->getWinX() + 14) {
         if (lcd->getLy()>= lcd->getWinY() && lcd->getLy() < Y_RES + lcd->getWinY()) {
             bgwFetchData[0] = bus->read(lcd->getWinMapArea() + (fetchX + 7 - lcd->getWinX()) + ((windowLine / 8) * 32));
-            if (lcd->getBgWDataArea() == 0x8000) bgwFetchData[0] += 128;
+            if (lcd->getBgWDataArea() == 0x8800) bgwFetchData[0] += 128;
         }
 
     }
