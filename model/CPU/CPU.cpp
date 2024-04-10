@@ -5,6 +5,8 @@
 #define DEBUG
 
 CPU::CPU() {
+    // calling RESET here so that RESET is a single source of truth for what the registers are set to at startup
+    RESET();
     std::ofstream outputFile("output.txt");
 
     if (!outputFile.is_open()) {
@@ -63,6 +65,7 @@ void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptA
 {
     // temp disable interrupts TODO: right now this is not re-enabled afaik
     setImeFlag(false);
+    setInterruptFlag(bus, getInterruptFlag(bus) & ~interrupt); // reset bit in IF register (interrupt has now been serviced)
 
     // push current PC to stack so we can return to it later
     stackPush(bus, PC);
@@ -359,12 +362,14 @@ void CPU::tick(Bus &bus)
                             (bus.read(PC + 2) << 8) | bus.read(PC + 1), count++);
                 if (GlobalFlags::showRegisters) {
                     std::printf("A F: %02X %02X\n", getARegister(), getFlagsByte());
-                    std::printf("Z: %d N: %d H: %d C: %d\n", getZeroFlag(), getSubtractFlag(), getHalfCarryFlag(),
-                                getCarryFlag());
+                    std::printf("Z: %d N: %d H: %d C: %d IME: %d\n", getZeroFlag(), getSubtractFlag(), getHalfCarryFlag(),
+                                getCarryFlag(), imeFlag);
+                    std::printf("IE: %02X IF: %02X\n", bus.read(0xFFFF), bus.read(0xFF0F));
                     std::printf("B C: %02X %02X\n", getBRegister(), getCRegister());
                     std::printf("D E: %02X %02X\n", getDRegister(), getERegister());
                     std::printf("H L: %02X %02X\n", getHRegister(), getLRegister());
                 }
+                std::fflush(stdout);
             }
             if (GlobalFlags::manualdbg) std::cin.get();
         }
@@ -382,7 +387,7 @@ void CPU::tick(Bus &bus)
 void CPU::RESET()
 {
     setCycleCount(0);
-    setPC(0x100);
+    setPC(GlobalFlags::initialPC);
     setSP(0xFFFE);
 
     // reset registers
