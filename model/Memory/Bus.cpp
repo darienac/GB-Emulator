@@ -71,10 +71,10 @@ void Bus::write(uint16_t address, uint8_t value) {
         //unusable reserved
     } else if (address < 0xFF80) {
         //IO Registers... TODO
-        //io_write(address, value);
         if (address == 0xFF0F) {
             interruptFlag = value;
         }
+        io->write(address, value);
     } else if (address == 0xFFFF) {
         //CPU SET ENABLE REGISTER
         interruptEnable = value;
