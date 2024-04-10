@@ -165,15 +165,12 @@ void PPU::fetchPixel() {
     switch (fetchState) {
         case TILE:
             fetchEntryCount = 0;
+
             if (lcd->getBgWEnabled()) {
                 bgwFetchData[0] = bus->read(lcd->getBgMapArea() + (mapX / 8) + ((mapY / 8) * 32));
-
                 if (lcd->getBgWDataArea() == 0x8800) {
                     bgwFetchData[0] += 128;
                 }
-
-                fetchX += 8;
-                fetchState = DATA0;
                 pipelineLoadWindowTile();
             }
 
@@ -181,7 +178,8 @@ void PPU::fetchPixel() {
                 pipelineLoadSpriteTile();
             }
 
-            pipelineLoadWindowTile();
+            fetchX += 8;
+            fetchState = DATA0;
             break;
 
         case DATA0:

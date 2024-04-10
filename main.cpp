@@ -30,10 +30,12 @@ int main() {
 //    std::string romPath = "./roms/09-op r,r.gb";
 //    std::string romPath = "./roms/10-bit ops.gb";
 //    std::string romPath = "./roms/11-op a,(hl).gb";
-//    std::string romPath = "./roms/dr_mario.gb";
+    std::string romPath = "./roms/dr_mario.gb";
+//    std::string romPath = "./roms/tetris.gb";
+//    std::string romPath = "./roms/alleyway.gb";
 //    std::string romPath = "./roms/asteroids.gb";
 //    std::string romPath = "./roms/dmg-acid2.gb";
-    std::string romPath = "./roms/000-write_to_x8000.gb";
+//    std::string romPath = "./roms/000-write_to_x8000.gb";
 //    std::string romPath = "./roms/flood_vram.gb";
 
     Emulator emulator(window.getScreen(), controls, romPath);
