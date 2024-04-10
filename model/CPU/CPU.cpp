@@ -346,9 +346,6 @@ void CPU::execute(uint8_t opcode, Bus &bus)
 
 void CPU::tick(Bus &bus)
 {
-    if (++count == 48931) {
-        int i;
-    }
     // if we're halted, we only wait for interrupts (then wake up when an interrupt is received)
     if (!getHalted())
     {
@@ -372,6 +369,9 @@ void CPU::tick(Bus &bus)
             if (GlobalFlags::manualdbg) std::cin.get();
         }
         processOpCode(opcode, bus);
+    }
+    else {
+        cycleCount += 1;
     }
     handleInterrupts(bus);
 
