@@ -17,6 +17,7 @@ public:
 
     static const bool manualdbg;
     static const bool matchTranscript;
+    static const bool printSerialOut;
 };
 
 
