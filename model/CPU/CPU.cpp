@@ -7,10 +7,9 @@
 CPU::CPU() {
     std::ofstream outputFile("output.txt");
 
-    // Check if the file is opened successfully
     if (!outputFile.is_open()) {
         std::cerr << "Error opening file for writing." << std::endl;
-        exit(1); // Exit with error
+        exit(1);
     }
 }
 
@@ -74,15 +73,15 @@ void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptA
 
 void CPU::stackPush(Bus &bus, uint16_t value)
 {
+    setSP(SP - 1);
     bus.write(getSP(), (value >> 8) & 0xFF); // high byte
     setSP(SP - 1);
     bus.write(getSP(), value & 0xFF); // low byte
-    setSP(SP - 1);
 }
 
 uint16_t CPU::stackPop(Bus &bus)
 {
-    uint16_t value = (bus.read(getSP() + 2) << 8) | bus.read(getSP() + 1);
+    uint16_t value = (bus.read(getSP() + 1) << 8) | bus.read(getSP());
     setSP(SP + 2);
     return value;
 }
@@ -347,6 +346,9 @@ void CPU::execute(uint8_t opcode, Bus &bus)
 
 void CPU::tick(Bus &bus)
 {
+    if (++count == 48931) {
+        int i;
+    }
     // if we're halted, we only wait for interrupts (then wake up when an interrupt is received)
     if (!getHalted())
     {
@@ -398,7 +400,6 @@ void CPU::RESET()
 
 void CPU::printTranscript(Bus &bus) {
     if (count < 100000) {
-        count++;
         FILE* outputFile = std::fopen("output.txt", "a");
 
         std::fprintf(outputFile,
