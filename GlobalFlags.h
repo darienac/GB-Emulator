@@ -6,6 +6,8 @@
 #define GAMEBOY_EMULATOR_GLOBALFLAGS_H
 
 
+#include <cstdint>
+
 class GlobalFlags {
 public:
     static const bool debug;
@@ -18,6 +20,8 @@ public:
     static const bool manualdbg;
     static const bool matchTranscript;
     static const bool printSerialOut;
+
+    static const uint16_t initialPC;
 };
 
 

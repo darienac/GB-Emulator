@@ -2228,26 +2228,29 @@ void CPU::process26(Bus &bus)
     setPC(PC + 2);
 }
 
-// TODO: how to do DAA? what even is that?
 void CPU::process27(Bus &bus)
 {
-    uint8_t u = 0;
-    int fc = 0;
-
-    if (getHalfCarryFlag() || (!getSubtractFlag() && (getARegister() & 0xF) > 9)) {
-        u = 6;
+    uint8_t a = getARegister();
+    if (!getSubtractFlag()) {
+        if (getCarryFlag() || a > 0x99) {
+            a += 0x60;
+            setCarryFlag(true);
+        }
+        if (getHalfCarryFlag() || (a & 0x0F) > 0x09) {
+            a += 0x6;
+        }
+    } else {
+        if (getCarryFlag()) {
+            a -= 0x60;
+        }
+        if (getHalfCarryFlag()) {
+            a -= 0x6;
+        }
     }
 
-    if (getCarryFlag() || (!getSubtractFlag() && getARegister() > 0x99)) {
-        u |= 0x60;
-        fc = 1;
-    }
-
-    setARegister(getSubtractFlag() ? -u : u);
-
-    setZeroFlag(false);
+    setZeroFlag(a == 0);
     setHalfCarryFlag(false);
-    setCarryFlag(fc != 0);
+    setARegister(a);
 
     setPC(PC + 1);
 }
