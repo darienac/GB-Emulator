@@ -53,6 +53,7 @@ add_executable(gameboy_emulator main.cpp
         model/CPU/DebugLookupTable.cpp
         model/CPU/DebugLookupTable.h
         model/CPU/TestRomSerialDebug.cpp
+        model/CPU/TestRomSerialDebug.h
 )
 
 target_compile_features(gameboy_emulator PRIVATE cxx_std_23)
