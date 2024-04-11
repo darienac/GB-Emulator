@@ -18,7 +18,7 @@ LCD::LCD(DMA* dma) : dma(dma) {
 
     setLcdMode(MODE_OAM);
 
-    for (int i = 0; i < 4; i++) bgColors[i] = sp1Colors[i] = sp2Colors[i] = i;
+    for (int i = 0; i < 4; i++) bgColors[i] = sp1Colors[i] = sp2Colors[i] = 3 - i;
 }
 
 bool LCD::getObjEnabled() const { return BitManip::getBit(lcdRegs.lcdControl, 1); }
@@ -55,7 +55,6 @@ void LCD::write(uint16_t address, uint8_t value) {
     int offset = address - 0xFF40;
     auto *p = reinterpret_cast<uint8_t*>(&lcdRegs);
     p[offset] = value;
-
     if (offset == 6) {
         //0xFF46 = DMA
         dma->start(value);
@@ -71,12 +70,12 @@ void LCD::write(uint16_t address, uint8_t value) {
 }
 
 void LCD::updatePalette(uint8_t paletteData, uint8_t palette) {
+    paletteData = ~paletteData;
     if (palette == 0) {
         bgColors[0] = paletteData & 0b11;
         bgColors[1] = paletteData >> 2 & 0b11;
         bgColors[2] = paletteData >> 4 & 0b11;
         bgColors[3] = paletteData >> 6 & 0b11;
-
     } else if (palette == 1) {
         sp1Colors[0] = 0;
         sp1Colors[1] = paletteData >> 2 & 0b11;
