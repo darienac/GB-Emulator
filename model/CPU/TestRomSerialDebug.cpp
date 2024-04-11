@@ -3,6 +3,7 @@
 //
 
 #include "TestRomSerialDebug.h"
+#include "../../GlobalFlags.h"
 
 TestRomSerialDebug::TestRomSerialDebug() {
     message = "";
@@ -18,7 +19,9 @@ void TestRomSerialDebug::update(Bus &bus) {
 
 void TestRomSerialDebug::print() {
     if (messageOld != message) {
-        std::cout << message << "\n";
+        if (GlobalFlags::printSerialOut) {
+            std::cout << message << "\n";
+        }
         messageOld = message;
     }
 }
