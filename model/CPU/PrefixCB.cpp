@@ -72,9 +72,14 @@ uint8_t SRA(CPU& cpu, uint8_t word8) {
 }
 
 uint8_t SWAP(CPU& cpu, uint8_t word8) {
-    uint8_t lowerNibble = word8 & 0xF;
-    word8 = word8 >> 4;
-    return word8 | (lowerNibble << 4);
+    uint8_t swapped = (word8 & 0x0F) << 4 | (word8 & 0xF0) >> 4;
+
+    cpu.setZeroFlag(swapped == 0);
+    cpu.setSubtractFlag(false);
+    cpu.setHalfCarryFlag(false);
+    cpu.setCarryFlag(false);
+
+    return swapped;
 }
 
 uint8_t SRL(CPU& cpu, uint8_t word8) {
