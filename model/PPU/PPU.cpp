@@ -82,6 +82,7 @@ void PPU::runHBlankMode() {
             lcd->setLcdMode(MODE_VBLANK);
 
             emu->triggerInterrupt(VBLANK);
+          
             if (lcd->getVBlankInt()) emu->triggerInterrupt(STAT);
             emu->updateFrame(display);
         } else {
