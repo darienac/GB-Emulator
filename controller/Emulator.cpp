@@ -18,7 +18,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     oamRam = new OamRAM();
     hRam = new HRAM();
     wRam = new WRAM();
-    dma = new DMA(oamRam);
+    dma = new DMA(bus, oamRam);
     lcd = new LCD(dma);
     gamepad = new Gamepad(controls);
     timer = new Timer();
