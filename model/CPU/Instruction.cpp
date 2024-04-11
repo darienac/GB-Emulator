@@ -1955,8 +1955,8 @@ void CPU::process09(Bus &bus)
 void CPU::process0A(Bus &bus)
 {
     // get the location in memory from the BC register pair
-    uint16_t address = bus.read(registers.BC);
-    setARegister(bus.read(address));
+    uint8_t value = bus.read(registers.BC);
+    setARegister(value);
 
     setPC(PC + 1);
 }
@@ -2418,7 +2418,7 @@ void CPU::process34(Bus &bus)
 {
     // increment the value at the memory address specified by the HL register pair
     uint8_t value = bus.read(registers.HL);
-    bus.write(registers.HL, value + 1);
+    bus.write(registers.HL, ++value);
     // update flags
     setZeroFlag(value == 0);
     setSubtractFlag(false);
@@ -2430,7 +2430,7 @@ void CPU::process35(Bus &bus)
 {
     // decrement the value at the memory address specified by the HL register pair
     uint8_t value = bus.read(registers.HL);
-    bus.write(registers.HL, value - 1);
+    bus.write(registers.HL, --value);
     // update flags
     setZeroFlag(value == 0);
     setSubtractFlag(true);
@@ -3103,7 +3103,10 @@ void CPU::process85(Bus &bus)
 void CPU::process86(Bus &bus)
 {
     // add the value at the address of HL to the A register
-    uint16_t result = registers.A + registers.HL;
+    uint16_t result = registers.A + bus.read(registers.HL);
+
+    int hc = (registers.A & 0x0F) + (bus.read(registers.HL) & 0x0F) > 0x0F;
+
     // load the result into the A register pair
     setARegister(result);
     // set the zero flag if the result is zero
@@ -3111,7 +3114,7 @@ void CPU::process86(Bus &bus)
     // clear the subtract flag
     setSubtractFlag(false);
     // set the half-carry flag if the lower nibble overflowed
-    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setHalfCarryFlag(hc);
     // complement the carry flag
     setCarryFlag(result > 0xFF);
 
@@ -3268,7 +3271,10 @@ void CPU::process8D(Bus &bus)
 void CPU::process8E(Bus &bus)
 {
     // add the value from the address of HL and the Carry Flag to the A register
-    uint16_t result = registers.A + registers.HL + getCarryFlag();
+    uint16_t result = registers.A + bus.read(registers.HL) + getCarryFlag();
+
+    int hc = (registers.A & 0x0F) + (bus.read(registers.HL) & 0x0F) + getCarryFlag() > 0x0F;
+
     // load the result into the A register pair
     setARegister(result);
     // set the zero flag if the result is zero
@@ -3276,7 +3282,7 @@ void CPU::process8E(Bus &bus)
     // clear the subtract flag
     setSubtractFlag(false);
     // set the half-carry flag if the lower nibble overflowed
-    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setHalfCarryFlag(hc);
     // complement the carry flag
     setCarryFlag(result > 0xFF);
 
@@ -3453,21 +3459,22 @@ void CPU::process96(Bus &bus)
 {
     // Subtract the value pointed to by the address in HL from that in Register A
     uint8_t value = bus.read(registers.HL);
-    uint16_t result = registers.A - value;
+    uint8_t result = registers.A - value;
 
     // check for half carry
     int hc = ((registers.A & 0xF) - (value & 0xF)) < 0;
+    int c = registers.A < value;
 
     // load the result into the A register pair
     setARegister(result);
     // set the zero flag if the result is zero
     setZeroFlag(registers.A == 0);
-    // clear the subtract flag
-    setSubtractFlag(false);
+    // set the subtract flag
+    setSubtractFlag(true);
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag(hc);
     // set the carry flag
-    setCarryFlag(registers.A < bus.read(registers.HL));
+    setCarryFlag(c);
 
     setPC(PC + 1);
 }
@@ -3510,7 +3517,6 @@ void CPU::process98(Bus &bus)
     setCarryFlag(resultFull < 0);
 
     setARegister(result);
-
 
     setPC(PC + 1);
 }
@@ -3648,7 +3654,8 @@ void CPU::process9E(Bus &bus)
     uint16_t result = registers.A - (value + getCarryFlag());
 
     // check for half carry
-    int hc = ((registers.A & 0xF) - ((value + getCarryFlag()) & 0xF)) < 0;
+    int hc = ((registers.A & 0x0F) - (value & 0x0F) - getCarryFlag()) < 0;
+    int c = registers.A < (value + getCarryFlag());
 
     // load the result into the A register pair
     setARegister(result);
@@ -3659,7 +3666,7 @@ void CPU::process9E(Bus &bus)
     // set the half-carry flag if the lower nibble overflowed
     setHalfCarryFlag(hc);
     // set the carry flag
-    setCarryFlag(registers.A < (bus.read(registers.HL) + getCarryFlag()));
+    setCarryFlag(c);
 
     setPC(PC + 1);
 }
@@ -4240,14 +4247,16 @@ void CPU::processBD(Bus &bus)
 void CPU::processBE(Bus &bus)
 {
     // Subtract the value pointed to by the address in HL from that in Register A
-    uint16_t result = registers.A - bus.read(registers.HL);
+    int result = registers.A - bus.read(registers.HL);
+
+    int hc = (registers.A & 0x0F) - (bus.read(registers.HL) & 0x0F) < 0;
 
     // set the zero flag if the result is zero
     setZeroFlag(result == 0);
     // set the subtract flag
     setSubtractFlag(true);
     // set the half-carry flag if the lower nibble overflowed
-    setHalfCarryFlag((registers.A & 0x0F) == 0);
+    setHalfCarryFlag(hc);
     // set the carry flag
     setCarryFlag(registers.A < bus.read(registers.HL));
 
