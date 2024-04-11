@@ -31,6 +31,7 @@ int main() {
 //    std::string romPath = "./roms/10-bit ops.gb";
 //    std::string romPath = "./roms/11-op a,(hl).gb";
     std::string romPath = "./roms/dr_mario.gb";
+//    std::string romPath = "./roms/mario_land.gb";
 //    std::string romPath = "./roms/tetris.gb";
 //    std::string romPath = "./roms/zelda.gb";
 //    std::string romPath = "./roms/alleyway.gb";
