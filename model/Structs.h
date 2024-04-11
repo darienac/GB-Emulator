@@ -6,8 +6,8 @@
 #define GAMEBOY_EMULATOR_STRUCTS_H
 
 struct OamEntry {
-    uint8_t x;
     uint8_t y;
+    uint8_t x;
     uint8_t tile;
 
     unsigned f_gbc_pn : 3;

@@ -42,7 +42,7 @@ void PPU::runOamMode() {
         lcd->setLcdMode(MODE_XFER);
         pipelineZeros();
     }
-    if (lineTicks == 0) {
+    if (lineTicks == 1) {
         loadLineSprites();
     }
 }
@@ -53,6 +53,8 @@ void PPU::runXferMode() {
         pipelineReset();
 
         lcd->setLcdMode(MODE_HBLANK);
+
+        if (lcd->getHBlankInt()) emu->triggerInterrupt(STAT);
     }
 }
 
@@ -80,18 +82,14 @@ void PPU::runHBlankMode() {
             lcd->setLcdMode(MODE_VBLANK);
 
             emu->triggerInterrupt(VBLANK);
-            if (lcd->getVBlankInt()) {
-                emu->triggerInterrupt(STAT);
-            }
-
-            currFrame++;
-
-
+          
+            if (lcd->getVBlankInt()) emu->triggerInterrupt(STAT);
+            emu->updateFrame(display);
         } else {
+
             lcd->setLcdMode(MODE_OAM);
         }
-
-        emu->updateFrame(display);
+        lineTicks = 0;
     }
 }
 
@@ -107,7 +105,6 @@ void PPU::handleLy() {
 
     if (lcd->getLy() == lcd->getLyCompare()) {
         lcd->setLycFlag(true);
-        lcd->resetLy();
 
         if (lcd->getLycInt()) {
             emu->triggerInterrupt(STAT);
@@ -206,9 +203,9 @@ void PPU::fetchPixel() {
 uint8_t PPU::fetchSpritePixel(uint8_t color, uint8_t bgColor) {
     for (int i = 0; i < fetchEntryCount; i++) {
         int spX = (fetchedEntries[i].x - 8) + (lcd->getScrollX() % 8);
-        if (spX + 8 > fifoX) continue;
+        if (spX + 8 < fifoX) continue;
 
-        int offset = spX - fifoX;
+        int offset = fifoX - spX;
         if (offset < 0 || offset > 7) continue;
 
         int bit = 7 - offset;
@@ -233,11 +230,17 @@ bool PPU::pipelineAdd() {
     for (int bit = 7; bit >= 0; bit--) {
         uint8_t low = ((bgwFetchData[1] & (1 << bit)) != 0);
         uint8_t high = ((bgwFetchData[2] & (1 << bit)) != 0) << 1;
-        uint8_t pixel = high | low;
+        uint8_t pixel = lcd->bgColors[high | low];
+        uint8_t old = pixel;
 
         if (!lcd->getBgWEnabled()) pixel = 0;
-        if (lcd->getObjEnabled()) pixel = fetchSpritePixel(pixel, high|low);
+        if (lcd->getObjEnabled()) {
+            pixel = fetchSpritePixel(pixel, lcd->bgColors[high | low]);
+        }
 
+        if (old != pixel) {
+            int x;
+        }
         if (x >= 0) {
             fifoPush(pixel);
             fifoX++;
@@ -248,14 +251,14 @@ bool PPU::pipelineAdd() {
 }
 
 void PPU::pipelineReset() {
-    while (fifo.size() > 0) fifo.pop_front();
+    while (!fifo.empty()) fifo.pop_front();
 }
 
 void PPU::loadLineSprites() {
     int curY = lcd->getLy();
     int spriteHeight = lcd->getObjHeight();
 
-    while (lineSprites.size()) lineSprites.pop_front();
+    while (!lineSprites.empty()) lineSprites.pop_front();
 
     for (int i = 0; i < 40; i++) {
         OamEntry e = bus->getOamEntry(i);
@@ -265,7 +268,6 @@ void PPU::loadLineSprites() {
 
         if (e.y <= curY + 16 && e.y + spriteHeight > curY + 16) {
             lineSprites.push_front(e);
-
 
             //sort
             for (int j = 0; j < lineSprites.size() - 1;  j++) {
