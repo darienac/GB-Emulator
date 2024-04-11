@@ -84,9 +84,6 @@ void PPU::runHBlankMode() {
                 emu->triggerInterrupt(STAT);
             }
 
-            currFrame++;
-
-
         } else {
             lcd->setLcdMode(MODE_OAM);
         }
