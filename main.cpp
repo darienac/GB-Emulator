@@ -20,7 +20,7 @@ int main() {
     IControls* controls = window.getControls();
 
 //    std::string romPath = "./roms/01-special.gb";
-    std::string romPath = "./roms/02-interrupts.gb";
+//    std::string romPath = "./roms/02-interrupts.gb";
 //    std::string romPath = "./roms/03-op sp,hl.gb";
 //    std::string romPath = "./roms/04-op r,imm.gb";
 //    std::string romPath = "./roms/05-op rp.gb";
@@ -30,7 +30,7 @@ int main() {
 //    std::string romPath = "./roms/09-op r,r.gb";
 //    std::string romPath = "./roms/10-bit ops.gb";
 //    std::string romPath = "./roms/11-op a,(hl).gb";
-//    std::string romPath = "./roms/dr_mario.gb";
+    std::string romPath = "./roms/dr_mario.gb";
 //    std::string romPath = "./roms/mario_land.gb";
 //    std::string romPath = "./roms/tetris.gb";
 //    std::string romPath = "./roms/alleyway.gb";

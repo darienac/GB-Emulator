@@ -20,7 +20,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     wRam = new WRAM();
     dma = new DMA(bus, oamRam);
     lcd = new LCD(dma);
-    gamepad = new Gamepad(controls);
+    gamepad = new Gamepad(controls, this);
     timer = new Timer(this);
     io = new IO(lcd, gamepad, timer);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
@@ -34,7 +34,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
 }
 
 void Emulator::runFrame() {
-
+    gamepad->checkForInterrupt();
     for (uint8_t r = 0; r < 144; r++) {
         while (lcd->getLcdMode() == lcdMode::MODE_OAM) {
             ppu->tick();
@@ -97,13 +97,19 @@ void Emulator::syncCPUWithPPU() {
 void Emulator::triggerInterrupt(InterruptType interrupt) {
     switch(interrupt) {
         case InterruptType::STAT:
-            // TODO: Figure this out (FF41 register)
+            queueInterrupt(2, bus);
             break;
         case InterruptType::VBLANK:
             queueInterrupt(1, bus);
             break;
         case InterruptType::TIMER:
             queueInterrupt(4, bus);
+            break;
+        case InterruptType::JOYPAD:
+            queueInterrupt(16, bus);
+            break;
+        case InterruptType::SERIAL:
+            queueInterrupt(8, bus);
             break;
         default:
             break;
