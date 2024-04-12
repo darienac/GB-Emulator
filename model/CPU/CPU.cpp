@@ -33,8 +33,8 @@ void CPU::handleInterrupts(Bus &bus)
         return;
     }
 
+    // Don't put stack push here, it already happens in handleSingleInterrupt
     setHalted(false);
-    stackPush(bus, PC);
 
     // check each interrupt type (there are 5)
     for (int i = 0; i < 5; i++)
