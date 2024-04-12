@@ -14,4 +14,4 @@ bool GlobalFlags::matchTranscript = false; // writes data to output.txt
 bool GlobalFlags::printSerialOut = false; // writes serial data to stdout
 
 uint16_t GlobalFlags::initialPC = 0x100; // Initial PC value, should be 0x100 for normal runs
-unsigned int GlobalFlags::frameTime = 16; // Normally set to 16 (~16.6666ms)
+unsigned int GlobalFlags::framesPerSecond = 60; // Normally set to 60

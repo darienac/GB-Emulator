@@ -22,7 +22,7 @@ public:
     static bool printSerialOut;
 
     static uint16_t initialPC;
-    static unsigned int frameTime;
+    static unsigned int framesPerSecond;
 };
 
 
