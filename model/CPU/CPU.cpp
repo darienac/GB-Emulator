@@ -81,15 +81,15 @@ void CPU::handleSingleInterrupt(Bus &bus, uint8_t interrupt, uint16_t interruptA
 
 void CPU::stackPush(Bus &bus, uint16_t value)
 {
+    setSP(SP - 1);
     bus.write(getSP(), (value >> 8) & 0xFF); // high byte
     setSP(SP - 1);
     bus.write(getSP(), value & 0xFF); // low byte
-    setSP(SP - 1);
 }
 
 uint16_t CPU::stackPop(Bus &bus)
 {
-    uint16_t value = (bus.read(getSP() + 2) << 8) | bus.read(getSP() + 1);
+    uint16_t value = (bus.read(getSP() + 1) << 8) | bus.read(getSP());
     setSP(SP + 2);
     return value;
 }
