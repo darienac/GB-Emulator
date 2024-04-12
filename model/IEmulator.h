@@ -8,7 +8,9 @@
 enum InterruptType {
     STAT,
     VBLANK,
-    TIMER
+    TIMER,
+    SERIAL,
+    JOYPAD
 };
 
 class IEmulator {

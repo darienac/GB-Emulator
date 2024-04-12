@@ -7,18 +7,21 @@
 
 #include <cstdint>
 #include "../../controller/IControls.h"
+#include "../IEmulator.h"
 
 class Gamepad{
 private:
     bool buttonSelected;
     bool directionSelected;
     IControls* controls;
+    uint8_t lastCheckedOutput = 0xFF;
+    IEmulator* emu;
 
 public:
-    Gamepad(IControls* controls): controls(controls){}
+    Gamepad(IControls* controls, IEmulator* emu): controls(controls), emu(emu) {}
     [[nodiscard]] uint8_t get_output() const;
     void set_sel(uint8_t value);
-
+    void checkForInterrupt();
 };
 
 #endif //GAMEBOY_EMULATOR_GAMEPAD_H

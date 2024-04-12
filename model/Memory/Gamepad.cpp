@@ -45,3 +45,11 @@ uint8_t Gamepad::get_output() const {
 
     return output;
 }
+
+void Gamepad::checkForInterrupt() {
+    uint8_t output = get_output();
+    if ((~output & 0xFF) & (lastCheckedOutput & 0xFF)) {
+        emu->triggerInterrupt(InterruptType::JOYPAD);
+    }
+    lastCheckedOutput = output;
+}
