@@ -44,6 +44,8 @@ int main() {
 //    std::string romPath = "./roms/flood_vram.gb";
 
     Emulator emulator(window.getScreen(), controls, romPath);
+    unsigned int frameCount = 0;
+    unsigned int msCount = 0;
     while (true) {
         emulator.runFrame();
         window.pollEvents();
@@ -58,7 +60,14 @@ int main() {
             bitmap[1][12] = controls->A() ? 3 : 1;
         }
         window.render();
-        SDL_Delay(GlobalFlags::frameTime);
+        frameCount++;
+        unsigned int newMsCount = 1000 * frameCount / GlobalFlags::framesPerSecond;
+        SDL_Delay(newMsCount - msCount);
+        msCount = newMsCount;
+        if (frameCount == GlobalFlags::framesPerSecond) {
+            frameCount = 0;
+            msCount = 0;
+        }
     }
 
     return 0;
