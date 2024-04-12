@@ -17,12 +17,17 @@ CPU::CPU() {
 
 void CPU::handleInterrupts(Bus &bus)
 {
+    uint8_t interrupts = getInterruptEnableFlag(bus) & getInterruptFlag(bus);
+    if (getHalted() && !getImeFlag() && interrupts) {
+        setHalted(false);
+        return;
+        // Optional: handle stuff with the halt bug here (not sure if necessary)
+    }
     if (!this->imeFlag)
     {
         return;
     }
 
-    uint8_t interrupts = getInterruptEnableFlag(bus) & getInterruptFlag(bus);
     if (!getImeFlag() || !interrupts)
     {
         return;
@@ -349,7 +354,6 @@ void CPU::execute(uint8_t opcode, Bus &bus)
 
 void CPU::tick(Bus &bus)
 {
-    // if we're halted, we only wait for interrupts (then wake up when an interrupt is received)
     if (!getHalted())
     {
         uint8_t opcode = fetch(bus);
