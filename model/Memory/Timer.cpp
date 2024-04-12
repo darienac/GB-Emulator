@@ -2,13 +2,14 @@
 // Created by Keiffer on 3/7/2024.
 //
 
+#include <iostream>
 #include "Timer.h"
 
 void Timer::setDiv(uint16_t value) {
     div = value;
 }
 
-void Timer::timerTick() {
+void Timer::timerTick() { // Ticks every T cycle
     uint16_t prevDiv = div;
     div++;
     bool timerUpdate = false;
@@ -30,11 +31,12 @@ void Timer::timerTick() {
             break;
     }
 
-    if(timerUpdate && tac & (1 << 2)){
-        tima++;
-        if(tima == 0xFF){
+    if (timerUpdate && tac & (1 << 2)){
+        if (tima == 0xFF) {
             tima = tma;
-            //TODO:Request CPU interrupt: requestInterrupt(InterruptTimer);
+            emu->triggerInterrupt(InterruptType::TIMER);
+        } else {
+            tima++;
         }
     }
 }

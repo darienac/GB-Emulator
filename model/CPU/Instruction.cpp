@@ -2021,6 +2021,10 @@ void CPU::process0F(Bus &bus)
 void CPU::process10(Bus &bus)
 {
     // STOP instruction TODO: how?
+    // TODO: should also put CPU in a stop mode? Timer shouldn't increment until this is turned off
+
+    // Reset the Timer's divider register
+    bus.write(0xFF04, 0);
 
     setPC(PC + 2);
 }
@@ -2912,6 +2916,7 @@ void CPU::process75(Bus &bus)
 void CPU::process76(Bus &bus)
 {
     setHalted(true);
+    setPC(PC + 1);
 }
 
 void CPU::process77(Bus &bus)

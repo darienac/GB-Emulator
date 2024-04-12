@@ -21,7 +21,7 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     dma = new DMA(bus, oamRam);
     lcd = new LCD(dma);
     gamepad = new Gamepad(controls);
-    timer = new Timer();
+    timer = new Timer(this);
     io = new IO(lcd, gamepad, timer);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
     ppu = new PPU(lcd, bus, this);
@@ -84,6 +84,9 @@ void Emulator::cpuRunForDots(unsigned int dots) {
     while (cpu->getCycleCount() < targetCPUDotCount) {
         cpu->tick(*bus);
     }
+    for (unsigned int i = 0; i < dots; i++) {
+        timer->timerTick();
+    }
 }
 
 void Emulator::syncCPUWithPPU() {
@@ -98,6 +101,9 @@ void Emulator::triggerInterrupt(InterruptType interrupt) {
             break;
         case InterruptType::VBLANK:
             queueInterrupt(1, bus);
+            break;
+        case InterruptType::TIMER:
+            queueInterrupt(4, bus);
             break;
         default:
             break;

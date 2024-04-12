@@ -10,18 +10,18 @@
 
 class GlobalFlags {
 public:
-    static const bool debug;
-    static const bool showRegisters;
+    static bool debug;
+    static bool showRegisters;
 
-    static const bool checkForStuckInstruction; // Checks if PC stays the same between instruction calls to try to detect unimplemented instructions
+    static bool checkForStuckInstruction; // Checks if PC stays the same between instruction calls to try to detect unimplemented instructions
 
-    static const bool showControls;
+    static bool showControls;
 
-    static const bool manualdbg;
-    static const bool matchTranscript;
-    static const bool printSerialOut;
+    static bool manualdbg;
+    static bool matchTranscript;
+    static bool printSerialOut;
 
-    static const uint16_t initialPC;
+    static uint16_t initialPC;
 };
 
 
