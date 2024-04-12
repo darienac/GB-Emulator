@@ -13,6 +13,11 @@ void DMA::start(uint8_t start) {
     value = start;
 }
 
+void DMA::init(Bus *bus, OamRAM *oamRam) {
+    this->bus = bus;
+    this->oamRam = oamRam;
+}
+
 void DMA::tick() {
     if (!active) {
         return;

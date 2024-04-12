@@ -13,17 +13,18 @@ void queueInterrupt(uint8_t mask, Bus* bus) {
 Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cartPath): screen(screen), controls(controls) {
     cpu = new CPU();
 
+    dma = new DMA();
     cart = new Cartridge(cartPath);
     vRam = new VRAM();
     oamRam = new OamRAM();
     hRam = new HRAM();
     wRam = new WRAM();
-    dma = new DMA(bus, oamRam);
     lcd = new LCD(dma);
     gamepad = new Gamepad(controls, this);
     timer = new Timer(this);
     io = new IO(lcd, gamepad, timer);
     bus = new Bus(cart, vRam, oamRam, hRam, wRam, dma, io);
+    dma->init(bus, oamRam);
     ppu = new PPU(lcd, bus, this);
 
     targetCPUDotCount = cpu->getCycleCount();

@@ -30,6 +30,9 @@ int main() {
 //    std::string romPath = "./roms/09-op r,r.gb";
 //    std::string romPath = "./roms/10-bit ops.gb";
 //    std::string romPath = "./roms/11-op a,(hl).gb";
+//    std::string romPath = "./roms/cpu_instrs.gb";
+//    std::string romPath = "./roms/instr_timing.gb";
+//    std::string romPath = "./roms/interrupt_time.gb";
     std::string romPath = "./roms/dr_mario.gb";
 //    std::string romPath = "./roms/mario_land.gb";
 //    std::string romPath = "./roms/tetris.gb";
@@ -55,7 +58,7 @@ int main() {
             bitmap[1][12] = controls->A() ? 3 : 1;
         }
         window.render();
-        SDL_Delay(15);
+        SDL_Delay(GlobalFlags::frameTime);
     }
 
     return 0;

@@ -21,7 +21,9 @@ private:
     Bus* bus;
     OamRAM* oamRam;
 public:
-    DMA(Bus* bus, OamRAM* oamRam) : bus(bus), oamRam(oamRam) {}
+    DMA() {}
+
+    void init(Bus* bus, OamRAM* oamRam);
 
     void start(uint8_t start);
     void tick();
