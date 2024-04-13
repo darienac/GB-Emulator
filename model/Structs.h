@@ -10,12 +10,12 @@ struct OamEntry {
     uint8_t x;
     uint8_t tile;
 
-    unsigned f_gbc_pn : 3;
-    unsigned f_gbc_vram_bank : 1;
-    unsigned f_pn : 1;
-    unsigned f_x_flip : 1;
-    unsigned f_y_flip : 1;
-    unsigned f_bgp : 1;
+    uint8_t f_gbc_pn : 3; // CGB palette
+    uint8_t f_gbc_vram_bank : 1; // Bank
+    uint8_t f_pn : 1; // DMG palette
+    uint8_t f_x_flip : 1; // X flip
+    uint8_t f_y_flip : 1; // Y flip
+    uint8_t f_bgp : 1; // Priority
 };
 
 struct LcdRegs {
