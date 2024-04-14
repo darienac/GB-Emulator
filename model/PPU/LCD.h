@@ -23,6 +23,7 @@ private:
 
     DMA* dma;
 
+    unsigned char colorsDefault[4] = {3, 2, 1, 0};
 public:
     uint8_t bgColors[4];
     uint8_t sp1Colors[4];

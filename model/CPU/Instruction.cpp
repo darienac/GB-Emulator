@@ -1260,11 +1260,9 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         case 0x01:
             return 12;
         case 0x02:
-            return 8;
         case 0x03:
             return 8;
         case 0x04:
-            return 4;
         case 0x05:
             return 4;
         case 0x06:
@@ -1274,29 +1272,24 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         case 0x08:
             return 20;
         case 0x09:
-            return 8;
         case 0x0A:
-            return 8;
         case 0x0B:
             return 8;
         case 0x0C:
-            return 4;
         case 0x0D:
             return 4;
         case 0x0E:
             return 8;
         case 0x0F:
-            return 8;
+            return 4;
         case 0x10:
             return 20;
         case 0x11:
             return 12;
         case 0x12:
-            return 8;
         case 0x13:
             return 8;
         case 0x14:
-            return 4;
         case 0x15:
             return 4;
         case 0x16:
@@ -1306,29 +1299,24 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         case 0x18:
             return 12;
         case 0x19:
-            return 8;
         case 0x1A:
-            return 8;
         case 0x1B:
             return 8;
         case 0x1C:
-            return 4;
         case 0x1D:
             return 4;
         case 0x1E:
             return 8;
         case 0x1F:
-            return 8;
+            return 4;
         case 0x20:
             return 8;
         case 0x21:
             return 12;
         case 0x22:
-            return 8;
         case 0x23:
             return 8;
         case 0x24:
-            return 4;
         case 0x25:
             return 4;
         case 0x26:
@@ -1336,162 +1324,107 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         case 0x27:
             return 4;
         case 0x28:
-            return 8;
         case 0x29:
-            return 8;
         case 0x2A:
-            return 8;
         case 0x2B:
             return 8;
         case 0x2C:
-            return 4;
         case 0x2D:
             return 4;
         case 0x2E:
             return 8;
         case 0x2F:
-            return 8;
+            return 4;
         case 0x30:
             return 8;
         case 0x31:
             return 12;
         case 0x32:
-            return 8;
         case 0x33:
             return 8;
         case 0x34:
-            return 12;
         case 0x35:
-            return 12;
         case 0x36:
             return 12;
         case 0x37:
-            return 8;
+            return 4;
         case 0x38:
-            return 8;
         case 0x39:
-            return 8;
         case 0x3A:
-            return 8;
         case 0x3B:
             return 8;
         case 0x3C:
-            return 4;
         case 0x3D:
             return 4;
         case 0x3E:
             return 8;
         case 0x3F:
-            return 8;
         case 0x40:
-            return 4;
         case 0x41:
-            return 4;
         case 0x42:
-            return 4;
         case 0x43:
-            return 4;
         case 0x44:
-            return 4;
         case 0x45:
             return 4;
         case 0x46:
             return 8;
         case 0x47:
-            return 4;
         case 0x48:
-            return 4;
         case 0x49:
-            return 4;
         case 0x4A:
-            return 4;
         case 0x4B:
-            return 4;
         case 0x4C:
-            return 4;
         case 0x4D:
             return 4;
         case 0x4E:
             return 8;
         case 0x4F:
-            return 8;
-            // 0x5
         case 0x50:
-            return 4;
         case 0x51:
-            return 4;
         case 0x52:
-            return 4;
         case 0x53:
-            return 4;
         case 0x54:
-            return 4;
         case 0x55:
             return 4;
         case 0x56:
             return 8;
         case 0x57:
-            return 4;
         case 0x58:
-            return 4;
         case 0x59:
-            return 4;
         case 0x5A:
-            return 4;
         case 0x5B:
-            return 4;
         case 0x5C:
-            return 4;
         case 0x5D:
             return 4;
         case 0x5E:
             return 8;
         case 0x5F:
-            return 4;
-            // 0x6
         case 0x60:
-            return 4;
         case 0x61:
-            return 4;
         case 0x62:
-            return 4;
         case 0x63:
-            return 4;
         case 0x64:
-            return 4;
         case 0x65:
             return 4;
         case 0x66:
             return 8;
         case 0x67:
-            return 4;
         case 0x68:
-            return 4;
         case 0x69:
-            return 4;
         case 0x6A:
-            return 4;
         case 0x6B:
-            return 4;
         case 0x6C:
-            return 4;
         case 0x6D:
             return 4;
         case 0x6E:
             return 8;
         case 0x6F:
             return 4;
-            // 0x7
         case 0x70:
-            return 8;
         case 0x71:
-            return 8;
         case 0x72:
-            return 8;
         case 0x73:
-            return 8;
         case 0x74:
-            return 8;
         case 0x75:
             return 8;
         case 0x76:
@@ -1499,147 +1432,90 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         case 0x77:
             return 8;
         case 0x78:
-            return 4;
         case 0x79:
-            return 4;
         case 0x7A:
-            return 4;
         case 0x7B:
-            return 4;
         case 0x7C:
-            return 4;
         case 0x7D:
             return 4;
         case 0x7E:
             return 8;
         case 0x7F:
-            return 4;
-            // 0x8
         case 0x80:
-            return 4;
         case 0x81:
-            return 4;
         case 0x82:
-            return 4;
         case 0x83:
-            return 4;
         case 0x84:
-            return 4;
         case 0x85:
             return 4;
         case 0x86:
             return 8;
         case 0x87:
-            return 4;
         case 0x88:
-            return 4;
         case 0x89:
-            return 4;
         case 0x8A:
-            return 4;
         case 0x8B:
-            return 4;
         case 0x8C:
-            return 4;
         case 0x8D:
             return 4;
         case 0x8E:
             return 8;
         case 0x8F:
-            return 4;
-            // 0x9
         case 0x90:
-            return 4;
         case 0x91:
-            return 4;
         case 0x92:
-            return 4;
         case 0x93:
-            return 4;
         case 0x94:
-            return 4;
         case 0x95:
             return 4;
         case 0x96:
             return 8;
         case 0x97:
-            return 4;
         case 0x98:
-            return 4;
         case 0x99:
-            return 4;
         case 0x9A:
-            return 4;
         case 0x9B:
-            return 4;
         case 0x9C:
-            return 4;
         case 0x9D:
             return 4;
         case 0x9E:
             return 8;
         case 0x9F:
-            return 4;
-            // 0xA
         case 0xA0:
-            return 4;
         case 0xA1:
-            return 4;
         case 0xA2:
-            return 4;
         case 0xA3:
-            return 4;
         case 0xA4:
-            return 4;
         case 0xA5:
             return 4;
         case 0xA6:
             return 8;
         case 0xA7:
-            return 4;
         case 0xA8:
-            return 4;
         case 0xA9:
-            return 4;
         case 0xAA:
-            return 4;
         case 0xAB:
-            return 4;
         case 0xAC:
-            return 4;
         case 0xAD:
             return 4;
         case 0xAE:
             return 8;
         case 0xAF:
-            return 4;
-            // 0xB
         case 0xB0:
-            return 4;
         case 0xB1:
-            return 4;
         case 0xB2:
-            return 4;
         case 0xB3:
-            return 4;
         case 0xB4:
-            return 4;
         case 0xB5:
             return 4;
         case 0xB6:
             return 8;
         case 0xB7:
-            return 4;
         case 0xB8:
-            return 4;
         case 0xB9:
-            return 4;
         case 0xBA:
-            return 4;
         case 0xBB:
-            return 4;
         case 0xBC:
-            return 4;
         case 0xBD:
             return 4;
         case 0xBE:
@@ -1690,11 +1566,7 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
             }
             return 12;
         case 0xCB:
-            if ((opcode & 0xF) == 0x6 || (opcode & 0xF) == 0xE)
-            {
-                return 20;
-            }
-            return 12;
+            return getCBCycleCount(opcode);
         case 0xCC:
             if (opCodeAdditionalCycles)
             {
@@ -1766,7 +1638,6 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
             return 16;
             // 0xE
         case 0xE0:
-            return 12;
         case 0xE1:
             return 12;
         case 0xE2:
@@ -1780,7 +1651,6 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
         case 0xE6:
             return 8;
         case 0xE7:
-            return 16;
         case 0xE8:
             return 16;
         case 0xE9:
@@ -1799,7 +1669,6 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
             return 16;
             // 0xF
         case 0xF0:
-            return 12;
         case 0xF1:
             return 12;
         case 0xF2:
@@ -1844,6 +1713,48 @@ unsigned int CPU::getCycleCount(uint8_t opcode) const
     }
 
     return 0;
+}
+
+unsigned int CPU::getCBCycleCount(uint8_t opCode) const {
+    switch (opCode) {
+        case 0x06:
+        case 0x0E:
+        case 0x16:
+        case 0x1E:
+        case 0x26:
+        case 0x2E:
+        case 0x36:
+        case 0x3E:
+            return 16;
+        case 0x46:
+        case 0x4E:
+        case 0x56:
+        case 0x5E:
+        case 0x66:
+        case 0x6E:
+        case 0x76:
+        case 0x7E:
+            return 12;
+        case 0x86:
+        case 0x8E:
+        case 0x96:
+        case 0x9E:
+        case 0xA6:
+        case 0xAE:
+        case 0xB6:
+        case 0xBE:
+        case 0xC6:
+        case 0xCE:
+        case 0xD6:
+        case 0xDE:
+        case 0xE6:
+        case 0xEE:
+        case 0xF6:
+        case 0xFE:
+            return 16;
+        default:
+            return 8;
+    }
 }
 
 void CPU::process00(Bus &bus)

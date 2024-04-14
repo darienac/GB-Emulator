@@ -40,6 +40,7 @@ private:
     Timer* timer;
     IO* io;
 
+    bool frameDone;
     // runtime state
     unsigned int targetCPUDotCount;
     unsigned int lastPPUTicks;

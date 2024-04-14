@@ -60,11 +60,13 @@ void PPU::runXferMode() {
 
 void PPU::runVBlankMode() {
     if (lineTicks >= TICKS_PER_LINE) {
-        //Increment and check line count
         handleLy();
         if (lcd->getLy() >= LINES_PER_FRAME) {
             lcd->setLcdMode(MODE_OAM);
             lcd->resetLy();
+
+            emu->updateFrame(display);
+
             windowLine = 0;
         }
 
@@ -74,19 +76,14 @@ void PPU::runVBlankMode() {
 
 void PPU::runHBlankMode() {
     if (lineTicks >= TICKS_PER_LINE) {
-        //Increment and check line count
-
         handleLy();
 
         if (lcd->getLy() >= Y_RES) {
             lcd->setLcdMode(MODE_VBLANK);
 
             emu->triggerInterrupt(VBLANK);
-          
             if (lcd->getVBlankInt()) emu->triggerInterrupt(STAT);
-            emu->updateFrame(display);
         } else {
-
             lcd->setLcdMode(MODE_OAM);
         }
         lineTicks = 0;
@@ -138,7 +135,7 @@ void PPU::pipelineProcess() {
     mapX = fetchX + lcd->getScrollX();
     tileY = ((lcd->getLy() + lcd->getScrollY()) % 8) * 2;
 
-    //Every other line
+    //Every other tick
     if (!(lineTicks % 2)) {
         fetchPixel();
     }
@@ -209,15 +206,20 @@ uint8_t PPU::fetchSpritePixel(uint8_t color, uint8_t bgColor) {
         if (offset < 0 || offset > 7) continue;
 
         int bit = 7 - offset;
-        if (lineSprites.at(i).f_x_flip) bit = offset;
+        if (fetchedEntries[i].f_x_flip) {
+            bit = offset;
+        }
 
-        uint8_t low = ((fetchEntryData[i*2] & (1 << bit)) != 0);
-        uint8_t high = ((fetchEntryData[(i*2)+1] & (1 << bit)) != 0) << 1;
+        uint8_t high = ((fetchEntryData[i*2] & (1 << bit)) != 0);
+        uint8_t low = ((fetchEntryData[(i*2)+1] & (1 << bit)) != 0) << 1;
 
         uint8_t val = high|low;
         bool bgPriority = fetchedEntries[i].f_bgp;
         if (!val) continue;
-        if (!bgPriority || bgColor == 0) color = fetchedEntries[i].f_pn ? lcd->sp1Colors[val] : lcd->sp2Colors[val];
+        if (!bgPriority || bgColor == 0) {
+            color = !fetchedEntries[i].f_pn ? lcd->sp1Colors[val] : lcd->sp2Colors[val];
+            return color;
+        }
     }
     return color;
 }
@@ -231,16 +233,13 @@ bool PPU::pipelineAdd() {
         uint8_t low = ((bgwFetchData[1] & (1 << bit)) != 0);
         uint8_t high = ((bgwFetchData[2] & (1 << bit)) != 0) << 1;
         uint8_t pixel = lcd->bgColors[high | low];
-        uint8_t old = pixel;
 
-        if (!lcd->getBgWEnabled()) pixel = 0;
+        if (!lcd->getBgWEnabled()) pixel = lcd->bgColors[0];
+
         if (lcd->getObjEnabled()) {
-            pixel = fetchSpritePixel(pixel, lcd->bgColors[high | low]);
+            pixel = fetchSpritePixel(pixel, high | low);
         }
 
-        if (old != pixel) {
-            int x;
-        }
         if (x >= 0) {
             fifoPush(pixel);
             fifoX++;
@@ -271,10 +270,10 @@ void PPU::loadLineSprites() {
 
             //sort
             for (int j = 0; j < lineSprites.size() - 1;  j++) {
-                if (lineSprites.at(j).x > lineSprites.at(j + 1).x) {
+                if (lineSprites.at(j).x >= lineSprites.at(j + 1).x) {
                     OamEntry temp = lineSprites.at(j);
                     lineSprites.at(j) = lineSprites.at(j + 1);
-                    lineSprites.at(j) = temp;
+                    lineSprites.at(j + 1) = temp;
                 }
             }
         }
@@ -311,7 +310,9 @@ void PPU::pipelineLoadWindowTile() {
     if (!windowVisible()) return;
     if (fetchX + 7 >= lcd->getWinX() && fetchX + 7 < X_RES + lcd->getWinX() + 14) {
         if (lcd->getLy()>= lcd->getWinY() && lcd->getLy() < Y_RES + lcd->getWinY()) {
-            bgwFetchData[0] = bus->read(lcd->getWinMapArea() + (fetchX + 7 - lcd->getWinX()) + ((windowLine / 8) * 32));
+            uint8_t winTileY = windowLine / 8;
+            bgwFetchData[0] = bus->read(lcd->getWinMapArea() + ((fetchX + 7 - lcd->getWinX()) / 8) + (winTileY * 32));
+
             if (lcd->getBgWDataArea() == 0x8800) bgwFetchData[0] += 128;
         }
 

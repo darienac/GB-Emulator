@@ -9,7 +9,7 @@ void Timer::setDiv(uint16_t value) {
     div = value;
 }
 
-void Timer::timerTick() { // Ticks every T cycle
+void Timer::tick() { // Ticks every T cycle
     uint16_t prevDiv = div;
     div++;
     bool timerUpdate = false;
@@ -32,16 +32,15 @@ void Timer::timerTick() { // Ticks every T cycle
     }
 
     if (timerUpdate && tac & (1 << 2)){
+        tima++;
         if (tima == 0xFF) {
             tima = tma;
             emu->triggerInterrupt(InterruptType::TIMER);
-        } else {
-            tima++;
         }
     }
 }
 
-uint8_t Timer::timerRead(uint16_t address) const {
+uint8_t Timer::read(uint16_t address) const {
     switch(address){
         case 0xFF04:
             return div >> 8;
@@ -50,13 +49,13 @@ uint8_t Timer::timerRead(uint16_t address) const {
         case 0xFF06:
             return tma;
         case 0xFF07:
-            return tac;
+            return tac & 0b111;
         default:
             return 0;
     }
 }
 
-void Timer::timerWrite(uint16_t address, uint8_t value) {
+void Timer::write(uint16_t address, uint8_t value) {
     switch (address) {
         case 0xFF04:
             div = 0;
@@ -68,7 +67,7 @@ void Timer::timerWrite(uint16_t address, uint8_t value) {
             tma = value;
             break;
         case 0xFF07:
-            tac = value;
+            tac = (tac & ~0b111) | (value & 0b111);
             break;
         default:
             break;
