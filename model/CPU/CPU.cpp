@@ -23,12 +23,7 @@ void CPU::handleInterrupts(Bus &bus)
         return;
         // Optional: handle stuff with the halt bug here (not sure if necessary)
     }
-    if (!this->imeFlag)
-    {
-        return;
-    }
-
-    if (!getImeFlag() || !interrupts)
+    if (!this->imeFlag || !interrupts)
     {
         return;
     }
@@ -380,7 +375,7 @@ void CPU::tick(Bus &bus)
         processOpCode(opcode, bus);
     }
     else {
-        cycleCount += 1;
+        cycleCount += 4;
     }
     handleInterrupts(bus);
 

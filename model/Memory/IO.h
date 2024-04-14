@@ -15,7 +15,7 @@ private:
     LCD* lcd;
     Gamepad* gamepad;
     Timer* timer;
-    uint8_t serialData[2]; // Was this supposed to be static?
+    uint8_t serialData[2];
 
 public:
     IO(LCD* lcd, Gamepad* gamepad, Timer* timer) : lcd(lcd), gamepad(gamepad), timer(timer){ }

@@ -25,10 +25,6 @@ uint8_t IO::read(uint16_t address) {
         return timer->timerRead(address);
     }
 
-    if (address == 0xFF0F) {
-        //Interrupt stuff
-    }
-
     if (0xFF10 <= address && address <= 0xFF3F) {
         //Sound Stuff
     }
@@ -39,6 +35,7 @@ uint8_t IO::read(uint16_t address) {
     }
 
     //Unsupported
+
     return 0;
 }
 
@@ -65,10 +62,6 @@ void IO::write(uint16_t address, uint8_t value) {
         //Timer Stuff
         timer->timerWrite(address, value);
         return;
-    }
-
-    if (address == 0xFF0F) {
-        //Interrupt Stuff
     }
 
     if (0xFF10 <= address && address <= 0xFF3F) {

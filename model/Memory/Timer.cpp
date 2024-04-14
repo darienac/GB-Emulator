@@ -32,11 +32,10 @@ void Timer::timerTick() { // Ticks every T cycle
     }
 
     if (timerUpdate && tac & (1 << 2)){
+        tima++;
         if (tima == 0xFF) {
             tima = tma;
             emu->triggerInterrupt(InterruptType::TIMER);
-        } else {
-            tima++;
         }
     }
 }

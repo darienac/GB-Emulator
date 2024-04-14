@@ -72,6 +72,7 @@ void Bus::write(uint16_t address, uint8_t value) {
         //IO Registers... TODO
         if (address == 0xFF0F) {
             interruptFlag = value;
+            return;
         }
         io->write(address, value);
     } else if (address == 0xFFFF) {
