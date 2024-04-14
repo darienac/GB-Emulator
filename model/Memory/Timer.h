@@ -18,9 +18,9 @@ private:
 
 public:
     Timer(IEmulator* emu): emu(emu) {div = 0xAC00; tima = 0; tma = 0; tac = 0;}
-    void timerTick();
-    uint8_t timerRead(uint16_t address) const;
-    void timerWrite(uint16_t address, uint8_t value);
+    void tick();
+    uint8_t read(uint16_t address) const;
+    void write(uint16_t address, uint8_t value);
     void setDiv(uint16_t value);
 };
 

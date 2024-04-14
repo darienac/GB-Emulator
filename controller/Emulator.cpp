@@ -31,36 +31,24 @@ Emulator::Emulator(IScreen *screen, IControls *controls, const std::string& cart
     lastPPUTicks = 0;
     ppuTicks = 0;
 
+    frameDone = false;
+
     cart->printHeaderInfo();
 }
 
 void Emulator::runFrame() {
-    gamepad->checkForInterrupt();
-    for (uint8_t r = 0; r < 144; r++) {
-        while (lcd->getLcdMode() == lcdMode::MODE_OAM) {
-            ppu->tick();
+    frameDone = false;
+
+    while(!frameDone) {
+        int prevCycles = cpu->getCycleCount() / 4;
+        cpu->tick(*bus);
+        for (int i = 0; i < (cpu->getCycleCount() / 4) - prevCycles; i++) {
+            for (int j = 0; j < 4; j++) {
+                ppu->tick();
+                timer->tick();
+            }
             dma->tick();
-            ppuTicks++;
-            syncCPUWithPPU();
         }
-        while (lcd->getLcdMode() == lcdMode::MODE_XFER) {
-            ppu->tick();
-            dma->tick();
-            ppuTicks++;
-            syncCPUWithPPU();
-        }
-        while (lcd->getLcdMode() == lcdMode::MODE_HBLANK) {
-            ppu->tick();
-            dma->tick();
-            ppuTicks++;
-            syncCPUWithPPU();
-        }
-    }
-    while (lcd->getLcdMode() == lcdMode::MODE_VBLANK) {
-        ppu->tick();
-        dma->tick();
-        ppuTicks++;
-        syncCPUWithPPU();
     }
 }
 
@@ -86,7 +74,7 @@ void Emulator::cpuRunForDots(unsigned int dots) {
         cpu->tick(*bus);
     }
     for (unsigned int i = 0; i < dots; i++) {
-        timer->timerTick();
+        timer->tick();
     }
 }
 
@@ -119,6 +107,8 @@ void Emulator::triggerInterrupt(InterruptType interrupt) {
 
 void Emulator::updateFrame(char **frame) {
     // May have to reverse 1 or 2 of the loops if the image is flipped
+    frameDone = true;
+
     unsigned char** screenOut = screen->getBitmap();
     for (uint8_t r = 0; r < 144; r++) {
         for (uint8_t c = 0; c < 160; c++) {

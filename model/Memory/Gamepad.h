@@ -18,7 +18,7 @@ private:
     IEmulator* emu;
 
 public:
-    Gamepad(IControls* controls, IEmulator* emu): controls(controls), emu(emu) {}
+    Gamepad(IControls* controls, IEmulator* emu): controls(controls), emu(emu) { buttonSelected = 0; directionSelected = 0;}
     [[nodiscard]] uint8_t get_output() const;
     void set_sel(uint8_t value);
     void checkForInterrupt();
