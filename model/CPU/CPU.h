@@ -406,6 +406,7 @@ public:
     /// @brief The CPU's cycle count
     unsigned int getCycleCount() const;
 
+
     /// @brief The CPU's program counter
     uint16_t getPC() const;
 
@@ -534,6 +535,7 @@ public:
 
     /// @brief Get the cycle count for the given opcode
     unsigned int getCycleCount(uint8_t opcode) const;
+    unsigned int getCBCycleCount(uint8_t opcode) const;
 
     /// @brief Execute an instruction
     void execute(uint8_t opcode, Bus &bus);
